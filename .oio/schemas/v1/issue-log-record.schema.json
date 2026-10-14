@@ -1,0 +1,345 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Pukujan/observational-issue-ops/blob/main/schemas/v1/issue-log-record.schema.json",
+  "title": "OIO observational or operational issue-log record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "issue_type",
+    "project",
+    "ontology",
+    "filer",
+    "priority",
+    "impact",
+    "release_relevance"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "oio.issue-log-record.v1"
+    },
+    "issue_type": {
+      "enum": [
+        "observational",
+        "operational"
+      ]
+    },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "repository"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "repository": {
+          "type": "string",
+          "pattern": "^[^/\\s]+/[^/\\s]+$"
+        }
+      }
+    },
+    "ontology": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "default_version",
+        "project_version"
+      ],
+      "properties": {
+        "default_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "project_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        }
+      }
+    },
+    "filer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "origin",
+        "authenticated_actor",
+        "content_author",
+        "authorization_state",
+        "destination_repository",
+        "created_at",
+        "session_reference"
+      ],
+      "properties": {
+        "origin": {
+          "enum": [
+            "human-direct",
+            "human-via-agent",
+            "agent-proposed",
+            "agent-initiated"
+          ]
+        },
+        "authenticated_actor": {
+          "type": "string",
+          "minLength": 1
+        },
+        "content_author": {
+          "type": "string",
+          "minLength": 1
+        },
+        "directing_human": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "authorization_state": {
+          "enum": [
+            "verified-account-attestation",
+            "claimed",
+            "unknown"
+          ]
+        },
+        "authorization_evidence": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "session_reference": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "destination_repository": {
+          "type": "string",
+          "pattern": "^[^/\\s]+/[^/\\s]+$"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"
+        }
+      }
+    },
+    "priority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "path",
+        "concept_id"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "resolved",
+            "unresolved"
+          ]
+        },
+        "path": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^(?:[1-9]|[1-9][0-9]|100)(?:\\.[1-9][0-9]*)*$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "concept_id": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "resolved"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "concept_id": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "unresolved"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path": {
+                "type": "null"
+              },
+              "concept_id": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "impact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "affected",
+        "consequence",
+        "breadth",
+        "workaround",
+        "impact_band",
+        "likelihood",
+        "exposure",
+        "recoverability",
+        "evidence_confidence",
+        "unresolved_risk",
+        "change_risk"
+      ],
+      "properties": {
+        "affected": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "consequence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "breadth": {
+          "type": "string",
+          "minLength": 1
+        },
+        "workaround": {
+          "type": "string",
+          "minLength": 1
+        },
+        "impact_band": {
+          "enum": [
+            "critical",
+            "high",
+            "moderate",
+            "low",
+            "informational"
+          ]
+        },
+        "likelihood": {
+          "enum": [
+            "observed",
+            "likely",
+            "plausible",
+            "unlikely",
+            "unknown"
+          ]
+        },
+        "exposure": {
+          "enum": [
+            "active-production",
+            "intermittent-production",
+            "limited-test-or-preview",
+            "not-currently-exposed",
+            "unknown"
+          ]
+        },
+        "recoverability": {
+          "enum": [
+            "automatic-recovery",
+            "documented-recovery",
+            "manual-recovery",
+            "difficult-or-irreversible",
+            "unknown"
+          ]
+        },
+        "evidence_confidence": {
+          "enum": [
+            "confirmed",
+            "supported",
+            "uncertain",
+            "unknown"
+          ]
+        },
+        "unresolved_risk": {
+          "type": "string",
+          "minLength": 1
+        },
+        "change_risk": {
+          "type": "string",
+          "minLength": 1
+        },
+        "exposure_duration": {
+          "type": "string",
+          "minLength": 1
+        },
+        "recovery": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "release_relevance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relation",
+        "product_outcome",
+        "delay_cost",
+        "smallest_useful_slice"
+      ],
+      "properties": {
+        "relation": {
+          "enum": [
+            "blocks",
+            "affects",
+            "supports",
+            "unrelated",
+            "unknown"
+          ]
+        },
+        "product_outcome": {
+          "type": "string",
+          "minLength": 1
+        },
+        "delay_cost": {
+          "type": "string",
+          "minLength": 1
+        },
+        "smallest_useful_slice": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

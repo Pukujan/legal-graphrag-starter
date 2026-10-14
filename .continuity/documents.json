@@ -1,0 +1,155 @@
+{
+  "documents": [
+    {
+      "id": "agents",
+      "keywords": [
+        "OIO",
+        "PCM",
+        "agent rules",
+        "issues"
+      ],
+      "path": "AGENTS.md",
+      "related": [],
+      "reviewed_commit": "uncommitted",
+      "reviewed_sha256": "b07bd4ff528a36ea8972164eefb05abe3fcf9acff5c8f308f54050ece686e114",
+      "summary": "Agent operating rules for issue-led progression, checkpointing, the single-checkout mode, and OIO issue logs.",
+      "tasks": [],
+      "title": "Agents"
+    },
+    {
+      "id": "concept-legend",
+      "keywords": [
+        "asset",
+        "concept",
+        "filename",
+        "provenance"
+      ],
+      "path": ".content-system/filename-legends/legal-graph-concept.json",
+      "related": [
+        "concept-prompt",
+        "design-brief"
+      ],
+      "reviewed_commit": "uncommitted",
+      "reviewed_sha256": "04e400ab7ec9e0337e06027219d3f491c99209b035cb310fee4225a14f39c896",
+      "summary": "Names the concept image with the CGM safe-twin helper and records the filename terms.",
+      "tasks": [
+        "LGR-0001"
+      ],
+      "title": "Legal Graph filename legend"
+    },
+    {
+      "id": "concept-prompt",
+      "keywords": [
+        "image prompt",
+        "provenance",
+        "visual concept"
+      ],
+      "path": "assets/legal-graph-concept.prompt.md",
+      "related": [],
+      "reviewed_commit": "uncommitted",
+      "reviewed_sha256": "f61167eeb1f87012e94d452bfa2ddb0ae502fb6b0cfaf27d0707c2a3309d8ee1",
+      "summary": "Exact image-generation prompt and provenance note for the illustrative visual concept.",
+      "tasks": [],
+      "title": "Concept Prompt"
+    },
+    {
+      "id": "current",
+      "keywords": [
+        "blockers",
+        "current state",
+        "next action"
+      ],
+      "path": "checkpoints/CURRENT.md",
+      "related": [],
+      "reviewed_commit": "uncommitted",
+      "reviewed_sha256": "b3c7b021b0ebf2ada9fb13303c5ef9be9ecdf257b8a7adaa0f1ea9d322f4513b",
+      "summary": "As-of project phase, active work, blockers, and next action.",
+      "tasks": [],
+      "title": "Current"
+    },
+    {
+      "id": "design-brief",
+      "keywords": [
+        "adapter",
+        "evidence",
+        "legal boundaries",
+        "project brief"
+      ],
+      "path": ".content-system/project-brief.json",
+      "related": [],
+      "reviewed_commit": "uncommitted",
+      "reviewed_sha256": "5c2565c453ccd411527f2810564a11243a2637ff589747c1812bd53340ac8940",
+      "summary": "Machine-readable adapter describing evidence, planned product scope, and legal boundaries.",
+      "tasks": [],
+      "title": "Design Brief"
+    },
+    {
+      "id": "handoff",
+      "keywords": [
+        "cold start",
+        "continuity",
+        "handoff"
+      ],
+      "path": "HANDOFF.md",
+      "related": [],
+      "reviewed_commit": "uncommitted",
+      "reviewed_sha256": "bba38280480bb65e0d12b7fafabe797082500a74996551ee9f566895b9a62e9b",
+      "summary": "Cold-start read order and continuity operating guidance.",
+      "tasks": [],
+      "title": "Handoff"
+    },
+    {
+      "id": "project",
+      "keywords": [
+        "boundaries",
+        "evaluation",
+        "project goal",
+        "scope"
+      ],
+      "path": "PROJECT.md",
+      "related": [],
+      "reviewed_commit": "uncommitted",
+      "reviewed_sha256": "b2e1dd839db6ee58161db5e5ddf031ec9f7e4676113f4255ce64b1b5cc0e718e",
+      "summary": "Durable goal, planned legal graph explorer and early decision stage, boundaries, and success criteria.",
+      "tasks": [],
+      "title": "Project"
+    },
+    {
+      "id": "readme",
+      "keywords": [
+        "legal graph",
+        "prototype",
+        "starter"
+      ],
+      "path": "README.md",
+      "related": [],
+      "reviewed_commit": "102cf1cf347cc753622a753ae4cd16438abe8f8d",
+      "reviewed_sha256": "84511b18921534366833dc26b4c2399bbabb8a42cc319e9c2bdb818883ae2be2",
+      "summary": "Starter overview of the legal graph data, traversal demo, current limits, and prototype goals.",
+      "tasks": [],
+      "title": "Readme"
+    },
+    {
+      "id": "setup-task",
+      "keywords": [
+        "ACS",
+        "hotload",
+        "installation",
+        "validators"
+      ],
+      "path": "tasks/TASK-LGR-0001-setup-acs-adopter-stack.md",
+      "related": [
+        "current",
+        "project"
+      ],
+      "reviewed_commit": "uncommitted",
+      "reviewed_sha256": "25e9b3aaa48f7215a156bd8b3d5bddc1e92da3b698a84c94755b8467e41127c3",
+      "summary": "Issue-linked checklist and evidence for the complete ACS stack installation and review PR.",
+      "tasks": [
+        "LGR-0001"
+      ],
+      "title": "ACS setup task"
+    }
+  ],
+  "schema": "project-continuity.documents.v1"
+}

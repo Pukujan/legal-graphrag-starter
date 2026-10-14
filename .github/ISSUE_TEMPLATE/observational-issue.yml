@@ -1,0 +1,272 @@
+name: Issue Log Entry
+description: File an observational or operational issue log with ontology, priority, impact, and filer provenance.
+title: "[ISSUE]: "
+labels: ["observational-issue", "proposal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Issue Log Entry Protocol
+        > OIO publishes the default issue-log ontology and intake rules. Each adopter owns its project ontology extension and issue history.
+        > Read `ontology/ISSUE_LOG_ONTOLOGY.md` and the installed project ontology before filing. A filed log is evidence for review, not permission to implement or release.
+
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: Issue Type
+      description: Observational = a condition or discrepancy seen; operational = a capability currently broken or degraded. This ontology does not classify general proposals or incident-management records.
+      options: ["observational", "operational"]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: filer_origin
+    attributes:
+      label: Filer Origin (who initiated this filing)
+      description: These are reported origins. Human-direct and human-via-agent remain class 3 until an authorized project account separately applies the matching oio-auth label. Triage records the label event and exact body digest; editing the body requires the account to attest again. Agent-proposed is class 3 and agent-initiated class 4. Protected repositories still require explicit human direction to submit.
+      options: ["human-direct", "human-via-agent", "agent-proposed", "agent-initiated"]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: authorization_state
+    attributes:
+      label: Filing Authorization Evidence
+      description: This field is a claim only. Triage records verified-account-attestation only when an authorized project account applies a separate matching oio-auth label to the exact current issue body. This is not implementation authorization.
+      options: ["claimed", "unknown"]
+    validations:
+      required: true
+
+  - type: textarea
+    id: filer_identity
+    attributes:
+      label: Session, Authorization Evidence, and Instruction Reference
+      description: The authenticated GitHub actor and timestamp come from the issue system. Record the session reference when available and a link or concise description of the claimed human instruction. Do not call a prompt independently verified based on this text.
+      placeholder: "- Session reference: unavailable\n- Claimed instruction/source: ...\n- Authorization evidence: claimed or unknown"
+    validations:
+      required: true
+
+  - type: input
+    id: content_author_identity
+    attributes:
+      label: Content Author Account or Runtime Identity
+      description: "Use a structured identity: human:<GitHub numeric account ID> or agent:<runtime>/<agent-or-session ID>. This names the claimed author; it does not authenticate the author."
+      placeholder: "agent:codex/session-123 or human:137629468"
+    validations:
+      required: true
+
+  - type: input
+    id: directing_human_github_account_id
+    attributes:
+      label: Directing Human GitHub Account ID
+      description: Required for human-via-agent. The account must be mapped in the project ontology and must separately attest using the matching oio-auth label. For other origins write not-applicable.
+      placeholder: "e.g., 137629468 or not-applicable"
+    validations:
+      required: true
+
+  - type: input
+    id: destination_repository
+    attributes:
+      label: Destination Repository
+      description: Must name the exact repository receiving this issue log. For protected repositories this does not itself grant filing authority.
+      placeholder: "owner/repository"
+    validations:
+      required: true
+
+  - type: input
+    id: ontology_versions
+    attributes:
+      label: Ontology Versions Used
+      description: Copy the exact OIO and project ontology versions from this repository's installed files; historical records keep their original versions.
+      placeholder: "oio=1.0.0; project=1.0.0"
+    validations:
+      required: true
+
+  - type: input
+    id: priority_path
+    attributes:
+      label: Project Priority Path
+      description: Enter a path defined in this repository's project ontology, such as 1, 1.2, or 1.10. This is a string, not a decimal. The adopter defines what each path means.
+      placeholder: "e.g., 5"
+    validations:
+      required: true
+
+  - type: input
+    id: priority_concept_id
+    attributes:
+      label: Project Priority Concept ID
+      description: Enter the namespaced concept ID defined for that path in the project ontology. Triage verifies the path and ID together.
+      placeholder: "e.g., oio-project:priority-5"
+    validations:
+      required: true
+
+  - type: textarea
+    id: affected
+    attributes:
+      label: Affected App, Adopter, Users, or Systems
+      description: Name who or what is affected and the breadth of the effect.
+      placeholder: "Affected users, app, adopter repository, workflow, and scope..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: consequence
+    attributes:
+      label: Observed Consequence and Workaround
+      description: Separate observed facts from interpretation. State what happens if unresolved and any usable workaround.
+      placeholder: "Observed consequence...\nAvailable workaround..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: evidence_confidence
+    attributes:
+      label: Evidence Confidence
+      description: Use confirmed only for directly reproduced/observed impact. Do not inflate impact to make an issue rank higher.
+      options: ["confirmed", "supported", "uncertain", "unknown"]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: impact_band
+    attributes:
+      label: Impact if Unresolved
+      description: Critical requires evidence of severe harm, broad production failure, security/authorization failure, or irreversible data loss; high means a core outcome fails for a meaningful segment with limited workaround; moderate is bounded with usable workaround/recovery; low is limited friction; informational means material impairment is not demonstrated.
+      options: ["critical", "high", "moderate", "low", "informational"]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: likelihood
+    attributes:
+      label: Likelihood
+      description: observed means it occurred in the evidence, not that it will recur; likely means repeated/strong recurrence evidence; plausible means a credible mechanism but not established; unlikely means evidence weighs against recurrence; unknown means evidence is insufficient.
+      options: ["observed", "likely", "plausible", "unlikely", "unknown"]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: exposure
+    attributes:
+      label: Exposure
+      description: Where and how the issue is exposed now. Include duration in the next field.
+      options: ["active-production", "intermittent-production", "limited-test-or-preview", "not-currently-exposed", "unknown"]
+    validations:
+      required: true
+
+  - type: input
+    id: exposure_duration
+    attributes:
+      label: Exposure Duration
+      description: State the observed duration, estimate, or unknown.
+      placeholder: "e.g., active for 2 hours, unknown"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: recoverability
+    attributes:
+      label: Recoverability
+      description: How recovery from the observed condition works, if known.
+      options: ["automatic-recovery", "documented-recovery", "manual-recovery", "difficult-or-irreversible", "unknown"]
+    validations:
+      required: true
+
+  - type: textarea
+    id: recovery
+    attributes:
+      label: Recovery Evidence
+      description: Describe available recovery/rollback or explicitly state unknown.
+      placeholder: "Recovery steps/evidence or unknown..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: unresolved_risk
+    attributes:
+      label: Risk if the Observation Remains Unresolved
+      description: Explain the impact band using evidence, likelihood, exposure, reversibility, and uncertainty. Avoid inflating speculative risk.
+      placeholder: "Evidence-based unresolved risk..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: change_risk
+    attributes:
+      label: Risk Introduced by a Proposed Change
+      description: Keep the risk of a proposed fix separate from the impact of leaving the observation unresolved.
+      placeholder: "Known or possible risks of proposed changes; write 'not assessed' when unknown."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: release_relation
+    attributes:
+      label: Product or Release Relevance
+      description: Describe relation to a named accepted outcome; this is not a deployment gate.
+      options: ["blocks", "affects", "supports", "unrelated", "unknown"]
+    validations:
+      required: true
+
+  - type: textarea
+    id: product_outcome
+    attributes:
+      label: Named Product Outcome and Cost of Delay
+      description: Link the accepted product outcome or release criterion, if known. State delay cost and evidence; do not make speculative edge cases release blockers.
+      placeholder: "Outcome/criterion and evidence, or 'none identified'; known cost of delay..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: delay_cost
+    attributes:
+      label: Cost of Delay
+      description: State the evidence-backed product cost of waiting, or unknown/not applicable.
+      placeholder: "Cost of delay, unknown, or not applicable..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: smallest_useful_slice
+    attributes:
+      label: Smallest Useful Product Slice
+      description: State the smallest outcome that would deliver user value, or unknown/not applicable. Do not widen scope for hypothetical edge cases.
+      placeholder: "Smallest useful outcome or unknown/not applicable..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: provenance
+    attributes:
+      label: Provenance and Context
+      description: Record repository, source revision, environment, observer, date, and the default/project ontology versions used.
+      placeholder: "- Destination repository: owner/repo\n- Source revision/environment: ...\n- Ontology versions: OIO 1.0.0 / project 1.0.0"
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproducibility
+    attributes:
+      label: Reproducibility Steps and Evidence
+      description: Give commands, steps, observed results, and the incident timeline when relevant.
+      placeholder: "1. ...\n2. ...\nObserved result: ..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: citations
+    attributes:
+      label: Citations and References
+      description: Link exact commits, repository files, evidence, or related issues.
+      placeholder: "- ..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_actions
+    attributes:
+      label: Non-Binding Proposed Next Actions
+      description: Suggested investigation or decision steps. These are proposals, not implementation instructions.
+      placeholder: "*(proposal)*\n- ..."
+    validations:
+      required: true

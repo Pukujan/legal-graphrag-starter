@@ -1,0 +1,50 @@
+{
+  "schema_version": "content-generation.project-brief.v2",
+  "project": "Legal Graph",
+  "audience": [
+    "Engineers and researchers prototyping legal-authority relationship exploration"
+  ],
+  "problem": "The starter contains a legal citation graph, but it is currently a data-only prototype without an implemented GraphRAG retrieval layer or interactive source-inspection experience.",
+  "solution": "Build a restrained legal-authority graph explorer with query, node and edge inspection, and visible source links. The planned initial decision engine includes an early JEV/OpenAI Decisions stage and a local open-source alternative. These are requirements for future work, not shipped capabilities.",
+  "evidence": [
+    {
+      "claim": "The starter's graph inventory reports 119,770 nodes and 160,793 edges.",
+      "source": "data/stats.json graph inventory",
+      "status": "shipped",
+      "supports": "The checked-in inventory records those node and edge totals for this starter revision.",
+      "limits": "The counts do not establish corpus completeness, current legal validity, citation correctness, retrieval quality, or performance gains.",
+      "source_revision": {
+        "kind": "repository_artifact",
+        "reference": "Legal GraphRAG starter initial revision",
+        "repository": "Pukujan/legal-graphrag-starter",
+        "commit": "102cf1cf347cc753622a753ae4cd16438abe8f8d",
+        "path": "data/stats.json",
+        "locator": "nodes_total and edges_total",
+        "uri": "https://github.com/Pukujan/legal-graphrag-starter/blob/102cf1cf347cc753622a753ae4cd16438abe8f8d/data/stats.json"
+      },
+      "recorded_at": "2026-10-14T00:00:00Z",
+      "cite_in_readme": false
+    },
+    {
+      "claim": "The first product stage is intended to combine a legal-authority graph explorer with an early JEV/OpenAI Decisions stage and a local open-source alternative.",
+      "source": "Owner-provided product requirements and direction",
+      "status": "planned",
+      "supports": "This records requested product scope and sequencing.",
+      "limits": "No explorer, decision stage, provider integration, or measured retrieval benefit is implemented in this fork at this revision.",
+      "source_revision": {
+        "kind": "owner_decision",
+        "reference": "KEYARGO10/KEYARGO11 requirements and active product direction supplied by the owner",
+        "observed_at": "2026-10-14"
+      },
+      "recorded_at": "2026-10-14T00:00:00Z",
+      "cite_in_readme": false
+    }
+  ],
+  "boundaries": [
+    "The project is a research and retrieval prototype, not legal advice.",
+    "Do not infer legal validity, current precedential status, or controlling authority from graph links or ranking alone.",
+    "Clearly label illustrative authorities and sample data; do not invent quotations, legal judgments, or performance results.",
+    "The starter has no production access or credentials. Keep the initial path local-first and preserve a local open-source alternative.",
+    "Report retrieval or decision-stage benefits only after a documented evaluation against a baseline."
+  ]
+}

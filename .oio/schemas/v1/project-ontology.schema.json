@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Pukujan/observational-issue-ops/blob/main/schemas/v1/project-ontology.schema.json",
+  "title": "Adopter issue-log ontology extension",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "project_id", "namespace", "extends", "version", "concepts", "priorities", "account_authority"],
+  "properties": {
+    "schema_version": {"const": "oio.project-issue-log-ontology.v1"},
+    "project_id": {"type": "string", "minLength": 3},
+    "namespace": {"type": "string", "pattern": "^[a-z][a-z0-9-]{1,62}$"},
+    "extends": {"type": "object", "additionalProperties": false, "required": ["ontology_id", "version"], "properties": {"ontology_id": {"const": "oio:issue-log"}, "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"}}},
+    "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "concepts": {"type": "array", "items": {"$ref": "#/$defs/concept"}},
+    "priorities": {"type": "array", "items": {"$ref": "#/$defs/priority"}},
+    "account_authority": {"type": "array", "items": {"$ref": "#/$defs/account"}, "uniqueItems": true}
+  },
+  "$defs": {
+    "concept": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "label", "definition", "broader"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{1,62}:[a-z0-9][a-z0-9._-]*$"},
+        "label": {"type": "string", "minLength": 1},
+        "definition": {"type": "string", "minLength": 1},
+        "broader": {"type": "string", "minLength": 1},
+        "examples": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "priority": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "concept_id", "label", "definition"],
+      "properties": {
+        "path": {"type": "string", "pattern": "^(?:[1-9]|[1-9][0-9]|100)(?:\\.[1-9][0-9]*)*$"},
+        "concept_id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{1,62}:[a-z0-9][a-z0-9._-]*$"},
+        "label": {"type": "string", "minLength": 1},
+        "definition": {"type": "string", "minLength": 1}
+      }
+    },
+    "account": {
+      "type": "object", "additionalProperties": false,
+      "required": ["github_user_id", "login", "authority"],
+      "properties": {
+        "github_user_id": {"type": "string", "pattern": "^[1-9][0-9]*$"},
+        "login": {"type": "string", "minLength": 1},
+        "authority": {"enum": ["owner", "approved-collaborator", "community"]}
+      }
+    }
+  }
+}

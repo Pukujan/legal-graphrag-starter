@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schema_version": "oio.issue-log-ontology.v1",
+  "ontology_id": "oio:issue-log",
+  "version": "1.0.0",
+  "compatible_project_ontology_versions": [
+    "1.0.0"
+  ],
+  "scope": [
+    "observational",
+    "operational"
+  ],
+  "issue_types": {
+    "observational": "A condition, behavior, or discrepancy someone observed; it may or may not be causing active harm.",
+    "operational": "A service, workflow, integration, or user-facing capability is currently broken or degraded."
+  },
+  "filer_origins": {
+    "human-direct": {
+      "queue_class": 1,
+      "meaning": "A human authored and filed the log directly.",
+      "authority_source": "authenticated human account, interpreted by the adopter's owner-maintained account policy"
+    },
+    "human-via-agent": {
+      "queue_class": 2,
+      "meaning": "A human explicitly directed an agent to file this log; the human's account supplies the human authority tier.",
+      "authority_source": "directing human account and recorded instruction evidence"
+    },
+    "agent-proposed": {
+      "queue_class": 3,
+      "meaning": "An agent authored a log for human consideration. Filing it does not authorize implementation.",
+      "authority_source": "agent identity; a human approver is recorded separately if a later decision occurs"
+    },
+    "agent-initiated": {
+      "queue_class": 4,
+      "meaning": "An agent initiated a log within the destination repository's explicitly allowed filing scope.",
+      "authority_source": "agent identity; always the lowest normal queue class"
+    }
+  },
+  "authorization": {
+    "meaning": "Permission to create a log is independent of who authored it, its queue rank, and permission to implement or release a change. The form's selected state is not proof by itself; triage verifies what GitHub actor data can establish and downgrades unverifiable human-via-agent claims.",
+    "evidence_states": [
+      "verified",
+      "claimed",
+      "unknown"
+    ],
+    "required_facts": [
+      "authenticated GitHub actor",
+      "claimed content author",
+      "filer origin",
+      "directing human GitHub account ID when applicable",
+      "authorization evidence and state",
+      "session reference when available",
+      "destination repository"
+    ]
+  },
+  "priority": {
+    "meaning": "A project-scoped ordering identifier. It is not a severity score and is not comparable across projects without an explicit crosswalk.",
+    "syntax": "positive integer path with dot-separated components; first component is 1 through 100; components have no leading zero",
+    "comparison": "Compare integer components from left to right; when one path is a prefix of another, the parent precedes its child. Lower paths are earlier in the adopter's declared order.",
+    "floating_point": false,
+    "required_project_definition": true,
+    "examples": [
+      "1",
+      "1.1",
+      "1.2",
+      "1.10",
+      "2",
+      "100",
+      "100.1"
+    ],
+    "invalid_examples": [
+      "0",
+      "01",
+      "1.0",
+      "1.01",
+      "1..2",
+      "1e2"
+    ]
+  },
+  "assessment": {
+    "unresolved_impact": [
+      "affected users or systems",
+      "scope and breadth",
+      "consequence",
+      "available workaround"
+    ],
+    "impact_bands": {
+      "critical": "Direct evidence of severe user harm, broad production failure, security/authorization boundary failure, or irreversible data loss.",
+      "high": "A core user outcome or accepted release criterion fails for a meaningful segment; workaround is limited.",
+      "moderate": "A bounded workflow or segment is impaired and a usable workaround or recovery exists.",
+      "low": "Limited friction or quality loss without evidence that a core accepted outcome is blocked.",
+      "informational": "No present material impairment is demonstrated; retain as an observation or follow-up."
+    },
+    "likelihood_values": {
+      "observed": "The condition occurred in the recorded evidence.",
+      "likely": "Repeated or strong evidence supports recurrence.",
+      "plausible": "A credible mechanism exists, but occurrence or recurrence is not established.",
+      "unlikely": "Available evidence weighs against occurrence or recurrence.",
+      "unknown": "There is not enough evidence to estimate likelihood."
+    },
+    "exposure_values": [
+      "active-production",
+      "intermittent-production",
+      "limited-test-or-preview",
+      "not-currently-exposed",
+      "unknown"
+    ],
+    "recoverability_values": [
+      "automatic-recovery",
+      "documented-recovery",
+      "manual-recovery",
+      "difficult-or-irreversible",
+      "unknown"
+    ],
+    "risk_evidence": [
+      "likelihood",
+      "production/test exposure",
+      "duration",
+      "reversibility and recovery",
+      "evidence confidence"
+    ],
+    "release_relevance": [
+      "named product outcome or release criterion",
+      "whether it is blocked, affected, supported, or unrelated",
+      "cost of delay and evidence"
+    ],
+    "change_risk": "Risk introduced by a proposed fix is recorded separately from the impact of leaving the observed condition unresolved.",
+    "scope_balance": "A low-evidence, low-impact edge case does not block a declared product outcome by default. A demonstrated failure of an accepted user outcome or a critical boundary must not be waved through for speed alone. State uncertainty instead of inflating impact.",
+    "review_lanes": {
+      "production-risk-review": "Critical/high impact with confirmed/supported evidence of observed/likely exposure in production. Expedite human review; not an automatic release decision.",
+      "release-risk-review": "Critical/high impact with confirmed/supported evidence that a named outcome is blocked, but no qualifying active production exposure.",
+      "product-outcome-review": "The record affects or blocks a named product outcome; weigh demonstrated delay cost and the smallest useful slice.",
+      "bounded-or-uncertain-review": "Low/informational impact or uncertain/unknown evidence; keep visible without allowing speculative edge cases to block a product outcome.",
+      "normal-review": "Other complete records; use the project priority and evidence."
+    }
+  },
+  "protected_rules": [
+    "A project may add namespaced concepts and priority meanings but may not redefine or remove an OIO core concept.",
+    "A reporter cannot self-assign account authority.",
+    "Filer origin, authorization, project priority, unresolved impact, change risk, release relevance, and permission to implement remain separate facts.",
+    "Impact bands describe demonstrated consequences; likelihood, exposure, recoverability, and evidence confidence remain separate dimensions and do not produce an automatic universal score.",
+    "An issue log is evidence and a proposal for review; it is not implementation or release authorization.",
+    "On OIO, ACS, CGM, and PCM, an agent may prepare a local issue draft but must not submit it without explicit human direction for that destination and filing action.",
+    "Human origin claims in issue text are unverified until an authorized project account separately applies the matching OIO attestation label. Triage preserves a bot comment with the event ID and exact issue-body SHA-256; editing the body invalidates the attestation and requires it to be applied again. The state is verified-account-attestation: it proves account action, not who typed a prompt when credentials are shared, and does not authorize implementation."
+  ],
+  "queue_order": {
+    "source_class": [
+      "human-direct",
+      "human-via-agent",
+      "agent-proposed",
+      "agent-initiated"
+    ],
+    "account_authority": "Within an origin class, order owner, approved collaborator, then community; unknown accounts stay at the end and require owner review.",
+    "project_priority": "Within the source/account tier, compare only project-defined priority paths by integer components, not decimals.",
+    "risk_lane": "An independent review annotation for production exposure and product outcomes; it can expedite review but never raises the filer origin or grants release authority."
+  }
+}

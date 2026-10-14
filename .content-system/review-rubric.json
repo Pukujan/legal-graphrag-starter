@@ -1,0 +1,31 @@
+{
+  "schema_version": "content-generation.review-rubric.v1",
+  "dimensions": [
+    {
+      "id": "source_traceability",
+      "question": "Can a reviewer inspect the source behind each displayed authority and relationship?",
+      "weight": 1
+    },
+    {
+      "id": "legal_boundary",
+      "question": "Does the interface avoid implying legal advice, validity, or precedential status without verification?",
+      "weight": 1
+    },
+    {
+      "id": "graph_readability",
+      "question": "Can a reader follow the selected node and its relevant links without a dense hairball?",
+      "weight": 1
+    },
+    {
+      "id": "decision_provenance",
+      "question": "Are JEV/OpenAI Decisions outputs and any local OSS alternative clearly identified with their source and limits?",
+      "weight": 1
+    },
+    {
+      "id": "data_transparency",
+      "question": "Are sample data, counts, and evaluation results accurately labeled and reproducible?",
+      "weight": 1
+    }
+  ],
+  "decision_rule": "Reject if any legal example is fabricated or unmarked, a source cannot be inspected, an unmeasured benefit is claimed, or the interface implies legal validity. Otherwise record reviewer findings and unresolved limits before accepting."
+}

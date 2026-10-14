@@ -1,0 +1,13 @@
+# Filing OIO observational and operational logs
+
+Before drafting or filing an observational or operational issue log, read the installed `.oio/ontology/ISSUE_LOG_ONTOLOGY.md` and `.oio/ontology/project.json`. Record the default and project ontology versions used.
+
+1. Identify the exact destination repository and exact filing action before writing. Work only in the repository named by the active task. Adoption is not write permission. Never write to sibling repositories or another adopter because OIO is installed there.
+2. OIO, ACS, CGM, and PCM are protected repositories in this workspace: an agent may research and prepare a local issue draft, but must not submit that issue or write repository files without the human explicitly directing that destination and action. Agents may file agent-proposed or agent-initiated records in other repositories only when that repository's policy and active task permit it; otherwise keep a draft for review.
+3. Classify whether the entry is observational or operational. Describe evidence, affected users/systems, consequence, workaround, duration, and uncertainty.
+4. Record content author, authenticated GitHub actor, filer origin, directing human when applicable, authorization evidence, destination, and session separately. A prompt stamp or issue body is a claim. Only a separate authorized GitHub action using `oio-auth:human-direct` or `oio-auth:human-via-agent` records account attestation; shared credentials still cannot prove who typed a prompt.
+5. Choose only a priority path defined by that repository's project ontology. The prepacked scaffold supplies generic paths 1–100; replace generic meanings with project-specific definitions as the owner decides. Keep paths as strings and compare numeric components, never decimals. Do not compare paths across repositories without a crosswalk.
+6. Describe unresolved impact, likelihood, production/test exposure, recoverability, proposed-change risk, evidence confidence, and release relevance separately. High, evidence-backed production risk gets a separate expedited review lane; this never raises agent authority or automatically blocks/permits a release. Low-evidence edge cases stay visible without blocking a named product outcome by default.
+7. Validate the project ontology and issue metadata before filing. A missing or incompatible ontology means keep a local draft and report the validation error; do not silently fetch an unpinned default or guess a project priority.
+
+The adopter owns its project extension, issue history, implementation decisions, and release decisions. OIO's default may not be used to write to a different repository than the task authorizes.

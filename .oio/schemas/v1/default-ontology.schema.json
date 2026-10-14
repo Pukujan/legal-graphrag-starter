@@ -1,0 +1,458 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Pukujan/observational-issue-ops/blob/main/schemas/v1/default-ontology.schema.json",
+  "title": "OIO default issue-log ontology",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "ontology_id",
+    "version",
+    "compatible_project_ontology_versions",
+    "scope",
+    "issue_types",
+    "filer_origins",
+    "authorization",
+    "priority",
+    "assessment",
+    "protected_rules",
+    "queue_order"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://json-schema.org/draft/2020-12/schema"
+    },
+    "schema_version": {
+      "const": "oio.issue-log-ontology.v1"
+    },
+    "ontology_id": {
+      "const": "oio:issue-log"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "compatible_project_ontology_versions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+      },
+      "uniqueItems": true
+    },
+    "scope": {
+      "const": [
+        "observational",
+        "operational"
+      ]
+    },
+    "issue_types": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observational",
+        "operational"
+      ],
+      "properties": {
+        "observational": {
+          "type": "string",
+          "minLength": 1
+        },
+        "operational": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "filer_origins": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "human-direct",
+        "human-via-agent",
+        "agent-proposed",
+        "agent-initiated"
+      ],
+      "properties": {
+        "human-direct": {
+          "$ref": "#/$defs/origin1"
+        },
+        "human-via-agent": {
+          "$ref": "#/$defs/origin2"
+        },
+        "agent-proposed": {
+          "$ref": "#/$defs/origin3"
+        },
+        "agent-initiated": {
+          "$ref": "#/$defs/origin4"
+        }
+      }
+    },
+    "authorization": {
+      "type": "object",
+      "required": [
+        "meaning",
+        "evidence_states",
+        "required_facts"
+      ],
+      "properties": {
+        "meaning": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_states": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "verified",
+              "claimed",
+              "unknown"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "required_facts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "priority": {
+      "type": "object",
+      "required": [
+        "meaning",
+        "syntax",
+        "comparison",
+        "floating_point",
+        "required_project_definition",
+        "examples",
+        "invalid_examples"
+      ],
+      "properties": {
+        "meaning": {
+          "type": "string",
+          "minLength": 1
+        },
+        "syntax": {
+          "type": "string",
+          "minLength": 1
+        },
+        "comparison": {
+          "type": "string",
+          "minLength": 1
+        },
+        "floating_point": {
+          "const": false
+        },
+        "required_project_definition": {
+          "const": true
+        },
+        "examples": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(?:[1-9]|[1-9][0-9]|100)(?:\\.[1-9][0-9]*)*$"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "invalid_examples": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "assessment": {
+      "type": "object",
+      "required": [
+        "unresolved_impact",
+        "impact_bands",
+        "likelihood_values",
+        "exposure_values",
+        "recoverability_values",
+        "risk_evidence",
+        "release_relevance",
+        "change_risk",
+        "scope_balance",
+        "review_lanes"
+      ],
+      "properties": {
+        "unresolved_impact": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "impact_bands": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "critical",
+            "high",
+            "moderate",
+            "low",
+            "informational"
+          ],
+          "properties": {
+            "critical": {
+              "type": "string"
+            },
+            "high": {
+              "type": "string"
+            },
+            "moderate": {
+              "type": "string"
+            },
+            "low": {
+              "type": "string"
+            },
+            "informational": {
+              "type": "string"
+            }
+          }
+        },
+        "likelihood_values": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "observed",
+            "likely",
+            "plausible",
+            "unlikely",
+            "unknown"
+          ],
+          "properties": {
+            "observed": {
+              "type": "string"
+            },
+            "likely": {
+              "type": "string"
+            },
+            "plausible": {
+              "type": "string"
+            },
+            "unlikely": {
+              "type": "string"
+            },
+            "unknown": {
+              "type": "string"
+            }
+          }
+        },
+        "exposure_values": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "active-production",
+              "intermittent-production",
+              "limited-test-or-preview",
+              "not-currently-exposed",
+              "unknown"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "recoverability_values": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "automatic-recovery",
+              "documented-recovery",
+              "manual-recovery",
+              "difficult-or-irreversible",
+              "unknown"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "risk_evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "release_relevance": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "change_risk": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope_balance": {
+          "type": "string",
+          "minLength": 1
+        },
+        "review_lanes": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "production-risk-review",
+            "release-risk-review",
+            "product-outcome-review",
+            "bounded-or-uncertain-review",
+            "normal-review"
+          ],
+          "properties": {
+            "production-risk-review": {
+              "type": "string",
+              "minLength": 1
+            },
+            "release-risk-review": {
+              "type": "string",
+              "minLength": 1
+            },
+            "product-outcome-review": {
+              "type": "string",
+              "minLength": 1
+            },
+            "bounded-or-uncertain-review": {
+              "type": "string",
+              "minLength": 1
+            },
+            "normal-review": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "protected_rules": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "queue_order": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_class",
+        "account_authority",
+        "project_priority",
+        "risk_lane"
+      ],
+      "properties": {
+        "source_class": {
+          "const": [
+            "human-direct",
+            "human-via-agent",
+            "agent-proposed",
+            "agent-initiated"
+          ]
+        },
+        "account_authority": {
+          "type": "string",
+          "minLength": 1
+        },
+        "project_priority": {
+          "type": "string",
+          "minLength": 1
+        },
+        "risk_lane": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  },
+  "$defs": {
+    "originBase": {
+      "type": "object",
+      "required": [
+        "queue_class",
+        "meaning",
+        "authority_source"
+      ],
+      "properties": {
+        "queue_class": {
+          "type": "integer"
+        },
+        "meaning": {
+          "type": "string",
+          "minLength": 1
+        },
+        "authority_source": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "origin1": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/originBase"
+        },
+        {
+          "properties": {
+            "queue_class": {
+              "const": 1
+            }
+          }
+        }
+      ]
+    },
+    "origin2": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/originBase"
+        },
+        {
+          "properties": {
+            "queue_class": {
+              "const": 2
+            }
+          }
+        }
+      ]
+    },
+    "origin3": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/originBase"
+        },
+        {
+          "properties": {
+            "queue_class": {
+              "const": 3
+            }
+          }
+        }
+      ]
+    },
+    "origin4": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/originBase"
+        },
+        {
+          "properties": {
+            "queue_class": {
+              "const": 4
+            }
+          }
+        }
+      ]
+    }
+  }
+}

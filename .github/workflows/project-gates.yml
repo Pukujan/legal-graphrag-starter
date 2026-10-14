@@ -1,0 +1,101 @@
+name: Project gates
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  adopter-validation:
+    name: adopter-validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out adopter
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Require read-only access to private ACS source
+        env:
+          ACS_READ_TOKEN: ${{ secrets.ACS_READ_TOKEN }}
+        run: |
+          if [ -z "$ACS_READ_TOKEN" ]; then
+            echo "Configure the ACS_READ_TOKEN repository secret with read-only access to Pukujan/agent-custom-setup."
+            exit 1
+          fi
+
+      - name: Check out pinned stack dependencies
+        uses: actions/checkout@v4
+        with:
+          repository: Pukujan/agent-custom-setup
+          ref: 5352653f4348e74afdf49e04cacc753f2b4beeb7
+          path: .deps/acs
+          token: ${{ secrets.ACS_READ_TOKEN }}
+
+      - uses: actions/checkout@v4
+        with:
+          repository: Pukujan/project-continuity-modules
+          ref: 8cbfc3c8e9f13eadf2663fd6dd060588ee29399d
+          path: .deps/pcm
+
+      - uses: actions/checkout@v4
+        with:
+          repository: Pukujan/content-generation-modules
+          ref: fe2054ba323257510eff4e31de1dcd4a1460d1c7
+          path: .deps/cgm
+
+      - uses: actions/checkout@v4
+        with:
+          repository: Pukujan/observational-issue-ops
+          ref: 2d1215502bc683e5bcbc6dc637b8b2b4cf28f3b7
+          path: .deps/oio
+
+      - name: Install validator dependency
+        run: python -m pip install jsonschema==4.23.0
+
+      - name: Validate full content adapter
+        run: >-
+          python .deps/cgm/scripts/validate_content_system.py
+          --root .deps/cgm --adapter .content-system --project-root .
+
+      - name: Validate ACS hotload contract
+        run: >-
+          python .deps/acs/modules/coordination/multi-agent-hotload/v0.1.0/scripts/hotload_check.py
+          --root .deps/acs/modules/coordination/multi-agent-hotload/v0.1.0
+          --adopter-root . --cgm-root .deps/cgm --no-dev-root-check
+
+      - name: Validate OIO installation
+        run: python .github/scripts/oio_installer.py --target "$GITHUB_WORKSPACE" --check
+
+      - name: Validate PCM continuity and preflight
+        env:
+          PYTHONPATH: .deps/pcm/src
+        run: |
+          python -m continuity validate --root .
+          python -m continuity preflight --root .
+
+  stack-train:
+    uses: Pukujan/agent-stack-train/.github/workflows/check-adopter.yml@main
+    with:
+      manifest: stack-manifest.json
+
+  gates:
+    name: gates
+    if: always()
+    needs: [adopter-validation, stack-train]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require all adopter checks to pass
+        env:
+          ADOPTER_VALIDATION: ${{ needs.adopter-validation.result }}
+          STACK_TRAIN: ${{ needs.stack-train.result }}
+        run: |
+          set -euo pipefail
+          test "$ADOPTER_VALIDATION" = "success"
+          test "$STACK_TRAIN" = "success"

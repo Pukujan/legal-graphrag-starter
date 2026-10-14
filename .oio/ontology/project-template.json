@@ -1,0 +1,614 @@
+{
+  "schema_version": "oio.project-issue-log-ontology.v1",
+  "project_id": "owner/repository",
+  "namespace": "project",
+  "extends": {
+    "ontology_id": "oio:issue-log",
+    "version": "1.0.0"
+  },
+  "version": "1.0.0",
+  "concepts": [],
+  "priorities": [
+    {
+      "path": "1",
+      "concept_id": "project:priority-1",
+      "label": "Project priority 1",
+      "definition": "Adopter queue position 1; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "2",
+      "concept_id": "project:priority-2",
+      "label": "Project priority 2",
+      "definition": "Adopter queue position 2; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "3",
+      "concept_id": "project:priority-3",
+      "label": "Project priority 3",
+      "definition": "Adopter queue position 3; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "4",
+      "concept_id": "project:priority-4",
+      "label": "Project priority 4",
+      "definition": "Adopter queue position 4; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "5",
+      "concept_id": "project:priority-5",
+      "label": "Project priority 5",
+      "definition": "Adopter queue position 5; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "6",
+      "concept_id": "project:priority-6",
+      "label": "Project priority 6",
+      "definition": "Adopter queue position 6; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "7",
+      "concept_id": "project:priority-7",
+      "label": "Project priority 7",
+      "definition": "Adopter queue position 7; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "8",
+      "concept_id": "project:priority-8",
+      "label": "Project priority 8",
+      "definition": "Adopter queue position 8; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "9",
+      "concept_id": "project:priority-9",
+      "label": "Project priority 9",
+      "definition": "Adopter queue position 9; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "10",
+      "concept_id": "project:priority-10",
+      "label": "Project priority 10",
+      "definition": "Adopter queue position 10; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "11",
+      "concept_id": "project:priority-11",
+      "label": "Project priority 11",
+      "definition": "Adopter queue position 11; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "12",
+      "concept_id": "project:priority-12",
+      "label": "Project priority 12",
+      "definition": "Adopter queue position 12; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "13",
+      "concept_id": "project:priority-13",
+      "label": "Project priority 13",
+      "definition": "Adopter queue position 13; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "14",
+      "concept_id": "project:priority-14",
+      "label": "Project priority 14",
+      "definition": "Adopter queue position 14; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "15",
+      "concept_id": "project:priority-15",
+      "label": "Project priority 15",
+      "definition": "Adopter queue position 15; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "16",
+      "concept_id": "project:priority-16",
+      "label": "Project priority 16",
+      "definition": "Adopter queue position 16; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "17",
+      "concept_id": "project:priority-17",
+      "label": "Project priority 17",
+      "definition": "Adopter queue position 17; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "18",
+      "concept_id": "project:priority-18",
+      "label": "Project priority 18",
+      "definition": "Adopter queue position 18; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "19",
+      "concept_id": "project:priority-19",
+      "label": "Project priority 19",
+      "definition": "Adopter queue position 19; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "20",
+      "concept_id": "project:priority-20",
+      "label": "Project priority 20",
+      "definition": "Adopter queue position 20; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "21",
+      "concept_id": "project:priority-21",
+      "label": "Project priority 21",
+      "definition": "Adopter queue position 21; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "22",
+      "concept_id": "project:priority-22",
+      "label": "Project priority 22",
+      "definition": "Adopter queue position 22; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "23",
+      "concept_id": "project:priority-23",
+      "label": "Project priority 23",
+      "definition": "Adopter queue position 23; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "24",
+      "concept_id": "project:priority-24",
+      "label": "Project priority 24",
+      "definition": "Adopter queue position 24; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "25",
+      "concept_id": "project:priority-25",
+      "label": "Project priority 25",
+      "definition": "Adopter queue position 25; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "26",
+      "concept_id": "project:priority-26",
+      "label": "Project priority 26",
+      "definition": "Adopter queue position 26; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "27",
+      "concept_id": "project:priority-27",
+      "label": "Project priority 27",
+      "definition": "Adopter queue position 27; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "28",
+      "concept_id": "project:priority-28",
+      "label": "Project priority 28",
+      "definition": "Adopter queue position 28; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "29",
+      "concept_id": "project:priority-29",
+      "label": "Project priority 29",
+      "definition": "Adopter queue position 29; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "30",
+      "concept_id": "project:priority-30",
+      "label": "Project priority 30",
+      "definition": "Adopter queue position 30; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "31",
+      "concept_id": "project:priority-31",
+      "label": "Project priority 31",
+      "definition": "Adopter queue position 31; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "32",
+      "concept_id": "project:priority-32",
+      "label": "Project priority 32",
+      "definition": "Adopter queue position 32; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "33",
+      "concept_id": "project:priority-33",
+      "label": "Project priority 33",
+      "definition": "Adopter queue position 33; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "34",
+      "concept_id": "project:priority-34",
+      "label": "Project priority 34",
+      "definition": "Adopter queue position 34; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "35",
+      "concept_id": "project:priority-35",
+      "label": "Project priority 35",
+      "definition": "Adopter queue position 35; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "36",
+      "concept_id": "project:priority-36",
+      "label": "Project priority 36",
+      "definition": "Adopter queue position 36; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "37",
+      "concept_id": "project:priority-37",
+      "label": "Project priority 37",
+      "definition": "Adopter queue position 37; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "38",
+      "concept_id": "project:priority-38",
+      "label": "Project priority 38",
+      "definition": "Adopter queue position 38; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "39",
+      "concept_id": "project:priority-39",
+      "label": "Project priority 39",
+      "definition": "Adopter queue position 39; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "40",
+      "concept_id": "project:priority-40",
+      "label": "Project priority 40",
+      "definition": "Adopter queue position 40; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "41",
+      "concept_id": "project:priority-41",
+      "label": "Project priority 41",
+      "definition": "Adopter queue position 41; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "42",
+      "concept_id": "project:priority-42",
+      "label": "Project priority 42",
+      "definition": "Adopter queue position 42; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "43",
+      "concept_id": "project:priority-43",
+      "label": "Project priority 43",
+      "definition": "Adopter queue position 43; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "44",
+      "concept_id": "project:priority-44",
+      "label": "Project priority 44",
+      "definition": "Adopter queue position 44; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "45",
+      "concept_id": "project:priority-45",
+      "label": "Project priority 45",
+      "definition": "Adopter queue position 45; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "46",
+      "concept_id": "project:priority-46",
+      "label": "Project priority 46",
+      "definition": "Adopter queue position 46; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "47",
+      "concept_id": "project:priority-47",
+      "label": "Project priority 47",
+      "definition": "Adopter queue position 47; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "48",
+      "concept_id": "project:priority-48",
+      "label": "Project priority 48",
+      "definition": "Adopter queue position 48; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "49",
+      "concept_id": "project:priority-49",
+      "label": "Project priority 49",
+      "definition": "Adopter queue position 49; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "50",
+      "concept_id": "project:priority-50",
+      "label": "Project priority 50",
+      "definition": "Adopter queue position 50; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "51",
+      "concept_id": "project:priority-51",
+      "label": "Project priority 51",
+      "definition": "Adopter queue position 51; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "52",
+      "concept_id": "project:priority-52",
+      "label": "Project priority 52",
+      "definition": "Adopter queue position 52; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "53",
+      "concept_id": "project:priority-53",
+      "label": "Project priority 53",
+      "definition": "Adopter queue position 53; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "54",
+      "concept_id": "project:priority-54",
+      "label": "Project priority 54",
+      "definition": "Adopter queue position 54; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "55",
+      "concept_id": "project:priority-55",
+      "label": "Project priority 55",
+      "definition": "Adopter queue position 55; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "56",
+      "concept_id": "project:priority-56",
+      "label": "Project priority 56",
+      "definition": "Adopter queue position 56; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "57",
+      "concept_id": "project:priority-57",
+      "label": "Project priority 57",
+      "definition": "Adopter queue position 57; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "58",
+      "concept_id": "project:priority-58",
+      "label": "Project priority 58",
+      "definition": "Adopter queue position 58; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "59",
+      "concept_id": "project:priority-59",
+      "label": "Project priority 59",
+      "definition": "Adopter queue position 59; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "60",
+      "concept_id": "project:priority-60",
+      "label": "Project priority 60",
+      "definition": "Adopter queue position 60; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "61",
+      "concept_id": "project:priority-61",
+      "label": "Project priority 61",
+      "definition": "Adopter queue position 61; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "62",
+      "concept_id": "project:priority-62",
+      "label": "Project priority 62",
+      "definition": "Adopter queue position 62; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "63",
+      "concept_id": "project:priority-63",
+      "label": "Project priority 63",
+      "definition": "Adopter queue position 63; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "64",
+      "concept_id": "project:priority-64",
+      "label": "Project priority 64",
+      "definition": "Adopter queue position 64; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "65",
+      "concept_id": "project:priority-65",
+      "label": "Project priority 65",
+      "definition": "Adopter queue position 65; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "66",
+      "concept_id": "project:priority-66",
+      "label": "Project priority 66",
+      "definition": "Adopter queue position 66; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "67",
+      "concept_id": "project:priority-67",
+      "label": "Project priority 67",
+      "definition": "Adopter queue position 67; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "68",
+      "concept_id": "project:priority-68",
+      "label": "Project priority 68",
+      "definition": "Adopter queue position 68; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "69",
+      "concept_id": "project:priority-69",
+      "label": "Project priority 69",
+      "definition": "Adopter queue position 69; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "70",
+      "concept_id": "project:priority-70",
+      "label": "Project priority 70",
+      "definition": "Adopter queue position 70; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "71",
+      "concept_id": "project:priority-71",
+      "label": "Project priority 71",
+      "definition": "Adopter queue position 71; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "72",
+      "concept_id": "project:priority-72",
+      "label": "Project priority 72",
+      "definition": "Adopter queue position 72; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "73",
+      "concept_id": "project:priority-73",
+      "label": "Project priority 73",
+      "definition": "Adopter queue position 73; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "74",
+      "concept_id": "project:priority-74",
+      "label": "Project priority 74",
+      "definition": "Adopter queue position 74; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "75",
+      "concept_id": "project:priority-75",
+      "label": "Project priority 75",
+      "definition": "Adopter queue position 75; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "76",
+      "concept_id": "project:priority-76",
+      "label": "Project priority 76",
+      "definition": "Adopter queue position 76; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "77",
+      "concept_id": "project:priority-77",
+      "label": "Project priority 77",
+      "definition": "Adopter queue position 77; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "78",
+      "concept_id": "project:priority-78",
+      "label": "Project priority 78",
+      "definition": "Adopter queue position 78; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "79",
+      "concept_id": "project:priority-79",
+      "label": "Project priority 79",
+      "definition": "Adopter queue position 79; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "80",
+      "concept_id": "project:priority-80",
+      "label": "Project priority 80",
+      "definition": "Adopter queue position 80; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "81",
+      "concept_id": "project:priority-81",
+      "label": "Project priority 81",
+      "definition": "Adopter queue position 81; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "82",
+      "concept_id": "project:priority-82",
+      "label": "Project priority 82",
+      "definition": "Adopter queue position 82; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "83",
+      "concept_id": "project:priority-83",
+      "label": "Project priority 83",
+      "definition": "Adopter queue position 83; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "84",
+      "concept_id": "project:priority-84",
+      "label": "Project priority 84",
+      "definition": "Adopter queue position 84; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "85",
+      "concept_id": "project:priority-85",
+      "label": "Project priority 85",
+      "definition": "Adopter queue position 85; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "86",
+      "concept_id": "project:priority-86",
+      "label": "Project priority 86",
+      "definition": "Adopter queue position 86; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "87",
+      "concept_id": "project:priority-87",
+      "label": "Project priority 87",
+      "definition": "Adopter queue position 87; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "88",
+      "concept_id": "project:priority-88",
+      "label": "Project priority 88",
+      "definition": "Adopter queue position 88; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "89",
+      "concept_id": "project:priority-89",
+      "label": "Project priority 89",
+      "definition": "Adopter queue position 89; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "90",
+      "concept_id": "project:priority-90",
+      "label": "Project priority 90",
+      "definition": "Adopter queue position 90; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "91",
+      "concept_id": "project:priority-91",
+      "label": "Project priority 91",
+      "definition": "Adopter queue position 91; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "92",
+      "concept_id": "project:priority-92",
+      "label": "Project priority 92",
+      "definition": "Adopter queue position 92; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "93",
+      "concept_id": "project:priority-93",
+      "label": "Project priority 93",
+      "definition": "Adopter queue position 93; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "94",
+      "concept_id": "project:priority-94",
+      "label": "Project priority 94",
+      "definition": "Adopter queue position 94; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "95",
+      "concept_id": "project:priority-95",
+      "label": "Project priority 95",
+      "definition": "Adopter queue position 95; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "96",
+      "concept_id": "project:priority-96",
+      "label": "Project priority 96",
+      "definition": "Adopter queue position 96; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "97",
+      "concept_id": "project:priority-97",
+      "label": "Project priority 97",
+      "definition": "Adopter queue position 97; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "98",
+      "concept_id": "project:priority-98",
+      "label": "Project priority 98",
+      "definition": "Adopter queue position 98; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "99",
+      "concept_id": "project:priority-99",
+      "label": "Project priority 99",
+      "definition": "Adopter queue position 99; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    },
+    {
+      "path": "100",
+      "concept_id": "project:priority-100",
+      "label": "Project priority 100",
+      "definition": "Adopter queue position 100; replace or refine this meaning in the project extension before relying on it for substantive triage."
+    }
+  ],
+  "account_authority": []
+}
