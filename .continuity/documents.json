@@ -17,6 +17,36 @@
       "title": "Agents"
     },
     {
+      "id": "application-api-task",
+      "keywords": [
+        "API"
+      ],
+      "path": "tasks/TASK-LGR-0005-application-graph-api.md",
+      "related": [],
+      "reviewed_commit": "uncommitted",
+      "reviewed_sha256": "a0a255426201be7f028a062dafdf4967821ab9978688565c4a3b6a93edbcd6cb",
+      "summary": "Issue-linked LGR-0005 execution record for the bounded graph API.",
+      "tasks": [
+        "LGR-0005"
+      ],
+      "title": "Application API Task"
+    },
+    {
+      "id": "backend-api",
+      "keywords": [
+        "API"
+      ],
+      "path": "docs/backend-api.md",
+      "related": [],
+      "reviewed_commit": "uncommitted",
+      "reviewed_sha256": "9d69997f731dfc798b281ff340750538122b7501512bcc31d732e8068315e313",
+      "summary": "Versioned HTTP contract for graph browsing and retrieval.",
+      "tasks": [
+        "LGR-0005"
+      ],
+      "title": "Application Graph API"
+    },
+    {
       "id": "concept-legend",
       "keywords": [
         "asset",
@@ -62,7 +92,7 @@
       "path": "checkpoints/CURRENT.md",
       "related": [],
       "reviewed_commit": "uncommitted",
-      "reviewed_sha256": "27714078f95dd5c55f7a82cfbc9e3b7778c701f870b2819e69d19f02d37913aa",
+      "reviewed_sha256": "feeedcca34b9639a4e2cd97b493dab35c5ecd8679e15748202fbf0ca1025053b",
       "summary": "As-of project phase, active work, blockers, and next action.",
       "tasks": [],
       "title": "Current"
@@ -140,6 +170,22 @@
       "summary": "Cold-start read order and continuity operating guidance.",
       "tasks": [],
       "title": "Handoff"
+    },
+    {
+      "id": "http-service",
+      "keywords": [
+        "FastAPI",
+        "HTTP"
+      ],
+      "path": "docs/http-service.md",
+      "related": [],
+      "reviewed_commit": "uncommitted",
+      "reviewed_sha256": "90a9bde207337c29442ec62ddba8038c82ed38ba5440838f96508d8a8968530d",
+      "summary": "Implementation, runtime and local execution notes for the graph API.",
+      "tasks": [
+        "LGR-0005"
+      ],
+      "title": "HTTP Service Notes"
     },
     {
       "id": "project",
