@@ -1,3 +1,4 @@
-networkx>=3
-numpy
-scipy
+networkx==3.7
+langgraph==1.2.15
+numpy==2.5.4
+scipy==1.18.1
