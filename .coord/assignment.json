@@ -2,7 +2,7 @@
   "schema_version": "0.1.0",
   "project": "Legal Graph",
   "recorded_at": "2026-10-14T04:53:00+00:00",
-  "notes": "Complete ACS adopter install for Pukujan/legal-graphrag-starter. Parent issue #1 tracks the project; leaf issue #2 is setup task KEYARGO-SETUP-001 and canonical PCM task LGR-0001 on branch codex/acs-hotload-install. The seed list is a hint; live join/continue order fills roles. First continuer is the decision boss; claim_file remains the authority for live lease. FULL PCM + FULL eight-module CGM are required. claim_file writes local state only, not GitHub governance. PR-only, required CI checks, branch rules, and auto-merge require separate remote setup and verification.",
+  "notes": "Legal Graph GraphRAG project in Pukujan/legal-graphrag-starter. Parent issue #1 tracks the project. Setup issue #2 / LGR-0001 is complete locally but remote ACS CI is blocked on private source access. Current leaf issue #7 / LGR-0004 is existing-Octo snapshot storage on codex/octo-graph-storage. Root coordinates and owns tests/holdouts; Luna acs_executor is storage writer. Preserve PR-only flow, required CI and truthful governance state.",
   "role_fill": {
     "mode": "join_continue_order",
     "seed_is_hint_only": true,
@@ -23,7 +23,7 @@
       "harness": "codex",
       "machine_label": "Luna setup writer",
       "may_implement": true,
-      "notes": "Primary writer for issue #2 / LGR-0001 / KEYARGO-SETUP-001 on codex/acs-hotload-install."
+      "notes": "Primary writer for issue #7 / LGR-0004 on codex/octo-graph-storage; also completed setup issue #2 / LGR-0001."
     },
     {
       "agent_id": "baseline_executor",
