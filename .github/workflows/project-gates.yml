@@ -100,11 +100,14 @@ jobs:
       - name: Install declared engine and test dependencies
         run: python -m pip install --requirement requirements-dev.txt
 
-      - name: Run public retrieval and ranking contracts
+      - name: Run public engine, decision, provider, and annotation contracts
         run: >-
           python -m pytest -q
           tests/test_retrieval_contract.py
           tests/test_ranking_contract.py
+          tests/test_decision_contract.py
+          tests/test_provider_contract.py
+          tests/test_annotation_contract.py
 
   gates:
     name: gates

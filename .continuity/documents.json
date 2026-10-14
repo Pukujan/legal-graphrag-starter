@@ -62,7 +62,7 @@
       "path": "checkpoints/CURRENT.md",
       "related": [],
       "reviewed_commit": "uncommitted",
-      "reviewed_sha256": "33b0e5c2a23cb40befa3424ec4133551546363d0b3073c2c96aa9af811b8de6f",
+      "reviewed_sha256": "5ec7fbbb2b5e6069574fcf07a57069d51b9b03427876bb6284121db24e68a01f",
       "summary": "As-of project phase, active work, blockers, and next action.",
       "tasks": [],
       "title": "Current"
@@ -137,7 +137,7 @@
       "path": "docs/retrieval-baseline.md",
       "related": [],
       "reviewed_commit": "uncommitted",
-      "reviewed_sha256": "756630c470b26612b30d7110a92a9eed6adfa45c3286d6fb177252e0cfaad14a",
+      "reviewed_sha256": "129ccc5781c95fdbe45c9bcea6cc65587af6d4c7897ef6a9613d4a68268908b5",
       "summary": "Measured local citation retrieval and direct versus LangGraph benchmark.",
       "tasks": [
         "LGR-0002"
@@ -209,6 +209,49 @@
         "LGR-0001"
       ],
       "title": "ACS setup task"
+    },
+    {
+      "id": "decision-enrichment",
+      "keywords": [
+        "decisions",
+        "evidence",
+        "Jev",
+        "GLiNER2",
+        "annotations",
+        "GraphRAG"
+      ],
+      "path": "docs/decision-enrichment.md",
+      "related": [
+        "current"
+      ],
+      "reviewed_commit": "uncommitted",
+      "reviewed_sha256": "d762783404ef9550374ecc4122c4708083130c2669cca3482e0a44ed29a2c857",
+      "summary": "Jev decision parsing, source-preserving annotation overlay, synthetic pipeline, and explicit runtime limits.",
+      "tasks": [
+        "LGR-0003"
+      ],
+      "title": "Decision and Evidence Enrichment"
+    },
+    {
+      "id": "decision-task",
+      "keywords": [
+        "decisions",
+        "evidence",
+        "Jev",
+        "annotations",
+        "issue #4"
+      ],
+      "path": "tasks/TASK-LGR-0003-decision-graph-enrichment.md",
+      "related": [
+        "current"
+      ],
+      "reviewed_commit": "uncommitted",
+      "reviewed_sha256": "8740a86190f88676b1f0c4cfebb3c502a3480acd187b9d90442b71f512ffe27a",
+      "summary": "Issue-linked scope, lineage, acceptance, evidence, boundaries, and next step for decision enrichment.",
+      "tasks": [
+        "LGR-0003"
+      ],
+      "title": "Decision Enrichment Task"
     }
   ],
   "schema": "project-continuity.documents.v1"
