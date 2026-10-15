@@ -12,9 +12,19 @@ from collections.abc import Sequence
 from contextlib import asynccontextmanager
 from typing import Annotated, Literal
 
-from fastapi import FastAPI, HTTPException, Query, Request
+import logging
+import os
+import threading
+from typing import Any
+
+from fastapi import Body, FastAPI, HTTPException, Query, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, ValidationError
+
+from .engine.checks import ScorerRegistry
+from .engine.models import TextRetrieveRequest
+from .engine.routes import BENCH_DIR, build_router, require_token, text_retrieve_response
 
 from .retrieval import CitationGraphIndex, graphrag_retrieve, load_dataset
 
@@ -62,6 +72,11 @@ def create_app(
     *,
     synthetic: bool = False,
     allowed_origins: Sequence[str] = DEFAULT_ORIGINS,
+    pipeline: Any = None,
+    api_token: str | None = None,
+    scorers: ScorerRegistry | None = None,
+    bench_dir: Any = BENCH_DIR,
+    live_engine: bool | None = None,
 ) -> FastAPI:
     """Create the graph API, optionally injecting an index for tests.
 
@@ -78,6 +93,15 @@ def create_app(
     async def lifespan(app: FastAPI):
         if app.state.graph_index is None:
             app.state.graph_index = _make_local_index()
+        if app.state.pipeline is None and live:
+            def load():
+                try:
+                    from .engine.octo_source import build_live_pipeline
+                    app.state.pipeline, app.state.octo_graph = build_live_pipeline()
+                except Exception as exc:  # health reports it; legacy routes keep working
+                    logging.getLogger("legal_graph.engine").exception("engine load failed")
+                    app.state.engine_error = f"{type(exc).__name__}: {str(exc)[:200]}"
+            threading.Thread(target=load, daemon=True).start()
         yield
 
     app = FastAPI(
@@ -90,6 +114,11 @@ def create_app(
         lifespan=lifespan,
     )
     app.state.graph_index = index
+    app.state.pipeline = pipeline
+    app.state.octo_graph = None
+    app.state.engine_error = None
+    app.state.api_token = api_token if api_token is not None else os.environ.get("ENGINE_API_TOKEN") or None
+    live = (os.environ.get("ENGINE_LIVE") == "1") if live_engine is None else live_engine
     app.state.synthetic = bool(synthetic)
     app.add_middleware(
         CORSMiddleware,
@@ -129,6 +158,20 @@ def create_app(
                 "source_dataset": current.source_dataset,
                 "synthetic": app.state.synthetic,
             },
+            **({"engine": {
+                "status": "ready" if app.state.pipeline is not None else
+                          ("error" if app.state.engine_error else "loading" if live else "disabled"),
+                **({"error": app.state.engine_error} if app.state.engine_error else {}),
+                **({"chunks": len(app.state.pipeline.corpus.chunks),
+                    "cases": len(app.state.pipeline.corpus.by_doc),
+                    "corpus_revision": app.state.pipeline.corpus.revision,
+                    "graph_revision": app.state.pipeline.graph_revision,
+                    "lexical": app.state.pipeline.lexical.name,
+                    "dense_model": app.state.pipeline.dense_model,
+                    "rerank_model": app.state.pipeline.rerank_model,
+                    "jev_model": app.state.pipeline.jev_model} if app.state.pipeline is not None else {}),
+                "auth": "bearer" if app.state.api_token else "unconfigured",
+            }} if (app.state.pipeline is not None or live or app.state.api_token) else {}),
         }
 
     @app.get("/api/v1/search")
@@ -174,8 +217,23 @@ def create_app(
         return {**result, "graph_revision": current.dataset_revision}
 
     @app.post("/api/v1/retrieve")
-    def retrieve(request: Request, body: RetrieveRequest):
+    def retrieve(request: Request, payload: Annotated[dict[str, Any], Body()]):
+        """Two request shapes: {"query": ...} = staged text retrieval (bearer token, SSE);
+        {"seeds": [...], "k": n} = the original citation-prior ranking (unchanged)."""
         reject_unknown_query(request)
+        if "query" in payload:
+            require_token(request)
+            try:
+                text_body = TextRetrieveRequest.model_validate(payload)
+            except ValidationError as exc:
+                raise RequestValidationError(exc.errors()) from None
+            if app.state.pipeline is None:
+                raise HTTPException(503, detail="retrieval pipeline is still loading")
+            return text_retrieve_response(app.state.pipeline, text_body)
+        try:
+            body = RetrieveRequest.model_validate(payload)
+        except ValidationError as exc:
+            raise RequestValidationError(exc.errors()) from None
         current = graph_index()
         result = graphrag_retrieve(
             body.seeds,
@@ -195,6 +253,8 @@ def create_app(
         reject_unknown_query(request)
         return {"experiments": [], "graph_revision": revision()}
 
+    app.include_router(build_router(lambda: app.state.pipeline, scorers or ScorerRegistry(), bench_dir,
+                                    get_graph=lambda: app.state.octo_graph))
     return app
 
 
