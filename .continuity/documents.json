@@ -307,8 +307,8 @@
       ],
       "path": "docs/storage-contract.md",
       "related": [],
-      "reviewed_commit": "uncommitted",
-      "reviewed_sha256": "a0929b11646904e5649e7aa417d35836c57b1cfb59e008b9f42a2a1e64927bb7",
+      "reviewed_commit": "e59ce0dc8145d91c3f789d8a80226f2fea58b294",
+      "reviewed_sha256": "bf4b37ae798125976cbc602ee71b1bfa1e5f42152161cae356bc52f94b36b18d",
       "summary": "App-owned immutable citation snapshots, parameterized reader contract, and synthetic live Octo verification.",
       "tasks": [
         "LGR-0004"
