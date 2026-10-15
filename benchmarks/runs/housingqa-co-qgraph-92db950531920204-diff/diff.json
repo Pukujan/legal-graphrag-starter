@@ -1,0 +1,651 @@
+{
+  "run": "benchmarks/runs/housingqa-co-qgraph-92db950531920204",
+  "n_queries": 192,
+  "found_k": 10,
+  "pairs": [
+    {
+      "a": "bm25",
+      "b": "bm25+ppr",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.40972222222222227,
+          "mean_b": 0.4064236111111111,
+          "mean_diff": 0.003298611111111111,
+          "win": 16,
+          "tie": 160,
+          "loss": 16,
+          "p_permutation": 0.8317168283171683,
+          "ci95_bootstrap": [
+            -0.022743055555555555,
+            0.030034722222222223
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.3349953827517142,
+          "mean_b": 0.3299355478558244,
+          "mean_diff": 0.005059834895889816,
+          "win": 65,
+          "tie": 87,
+          "loss": 40,
+          "p_permutation": 0.7853214678532147,
+          "ci95_bootstrap": [
+            -0.02982036343325442,
+            0.03974070097946842
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 11,
+        "only_b": 5
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "hqa-co-606",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-3994",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-6067",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-6069",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-7594",
+            "text": "",
+            "gold": null
+          }
+        ],
+        "only_b": [
+          {
+            "query_id": "hqa-co-7456",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-6669",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-6068",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-518",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-6663",
+            "text": "",
+            "gold": null
+          }
+        ]
+      }
+    },
+    {
+      "a": "bm25",
+      "b": "bm25+neighbor",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.40972222222222227,
+          "mean_b": 0.4081597222222222,
+          "mean_diff": 0.0015625000000000005,
+          "win": 7,
+          "tie": 175,
+          "loss": 10,
+          "p_permutation": 0.8897110288971103,
+          "ci95_bootstrap": [
+            -0.017881944444444443,
+            0.024305555555555556
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.3349953827517142,
+          "mean_b": 0.36960588070128186,
+          "mean_diff": -0.034610497949567685,
+          "win": 61,
+          "tie": 94,
+          "loss": 37,
+          "p_permutation": 0.0443955604439556,
+          "ci95_bootstrap": [
+            -0.06880830343023718,
+            -0.001052167178245018
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 7,
+        "only_b": 1
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "hqa-co-7599",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-3994",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-6069",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-6060",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-607",
+            "text": "",
+            "gold": null
+          }
+        ],
+        "only_b": [
+          {
+            "query_id": "hqa-co-517",
+            "text": "",
+            "gold": null
+          }
+        ]
+      }
+    },
+    {
+      "a": "bm25",
+      "b": "bm25+graph_rrf",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.40972222222222227,
+          "mean_b": 0.3013888888888889,
+          "mean_diff": 0.10833333333333334,
+          "win": 44,
+          "tie": 148,
+          "loss": 0,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            0.07552083333333333,
+            0.14409722222222224
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.3349953827517142,
+          "mean_b": 0.249282085969224,
+          "mean_diff": 0.08571329678249019,
+          "win": 116,
+          "tie": 75,
+          "loss": 1,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            0.0672569367076745,
+            0.10515495011124094
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 29,
+        "only_b": 0
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "hqa-co-1924",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-6061",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-606",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-7599",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-3994",
+            "text": "",
+            "gold": null
+          }
+        ],
+        "only_b": []
+      }
+    },
+    {
+      "a": "bm25",
+      "b": "hybrid_rrf",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.40972222222222227,
+          "mean_b": 0.42473958333333334,
+          "mean_diff": -0.015017361111111112,
+          "win": 24,
+          "tie": 121,
+          "loss": 47,
+          "p_permutation": 0.6207379262073792,
+          "ci95_bootstrap": [
+            -0.06901041666666667,
+            0.04253472222222222
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.3349953827517142,
+          "mean_b": 0.407911897467091,
+          "mean_diff": -0.07291651471537677,
+          "win": 44,
+          "tie": 74,
+          "loss": 74,
+          "p_permutation": 0.0045995400459954,
+          "ci95_bootstrap": [
+            -0.12138001209461681,
+            -0.022381495932047062
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 19,
+        "only_b": 21
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "hqa-co-1924",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-7599",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-1929",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-169",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-1921",
+            "text": "",
+            "gold": null
+          }
+        ],
+        "only_b": [
+          {
+            "query_id": "hqa-co-3997",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-3996",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-8657",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-9264",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-7456",
+            "text": "",
+            "gold": null
+          }
+        ]
+      }
+    },
+    {
+      "a": "bm25",
+      "b": "bm25>jev",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.40972222222222227,
+          "mean_b": 0.4498263888888889,
+          "mean_diff": -0.04010416666666667,
+          "win": 5,
+          "tie": 160,
+          "loss": 27,
+          "p_permutation": 0.010298970102989701,
+          "ci95_bootstrap": [
+            -0.07118055555555555,
+            -0.009375
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.3349953827517142,
+          "mean_b": 0.46123503841160013,
+          "mean_diff": -0.12623965565988593,
+          "win": 26,
+          "tie": 109,
+          "loss": 57,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            -0.1775570258506114,
+            -0.07352995216893243
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 3,
+        "only_b": 6
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "hqa-co-1921",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-1923",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-1922",
+            "text": "",
+            "gold": null
+          }
+        ],
+        "only_b": [
+          {
+            "query_id": "hqa-co-917",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-7456",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-6669",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-6068",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-7604",
+            "text": "",
+            "gold": null
+          }
+        ]
+      }
+    },
+    {
+      "a": "bm25>jev",
+      "b": "bm25+ppr>jev",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.4498263888888889,
+          "mean_b": 0.44166666666666665,
+          "mean_diff": 0.008159722222222221,
+          "win": 17,
+          "tie": 154,
+          "loss": 21,
+          "p_permutation": 0.6159384061593841,
+          "ci95_bootstrap": [
+            -0.02100694444444445,
+            0.03819444444444444
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.46123503841160013,
+          "mean_b": 0.4738763922102717,
+          "mean_diff": -0.012641353798671554,
+          "win": 31,
+          "tie": 133,
+          "loss": 28,
+          "p_permutation": 0.2385761423857614,
+          "ci95_bootstrap": [
+            -0.03420978445985938,
+            0.007145074892422745
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 6,
+        "only_b": 3
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "hqa-co-1924",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-1928",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-1925",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-404",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-917",
+            "text": "",
+            "gold": null
+          }
+        ],
+        "only_b": [
+          {
+            "query_id": "hqa-co-919",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-518",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-6663",
+            "text": "",
+            "gold": null
+          }
+        ]
+      }
+    },
+    {
+      "a": "hybrid_rrf",
+      "b": "hybrid>jev",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.42473958333333334,
+          "mean_b": 0.4969618055555556,
+          "mean_diff": -0.07222222222222223,
+          "win": 9,
+          "tie": 151,
+          "loss": 32,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            -0.10781249999999999,
+            -0.03923611111111111
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.407911897467091,
+          "mean_b": 0.5132955623720891,
+          "mean_diff": -0.1053836649049981,
+          "win": 23,
+          "tie": 114,
+          "loss": 55,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            -0.15446073534308827,
+            -0.05603677337060658
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 0,
+        "only_b": 14
+      },
+      "examples": {
+        "only_a": [],
+        "only_b": [
+          {
+            "query_id": "hqa-co-924",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-169",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-919",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-603",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-7597",
+            "text": "",
+            "gold": null
+          }
+        ]
+      }
+    },
+    {
+      "a": "bm25>jev",
+      "b": "hybrid>jev",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.4498263888888889,
+          "mean_b": 0.4969618055555556,
+          "mean_diff": -0.04713541666666667,
+          "win": 25,
+          "tie": 120,
+          "loss": 47,
+          "p_permutation": 0.10588941105889411,
+          "ci95_bootstrap": [
+            -0.10277777777777779,
+            0.008680555555555554
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.46123503841160013,
+          "mean_b": 0.5132955623720891,
+          "mean_diff": -0.052060523960488964,
+          "win": 41,
+          "tie": 111,
+          "loss": 40,
+          "p_permutation": 0.0344965503449655,
+          "ci95_bootstrap": [
+            -0.09980855521603005,
+            -0.005492713196044732
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 13,
+        "only_b": 26
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "hqa-co-1924",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-7599",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-1929",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-1928",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-1925",
+            "text": "",
+            "gold": null
+          }
+        ],
+        "only_b": [
+          {
+            "query_id": "hqa-co-3997",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-924",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-3996",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-8657",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "hqa-co-9264",
+            "text": "",
+            "gold": null
+          }
+        ]
+      }
+    }
+  ]
+}

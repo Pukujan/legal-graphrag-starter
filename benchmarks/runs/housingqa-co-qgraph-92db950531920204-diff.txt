@@ -1,0 +1,8 @@
+bm25 vs bm25+ppr: recall@10 0.410 vs 0.406 W/T/L 16/160/16 p=0.8317; mrr 0.335 vs 0.330 W/T/L 65/87/40 p=0.7853; only-found {'only_a': 11, 'only_b': 5}
+bm25 vs bm25+neighbor: recall@10 0.410 vs 0.408 W/T/L 7/175/10 p=0.8897; mrr 0.335 vs 0.370 W/T/L 61/94/37 p=0.0444; only-found {'only_a': 7, 'only_b': 1}
+bm25 vs bm25+graph_rrf: recall@10 0.410 vs 0.301 W/T/L 44/148/0 p=0.0001; mrr 0.335 vs 0.249 W/T/L 116/75/1 p=0.0001; only-found {'only_a': 29, 'only_b': 0}
+bm25 vs hybrid_rrf: recall@10 0.410 vs 0.425 W/T/L 24/121/47 p=0.6207; mrr 0.335 vs 0.408 W/T/L 44/74/74 p=0.0046; only-found {'only_a': 19, 'only_b': 21}
+bm25 vs bm25>jev: recall@10 0.410 vs 0.450 W/T/L 5/160/27 p=0.0103; mrr 0.335 vs 0.461 W/T/L 26/109/57 p=0.0001; only-found {'only_a': 3, 'only_b': 6}
+bm25>jev vs bm25+ppr>jev: recall@10 0.450 vs 0.442 W/T/L 17/154/21 p=0.6159; mrr 0.461 vs 0.474 W/T/L 31/133/28 p=0.2386; only-found {'only_a': 6, 'only_b': 3}
+hybrid_rrf vs hybrid>jev: recall@10 0.425 vs 0.497 W/T/L 9/151/32 p=0.0001; mrr 0.408 vs 0.513 W/T/L 23/114/55 p=0.0001; only-found {'only_a': 0, 'only_b': 14}
+bm25>jev vs hybrid>jev: recall@10 0.450 vs 0.497 W/T/L 25/120/47 p=0.1059; mrr 0.461 vs 0.513 W/T/L 41/111/40 p=0.0345; only-found {'only_a': 13, 'only_b': 26}

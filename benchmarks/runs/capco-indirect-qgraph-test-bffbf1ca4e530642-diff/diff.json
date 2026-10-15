@@ -1,0 +1,699 @@
+{
+  "run": "benchmarks/runs/capco-indirect-qgraph-test-bffbf1ca4e530642",
+  "n_queries": 2000,
+  "found_k": 10,
+  "pairs": [
+    {
+      "a": "bm25",
+      "b": "bm25+ppr",
+      "metrics": {
+        "recall@10": {
+          "p_mcnemar": 7.326330356749238e-12,
+          "mean_a": 0.385,
+          "mean_b": 0.4415,
+          "mean_diff": -0.0565,
+          "win": 81,
+          "tie": 1725,
+          "loss": 194,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            -0.073,
+            -0.041
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.19269818624429622,
+          "mean_b": 0.2023687714002204,
+          "mean_diff": -0.009670585155924184,
+          "win": 576,
+          "tie": 736,
+          "loss": 688,
+          "p_permutation": 0.045495450454954504,
+          "ci95_bootstrap": [
+            -0.01917914325071944,
+            -6.010582467418967e-05
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 81,
+        "only_b": 194
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "coc-indirect-12572586-14",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-6795094-28",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12178271-13",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12572814-21",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-6863749-28",
+            "text": "",
+            "gold": null
+          }
+        ],
+        "only_b": [
+          {
+            "query_id": "coc-indirect-12564904-24",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12577134-14",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-6775054-24",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12570790-10",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12575582-8",
+            "text": "",
+            "gold": null
+          }
+        ]
+      }
+    },
+    {
+      "a": "bm25",
+      "b": "bm25+neighbor",
+      "metrics": {
+        "recall@10": {
+          "p_mcnemar": 1.357633826700746e-12,
+          "mean_a": 0.385,
+          "mean_b": 0.433,
+          "mean_diff": -0.048,
+          "win": 46,
+          "tie": 1812,
+          "loss": 142,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            -0.061,
+            -0.035
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.19269818624429622,
+          "mean_b": 0.20228515162122862,
+          "mean_diff": -0.009586965376932419,
+          "win": 478,
+          "tie": 863,
+          "loss": 659,
+          "p_permutation": 0.0122987701229877,
+          "ci95_bootstrap": [
+            -0.01687094373732775,
+            -0.0020305185849217836
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 46,
+        "only_b": 142
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "coc-indirect-6795094-28",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12178271-13",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-6863749-28",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-6835521-9",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12573445-0",
+            "text": "",
+            "gold": null
+          }
+        ],
+        "only_b": [
+          {
+            "query_id": "coc-indirect-12577134-14",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-6775054-24",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-6851738-19",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12574136-17",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12564812-6",
+            "text": "",
+            "gold": null
+          }
+        ]
+      }
+    },
+    {
+      "a": "bm25",
+      "b": "bm25+graph_rrf",
+      "metrics": {
+        "recall@10": {
+          "p_mcnemar": 2.245647911449228e-41,
+          "mean_a": 0.385,
+          "mean_b": 0.2905,
+          "mean_diff": 0.0945,
+          "win": 208,
+          "tie": 1773,
+          "loss": 19,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            0.0815,
+            0.1085
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.19269818624429622,
+          "mean_b": 0.10951553918150343,
+          "mean_diff": 0.08318264706279277,
+          "win": 1314,
+          "tie": 613,
+          "loss": 73,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            0.07618958583745856,
+            0.09058733760713514
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 208,
+        "only_b": 19
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "coc-indirect-6802514-14",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-6802919-22",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-6795094-28",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12178271-13",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12343584-11",
+            "text": "",
+            "gold": null
+          }
+        ],
+        "only_b": [
+          {
+            "query_id": "coc-indirect-12566037-7",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-6887453-20",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12572016-21",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12564918-28",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-6823384-12",
+            "text": "",
+            "gold": null
+          }
+        ]
+      }
+    },
+    {
+      "a": "bm25",
+      "b": "hybrid_rrf",
+      "metrics": {
+        "recall@10": {
+          "p_mcnemar": 1.3001551720725318e-29,
+          "mean_a": 0.385,
+          "mean_b": 0.2795,
+          "mean_diff": 0.1055,
+          "win": 289,
+          "tie": 1633,
+          "loss": 78,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            0.0875,
+            0.1235
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.19269818624429622,
+          "mean_b": 0.12088037545685447,
+          "mean_diff": 0.07181781078744175,
+          "win": 1116,
+          "tie": 698,
+          "loss": 186,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            0.061334851320276856,
+            0.0826449550883136
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 289,
+        "only_b": 78
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "coc-indirect-12565631-14",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-6882848-25",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-6804076-32",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-6802919-22",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12343489-77",
+            "text": "",
+            "gold": null
+          }
+        ],
+        "only_b": [
+          {
+            "query_id": "coc-indirect-12566728-9",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12571314-11",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12569687-23",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12572014-38",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12565629-6",
+            "text": "",
+            "gold": null
+          }
+        ]
+      }
+    },
+    {
+      "a": "bm25",
+      "b": "bm25>jev",
+      "metrics": {
+        "recall@10": {
+          "p_mcnemar": 5.67552722947101e-16,
+          "mean_a": 0.385,
+          "mean_b": 0.4395,
+          "mean_diff": -0.0545,
+          "win": 40,
+          "tie": 1811,
+          "loss": 149,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            -0.0675,
+            -0.0415
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.19269818624429622,
+          "mean_b": 0.3133802589875145,
+          "mean_diff": -0.12068207274321825,
+          "win": 213,
+          "tie": 1223,
+          "loss": 564,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            -0.13653479080903616,
+            -0.10556972367158125
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 40,
+        "only_b": 149
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "coc-indirect-6882848-25",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-6851643-13",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12566037-13",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-6863749-28",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12575539-53",
+            "text": "",
+            "gold": null
+          }
+        ],
+        "only_b": [
+          {
+            "query_id": "coc-indirect-6775054-24",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12566728-9",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12343226-36",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12568286-25",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-6851738-19",
+            "text": "",
+            "gold": null
+          }
+        ]
+      }
+    },
+    {
+      "a": "bm25>jev",
+      "b": "bm25+ppr>jev",
+      "metrics": {
+        "recall@10": {
+          "p_mcnemar": 0.18165884907349314,
+          "mean_a": 0.4395,
+          "mean_b": 0.452,
+          "mean_diff": -0.0125,
+          "win": 149,
+          "tie": 1677,
+          "loss": 174,
+          "p_permutation": 0.18398160183981602,
+          "ci95_bootstrap": [
+            -0.0295,
+            0.0045
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.3133802589875145,
+          "mean_b": 0.22902580613535112,
+          "mean_diff": 0.08435445285216336,
+          "win": 681,
+          "tie": 740,
+          "loss": 579,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            0.06847449853254842,
+            0.09969427917754403
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 149,
+        "only_b": 174
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "coc-indirect-12566728-9",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12572586-14",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-6851738-19",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-6795094-28",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12572814-21",
+            "text": "",
+            "gold": null
+          }
+        ],
+        "only_b": [
+          {
+            "query_id": "coc-indirect-6882848-25",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12564904-24",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12577134-14",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12570790-10",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12575582-8",
+            "text": "",
+            "gold": null
+          }
+        ]
+      }
+    },
+    {
+      "a": "hybrid_rrf",
+      "b": "hybrid>jev",
+      "metrics": {
+        "recall@10": {
+          "p_mcnemar": 1.0,
+          "mean_a": 0.2795,
+          "mean_b": 0.2795,
+          "mean_diff": 0.0,
+          "win": 0,
+          "tie": 2000,
+          "loss": 0,
+          "p_permutation": 1.0,
+          "ci95_bootstrap": [
+            0.0,
+            0.0
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.12088037545685447,
+          "mean_b": 0.12088037545685447,
+          "mean_diff": 0.0,
+          "win": 0,
+          "tie": 2000,
+          "loss": 0,
+          "p_permutation": 1.0,
+          "ci95_bootstrap": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 0,
+        "only_b": 0
+      },
+      "examples": {
+        "only_a": [],
+        "only_b": []
+      }
+    },
+    {
+      "a": "bm25>jev",
+      "b": "hybrid>jev",
+      "metrics": {
+        "recall@10": {
+          "p_mcnemar": 1.8218535733994287e-52,
+          "mean_a": 0.4395,
+          "mean_b": 0.2795,
+          "mean_diff": 0.16,
+          "win": 399,
+          "tie": 1522,
+          "loss": 79,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            0.14,
+            0.18
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.3133802589875145,
+          "mean_b": 0.12088037545685447,
+          "mean_diff": 0.19249988353066,
+          "win": 1103,
+          "tie": 711,
+          "loss": 186,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            0.17629774614218768,
+            0.20841335984494147
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 399,
+        "only_b": 79
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "coc-indirect-12565631-14",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-6775054-24",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-6804076-32",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12343226-36",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12568286-25",
+            "text": "",
+            "gold": null
+          }
+        ],
+        "only_b": [
+          {
+            "query_id": "coc-indirect-6851643-13",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12566037-13",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12571314-11",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-12575539-53",
+            "text": "",
+            "gold": null
+          },
+          {
+            "query_id": "coc-indirect-6775212-28",
+            "text": "",
+            "gold": null
+          }
+        ]
+      }
+    }
+  ]
+}
