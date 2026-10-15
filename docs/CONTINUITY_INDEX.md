@@ -1,6 +1,6 @@
 # Continuity Document Index
 
-<!-- continuity:documents-index {"catalog_sha256":"210ddfaf361f28581b8ce2469fc52a7466c90f93e2fc855e06888a74787127e2","schema":"project-continuity.documents-index.v1"} -->
+<!-- continuity:documents-index {"catalog_sha256":"33199d0dea387ec7469f24b9a9d96261b03a5bb80d9b7abff73f8302f1fe099e","schema":"project-continuity.documents-index.v1"} -->
 
 > Generated from `.continuity/documents.json`. Edit the JSON inventory, then run `continuity docs render`; do not edit this view directly.
 > Freshness below compares local file bytes; after `git fetch origin`, use `continuity docs find` for cached remote freshness.
@@ -16,6 +16,30 @@
 - Search terms: `OIO`, `PCM`, `agent rules`, `issues`
 - Neighboring records: none
 - Task associations: none
+
+## Application API Task (`application-api-task`)
+
+- File: [`tasks/TASK-LGR-0005-application-graph-api.md`](../tasks/TASK-LGR-0005-application-graph-api.md)
+- Local content status: **CURRENT**
+- Last reviewed at commit: `uncommitted`
+- Reviewed SHA-256: `a0a255426201be7f028a062dafdf4967821ab9978688565c4a3b6a93edbcd6cb`
+- Current SHA-256: `a0a255426201be7f028a062dafdf4967821ab9978688565c4a3b6a93edbcd6cb`
+- Summary: Issue-linked LGR-0005 execution record for the bounded graph API.
+- Search terms: `API`
+- Neighboring records: none
+- Task associations: `LGR-0005`
+
+## Application Graph API (`backend-api`)
+
+- File: [`docs/backend-api.md`](../docs/backend-api.md)
+- Local content status: **CURRENT**
+- Last reviewed at commit: `uncommitted`
+- Reviewed SHA-256: `9d69997f731dfc798b281ff340750538122b7501512bcc31d732e8068315e313`
+- Current SHA-256: `9d69997f731dfc798b281ff340750538122b7501512bcc31d732e8068315e313`
+- Summary: Versioned HTTP contract for graph browsing and retrieval.
+- Search terms: `API`
+- Neighboring records: none
+- Task associations: `LGR-0005`
 
 ## Legal Graph filename legend (`concept-legend`)
 
@@ -46,8 +70,8 @@
 - File: [`checkpoints/CURRENT.md`](../checkpoints/CURRENT.md)
 - Local content status: **CURRENT**
 - Last reviewed at commit: `uncommitted`
-- Reviewed SHA-256: `27714078f95dd5c55f7a82cfbc9e3b7778c701f870b2819e69d19f02d37913aa`
-- Current SHA-256: `27714078f95dd5c55f7a82cfbc9e3b7778c701f870b2819e69d19f02d37913aa`
+- Reviewed SHA-256: `feeedcca34b9639a4e2cd97b493dab35c5ecd8679e15748202fbf0ca1025053b`
+- Current SHA-256: `feeedcca34b9639a4e2cd97b493dab35c5ecd8679e15748202fbf0ca1025053b`
 - Summary: As-of project phase, active work, blockers, and next action.
 - Search terms: `blockers`, `current state`, `next action`
 - Neighboring records: none
@@ -100,6 +124,18 @@
 - Search terms: `cold start`, `continuity`, `handoff`
 - Neighboring records: none
 - Task associations: none
+
+## HTTP Service Notes (`http-service`)
+
+- File: [`docs/http-service.md`](../docs/http-service.md)
+- Local content status: **CURRENT**
+- Last reviewed at commit: `uncommitted`
+- Reviewed SHA-256: `90a9bde207337c29442ec62ddba8038c82ed38ba5440838f96508d8a8968530d`
+- Current SHA-256: `90a9bde207337c29442ec62ddba8038c82ed38ba5440838f96508d8a8968530d`
+- Summary: Implementation, runtime and local execution notes for the graph API.
+- Search terms: `FastAPI`, `HTTP`
+- Neighboring records: none
+- Task associations: `LGR-0005`
 
 ## Project (`project`)
 
