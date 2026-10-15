@@ -1,0 +1,36 @@
+{
+  "name": "proxy-v1",
+  "label": "PROVISIONAL PROXY GOLD derived from held-out citation edges; NOT real qrels; no retrieval uplift is claimed.",
+  "queries_file": "queries.jsonl",
+  "proxy": {
+    "n_queries": 200,
+    "seed": 20261014,
+    "seed_fraction": 0.3,
+    "distractors_per_seed": 1,
+    "min_cites": 5,
+    "max_cites": 60
+  },
+  "graph": {
+    "depth": 2,
+    "direction": "both",
+    "edge_kinds": [
+      "cites"
+    ]
+  },
+  "k_values": [
+    5,
+    10,
+    20
+  ],
+  "ndcg_k": 10,
+  "frozen": {
+    "queries_sha256": "773fe441020487bdb7130bdd687e5c45819ab412bd575baba03d83d0e45e7ca9",
+    "dataset_revision": "sha256:fee8dc5a3b6f395391d04c0738595895f36733d76cb6aaaf0e833cb08ed4102e:1fa8cc9d99d22f4de1b7226836e663a9589fcf1da6d954a10f717861c2b57367",
+    "source": {
+      "kind": "local_jsonl",
+      "nodes_sha256": "fee8dc5a3b6f395391d04c0738595895f36733d76cb6aaaf0e833cb08ed4102e",
+      "edges_sha256": "1fa8cc9d99d22f4de1b7226836e663a9589fcf1da6d954a10f717861c2b57367"
+    },
+    "n_queries": 200
+  }
+}
