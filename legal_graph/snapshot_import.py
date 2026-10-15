@@ -87,11 +87,11 @@ def migrate(execute: Executor, migrations_dir: Path = ROOT / "migrations") -> in
 
 
 def import_snapshot(execute: Executor, data_dir: Path | None = None, *, batch: int = 2000,
-                    activate: bool = False, log=print) -> dict[str, Any]:
+                    activate: bool = False, log=print, dataset_label: str | None = None) -> dict[str, Any]:
     nodes, edges, revision, hashes = load_dataset(data_dir or ROOT / "data")
     digest = graph_digest(nodes, edges)
     snapshot = str(uuid.uuid5(NAMESPACE, digest))
-    dataset = f"KeyArgo/legal-graphrag-starter data/nodes.jsonl+edges.jsonl {revision}"
+    dataset = f"{dataset_label or 'KeyArgo/legal-graphrag-starter data/nodes.jsonl+edges.jsonl'} {revision}"
     existing = _ok(execute("SELECT status FROM legal_graph.snapshots WHERE snapshot_id = $1::uuid",
                            [snapshot], 2))["rows"]
     status = existing[0]["status"] if existing else None
@@ -161,12 +161,15 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--workspace", required=True)
     ap.add_argument("--key-env", default="octo_db_legal")
     ap.add_argument("--activate", action="store_true")
+    ap.add_argument("--data-dir", type=Path, default=None)
+    ap.add_argument("--dataset-label", default=None)
     a = ap.parse_args(argv)
     execute = OctoSqlExecutor(a.workspace, key_env=a.key_env)
     if a.command == "migrate":
         print(f"applied {migrate(execute)} idempotent statements")
     else:
-        print(json.dumps(import_snapshot(execute, activate=a.activate), indent=2))
+        print(json.dumps(import_snapshot(execute, a.data_dir, activate=a.activate,
+                                           dataset_label=a.dataset_label), indent=2))
     return 0
 
 

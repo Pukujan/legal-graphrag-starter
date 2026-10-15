@@ -131,6 +131,18 @@ def build_proxy_queries(nodes, edges, *, n_queries: int, seed: int, seed_fractio
     return queries
 
 
+def seal(config_path: Path, source: GraphSource) -> dict:
+    """Record sha256 + graph identity for an externally built queries file (e.g. CLERC)."""
+    config = json.loads(config_path.read_text())
+    nodes, edges, revision, prov = source.load()
+    qbytes = (config_path.parent / config["queries_file"]).read_bytes()
+    config["frozen"] = {"queries_sha256": _sha(qbytes), "dataset_revision": revision,
+                        "graph_digest": _graph_digest(nodes, edges), "source": prov,
+                        "n_queries": sum(1 for line in qbytes.splitlines() if line.strip())}
+    config_path.write_text(json.dumps(config, indent=2, ensure_ascii=False) + "\n")
+    return config["frozen"]
+
+
 def freeze(config_path: Path, source: GraphSource) -> dict:
     config = json.loads(config_path.read_text())
     nodes, edges, revision, prov = source.load()
@@ -202,8 +214,12 @@ def run(config_path: Path, source: GraphSource, runs_dir: Path) -> Path:
     if revision != frozen.get("dataset_revision") and digest != frozen.get("graph_digest"):
         raise ValueError("graph revision/content differs from the frozen graph")
     queries = [json.loads(line) for line in qbytes.decode().splitlines() if line]
-    held = {q["held_out_opinion"] for q in queries}
-    kept = [e for e in edges if not (e["kind"] == "cites" and e["source"] in held)]
+    held = {q["held_out_opinion"] for q in queries if "held_out_opinion" in q}
+    holdout = set()
+    if config.get("apply_holdout_edges", True):
+        holdout = {tuple(e) for q in queries for e in q.get("holdout_edges", [])}
+    kept = [e for e in edges if not (e["kind"] == "cites" and e["source"] in held)
+            and (e["source"], e["target"], e["kind"]) not in holdout]
     t0 = time.perf_counter()
     index = CitationGraphIndex(nodes, kept, dataset_revision=revision + ":heldout",
                                source_dataset=prov["kind"])
@@ -222,6 +238,7 @@ def run(config_path: Path, source: GraphSource, runs_dir: Path) -> Path:
         augmented = (list(seeds) + [r["id"] for r in graph_res if r["id"] not in set(seeds)])[:kmax]
         ground = [grounded(r, set(seeds), index) for r in graph_res]
         row = {"query_id": q["query_id"], "n_gold": len(gold), "n_seeds": len(seeds),
+               "answerable": bool(gold) and bool(seeds),
                "graph_returned": len(graph_res), "truncated": out["retrieval"]["truncated"],
                "grounding_rate": _mean([float(x) for x in ground]) if ground else None}
         for name, ranked in (("baseline", baseline), ("augmented", augmented)):
@@ -231,6 +248,13 @@ def run(config_path: Path, source: GraphSource, runs_dir: Path) -> Path:
         per_query.append(row)
     summary = {name: {m: _mean([r[name][m] for r in per_query]) for m in per_query[0][name]}
                for name in ("baseline", "augmented")} if per_query else {}
+    answerable = [r for r in per_query if r["answerable"]]
+    summary["answerable_subset"] = {
+        "n": len(answerable),
+        **{name: {m: _mean([r[name][m] for r in answerable]) for m in per_query[0][name]}
+           for name in ("baseline", "augmented")}} if per_query else {}
+    summary["n_queries"] = len(per_query)
+    summary["holdout_edges_removed"] = len(edges) - len(kept)
     gr = [r["grounding_rate"] for r in per_query if r["grounding_rate"] is not None]
     summary["graph_grounding_rate"] = _mean(gr)
     summary["graph_latency_ms"] = {"p50": _pct(lat, 50), "p95": _pct(lat, 95), "max": max(lat, default=0)}
@@ -238,7 +262,7 @@ def run(config_path: Path, source: GraphSource, runs_dir: Path) -> Path:
     summary["truncated_queries"] = sum(r["truncated"] for r in per_query)
     import platform, langgraph, networkx  # noqa: E401
     from importlib.metadata import version
-    record = {"label": PROXY_LABEL, "config": config, "dataset_revision": revision,
+    record = {"label": config.get("label", PROXY_LABEL), "config": config, "dataset_revision": revision,
               "graph_digest": digest, "source": prov,
               "environment": {"python": platform.python_version(), "platform": platform.platform(),
                               "networkx": networkx.__version__, "langgraph": version("langgraph")},
@@ -262,7 +286,7 @@ def run(config_path: Path, source: GraphSource, runs_dir: Path) -> Path:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=PROXY_LABEL)
-    ap.add_argument("command", choices=["freeze", "run"])
+    ap.add_argument("command", choices=["freeze", "seal", "run"])
     ap.add_argument("--config", type=Path, default=ROOT / "benchmarks/proxy-v1/config.json")
     ap.add_argument("--data-dir", type=Path, default=None)
     ap.add_argument("--runs-dir", type=Path, default=ROOT / "benchmarks/runs")
@@ -275,11 +299,10 @@ def main(argv: list[str] | None = None) -> int:
         src = OctoSnapshotSource(GraphSnapshotStore(OctoSqlExecutor(a.workspace)), a.snapshot)
     else:
         src = LocalJsonlSource(a.data_dir)
-    if a.command == "freeze":
-        print(json.dumps(freeze(a.config, src), indent=2))
+    if a.command in ("freeze", "seal"):
+        print(json.dumps((freeze if a.command == "freeze" else seal)(a.config, src), indent=2))
     else:
         path = run(a.config, src, a.runs_dir)
-        print(PROXY_LABEL)
         print(path)
         print(json.dumps(json.loads((path / "results.json").read_text())["summary"], indent=2))
     return 0
