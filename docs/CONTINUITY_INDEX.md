@@ -1,6 +1,6 @@
 # Continuity Document Index
 
-<!-- continuity:documents-index {"catalog_sha256":"8f7bf27ae4001c1db6a9db901a644375fb30015198fc5b832f872dfdac220f4c","schema":"project-continuity.documents-index.v1"} -->
+<!-- continuity:documents-index {"catalog_sha256":"834dfbf1ed284b1ac4a70acb35808d5dfc5e16b98eced3ae9c24f004322aaca5","schema":"project-continuity.documents-index.v1"} -->
 
 > Generated from `.continuity/documents.json`. Edit the JSON inventory, then run `continuity docs render`; do not edit this view directly.
 > Freshness below compares local file bytes; after `git fetch origin`, use `continuity docs find` for cached remote freshness.
@@ -225,9 +225,9 @@
 
 - File: [`docs/storage-contract.md`](../docs/storage-contract.md)
 - Local content status: **CURRENT**
-- Last reviewed at commit: `e59ce0dc8145d91c3f789d8a80226f2fea58b294`
-- Reviewed SHA-256: `bf4b37ae798125976cbc602ee71b1bfa1e5f42152161cae356bc52f94b36b18d`
-- Current SHA-256: `bf4b37ae798125976cbc602ee71b1bfa1e5f42152161cae356bc52f94b36b18d`
+- Last reviewed at commit: `uncommitted`
+- Reviewed SHA-256: `b7a318c7815db6efcfdd72fa5197a258762b32a56c9f10946181e015c825cc01`
+- Current SHA-256: `b7a318c7815db6efcfdd72fa5197a258762b32a56c9f10946181e015c825cc01`
 - Summary: App-owned immutable citation snapshots, parameterized reader contract, and synthetic live Octo verification.
 - Search terms: `Octo`, `storage`
 - Neighboring records: none
