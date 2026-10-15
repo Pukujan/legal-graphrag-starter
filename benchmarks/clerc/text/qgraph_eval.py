@@ -25,7 +25,7 @@ ROOT = HERE.parents[2]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(HERE))
 from bench import Graph, metrics  # noqa: E402
-from legal_graph.graph_scoring import GraphScorer, fuse_linear, rank_scores  # noqa: E402
+from legal_graph.graph_scoring import GraphScorer, fuse_linear, fuse_rrf, graph_ranking, rank_scores  # noqa: E402
 from legal_graph.search.hybrid import rrf  # noqa: E402
 
 
@@ -63,7 +63,11 @@ def main(argv=None) -> int:
             for m, p in P.items():
                 seeds = {d: (text[d] if p["seed_weight"] == "score" else 1.0) for d in b[: p["n_seeds"]]}
                 gs = sc.score(seeds, p["method"], **({"alpha": p["alpha"]} if p["method"] == "ppr" else {}))
-                lists[f"bm25+{m}"] = fuse_linear(text, gs, sc, lam=p["lam"], allowed=lambda d: True, k=100)
+                if p.get("fuse") == "rrf":
+                    gl = graph_ranking(gs, sc, allowed=lambda d: True, exclude=b[: p["n_seeds"]], k=100)
+                    lists[f"bm25+{m}"] = fuse_rrf(b, gl, w=p["rrf_w"], k=100)
+                else:
+                    lists[f"bm25+{m}"] = fuse_linear(text, gs, sc, lam=p["lam"], allowed=lambda d: True, k=100)
                 if m == "ppr":
                     for l in a.sweep.split(","):
                         lists[f"bm25+ppr@lam{l}"] = fuse_linear(text, gs, sc, lam=float(l), allowed=lambda d: True,

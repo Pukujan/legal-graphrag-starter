@@ -6,6 +6,9 @@
    "method": "ppr", "n_seeds": 10, "alpha": 0.3, "lam": 0.5, "pool": 100, "graph_pool": 100,
    "seed_weight": "score"}
 
+``"fuse": "rrf"`` (with ``rrf_w``) instead fuses the first-stage list with the graph-score ranking
+(seeds excluded) by weighted reciprocal rank, which needs no score calibration.
+
 ``text_scores_from`` names an earlier ``bm25`` system whose index gives the query's BM25 score
 for every candidate (graph neighbours included). Without it (no corpus, e.g. CLERC seeds) the
 first-stage list is scored by 1/(60+rank) and graph-only candidates get text score 0.
@@ -25,7 +28,7 @@ import threading
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from .graph_scoring import GraphScorer, fuse_linear, rank_scores
+from .graph_scoring import GraphScorer, fuse_linear, fuse_rrf, graph_ranking, rank_scores
 
 _SCORERS: dict[int, GraphScorer] = {}
 STATS: dict[str, dict] = {}
@@ -75,7 +78,11 @@ def run_qgraph(sysdef, queries, first_stage, index, gcfg, bm25, dates, kmax) -> 
         else:
             seeds = {d: text.get(d, 0.0) for d in first[:n_seeds]}
         g = sc.score(seeds, method, keep=sc.keep_mask(darr, qd), **kw)
-        ranked = fuse_linear(text, g, sc, lam=lam, allowed=allowed, k=kmax, graph_pool=gpool, text_of=text_of)
+        if sysdef.get("fuse", "linear") == "rrf":
+            gl = graph_ranking(g, sc, allowed=allowed, exclude=first[:n_seeds], k=gpool)
+            ranked = fuse_rrf(full, gl, w=float(sysdef.get("rrf_w", 1.0)), k=kmax)
+        else:
+            ranked = fuse_linear(text, g, sc, lam=lam, allowed=allowed, k=kmax, graph_pool=gpool, text_of=text_of)
         seen = set(ranked)
         out[qid] = (ranked + [d for d in full if d not in seen])[:kmax]
     return out

@@ -16,7 +16,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[1]))
 from legal_graph.benchmark import mrr, recall_at  # noqa: E402
-from legal_graph.graph_scoring import fuse_linear  # noqa: E402
+from legal_graph.graph_scoring import fuse_linear, fuse_rrf, graph_ranking  # noqa: E402
 from legal_graph.graph_stage import scorer_for  # noqa: E402
 from legal_graph.retrieval_bench import BM25, _graph_index, _read_jsonl  # noqa: E402
 
@@ -49,7 +49,7 @@ def main(argv=None):
         prep.append((q, bm.score_vector(q["text"]),
                      bm.search(q["text"], 100, max_date=q["date"], exclude=q.get("exclude", ())),
                      sc.keep_mask(darr, q["date"])))
-    lams = [0.0, 0.05, 0.1, 0.2, 0.3, 0.5, 0.75, 1.0, 1.5, 2.0]
+    lams = [0.0, 0.05, 0.1, 0.2, 0.3, 0.5, 0.75, 1.0, 1.5, 2.0] + [f"rrf{w}" for w in (0.25, 0.5, 1.0)]
     grid = [("ppr", al, ns, sw) for al in (0.15, 0.3, 0.5) for ns in (5, 10, 20) for sw in ("score", "uniform")]
     grid += [("neighbor", None, ns, sw) for ns in (5, 10, 20) for sw in ("score", "uniform")]
     rows = []
@@ -63,14 +63,22 @@ def main(argv=None):
             ex, qd = set(q.get("exclude", ())), q["date"]
             allowed = lambda d: d not in ex and d in dates and not (dates[d] and dates[d] > qd)  # noqa: E731
             gold = set(q["gold"])
+            gl = graph_ranking(g, sc, allowed=allowed, exclude=first[:ns], k=100)
             for lam in lams:
+                if isinstance(lam, str):
+                    r = fuse_rrf(first, gl, w=float(lam[3:]), k=20)
+                    acc[lam][0].append(recall_at(r, gold, 10))
+                    acc[lam][1].append(mrr(r, gold))
+                    continue
                 r = fuse_linear(text, g, sc, lam=lam, allowed=allowed, k=20,
                                 text_of=lambda d: float(vec[bpos[d]]) if d in bpos else 0.0)
                 acc[lam][0].append(recall_at(r, gold, 10))
                 acc[lam][1].append(mrr(r, gold))
         for lam in lams:
             r10, m = acc[lam]
-            rows.append({"method": method, "alpha": al, "n_seeds": ns, "seed_weight": sw, "lam": lam,
+            rows.append({"method": method, "alpha": al, "n_seeds": ns, "seed_weight": sw,
+                         "fuse": "rrf" if isinstance(lam, str) else "linear",
+                         "lam": float(lam[3:]) if isinstance(lam, str) else lam,
                          "dev_r10": sum(r10) / len(r10), "dev_mrr": sum(m) / len(m),
                          "dev_r10_direct": sum(r10[:nd]) / nd, "dev_r10_indirect": sum(r10[nd:]) / (len(r10) - nd),
                          "dev_mrr_direct": sum(m[:nd]) / nd, "dev_mrr_indirect": sum(m[nd:]) / (len(m) - nd)})

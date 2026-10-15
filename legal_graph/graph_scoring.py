@@ -127,3 +127,32 @@ def fuse_linear(text: Mapping[str, float], graph: np.ndarray, scorer: GraphScore
     gmax = max(gvals.values(), default=0.0) or 1.0
     final = {d: cand[d] / tmax + lam * gvals[d] / gmax for d in cand}
     return [d for d, _ in sorted(final.items(), key=lambda x: (-x[1], x[0]))][:k]
+
+
+def graph_ranking(graph: np.ndarray, scorer: GraphScorer, *, allowed: Callable[[str], bool], exclude=(),
+                  k: int = 100) -> list[str]:
+    """Top ``k`` allowed nodes by graph score (ids in ``exclude`` skipped)."""
+    if not graph.any():
+        return []
+    m = min(k * 5, len(graph) - 1)
+    top = np.argpartition(-graph, m)[: m + 1]
+    top = top[np.argsort(-graph[top], kind="stable")]
+    ex, out = set(exclude), []
+    for i in top:
+        if graph[i] <= 0 or len(out) >= k:
+            break
+        d = scorer.ids[i]
+        if d not in ex and allowed(d):
+            out.append(d)
+    return out
+
+
+def fuse_rrf(first: Sequence[str], graph_list: Sequence[str], *, w: float = 1.0, k: int = 100, c: int = 60) -> list[str]:
+    """Weighted RRF: 1/(c+rank_text) + w/(c+rank_graph). With w=1 and a one-hop neighbour list this
+    is the CLERC bench.py fusion; the graph list here is query-aware (PPR / neighbour score)."""
+    sc: dict[str, float] = {}
+    for r, d in enumerate(first):
+        sc[d] = sc.get(d, 0.0) + 1.0 / (c + r + 1)
+    for r, d in enumerate(graph_list):
+        sc[d] = sc.get(d, 0.0) + w / (c + r + 1)
+    return [d for d, _ in sorted(sc.items(), key=lambda x: (-x[1], x[0]))][:k]
