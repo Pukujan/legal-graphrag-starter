@@ -1,6 +1,6 @@
 # Continuity Document Index
 
-<!-- continuity:documents-index {"catalog_sha256":"e99dc372d686bb1fe443ab45d6411e797036316eae38fb30607523f9258e10d6","schema":"project-continuity.documents-index.v1"} -->
+<!-- continuity:documents-index {"catalog_sha256":"fe1dbdf088300e28e19bbcafc3f7f8bc678405bed2aba6c182104b0cbaa70f88","schema":"project-continuity.documents-index.v1"} -->
 
 > Generated from `.continuity/documents.json`. Edit the JSON inventory, then run `continuity docs render`; do not edit this view directly.
 > Freshness below compares local file bytes; after `git fetch origin`, use `continuity docs find` for cached remote freshness.
@@ -46,12 +46,36 @@
 - File: [`checkpoints/CURRENT.md`](../checkpoints/CURRENT.md)
 - Local content status: **CURRENT**
 - Last reviewed at commit: `uncommitted`
-- Reviewed SHA-256: `33b0e5c2a23cb40befa3424ec4133551546363d0b3073c2c96aa9af811b8de6f`
-- Current SHA-256: `33b0e5c2a23cb40befa3424ec4133551546363d0b3073c2c96aa9af811b8de6f`
+- Reviewed SHA-256: `5ec7fbbb2b5e6069574fcf07a57069d51b9b03427876bb6284121db24e68a01f`
+- Current SHA-256: `5ec7fbbb2b5e6069574fcf07a57069d51b9b03427876bb6284121db24e68a01f`
 - Summary: As-of project phase, active work, blockers, and next action.
 - Search terms: `blockers`, `current state`, `next action`
 - Neighboring records: none
 - Task associations: none
+
+## Decision and Evidence Enrichment (`decision-enrichment`)
+
+- File: [`docs/decision-enrichment.md`](../docs/decision-enrichment.md)
+- Local content status: **CURRENT**
+- Last reviewed at commit: `uncommitted`
+- Reviewed SHA-256: `d762783404ef9550374ecc4122c4708083130c2669cca3482e0a44ed29a2c857`
+- Current SHA-256: `d762783404ef9550374ecc4122c4708083130c2669cca3482e0a44ed29a2c857`
+- Summary: Jev decision parsing, source-preserving annotation overlay, synthetic pipeline, and explicit runtime limits.
+- Search terms: `GLiNER2`, `GraphRAG`, `Jev`, `annotations`, `decisions`, `evidence`
+- Neighboring records: `current`
+- Task associations: `LGR-0003`
+
+## Decision Enrichment Task (`decision-task`)
+
+- File: [`tasks/TASK-LGR-0003-decision-graph-enrichment.md`](../tasks/TASK-LGR-0003-decision-graph-enrichment.md)
+- Local content status: **CURRENT**
+- Last reviewed at commit: `uncommitted`
+- Reviewed SHA-256: `8740a86190f88676b1f0c4cfebb3c502a3480acd187b9d90442b71f512ffe27a`
+- Current SHA-256: `8740a86190f88676b1f0c4cfebb3c502a3480acd187b9d90442b71f512ffe27a`
+- Summary: Issue-linked scope, lineage, acceptance, evidence, boundaries, and next step for decision enrichment.
+- Search terms: `Jev`, `annotations`, `decisions`, `evidence`, `issue #4`
+- Neighboring records: `current`
+- Task associations: `LGR-0003`
 
 ## Design Brief (`design-brief`)
 
@@ -106,8 +130,8 @@
 - File: [`docs/retrieval-baseline.md`](../docs/retrieval-baseline.md)
 - Local content status: **CURRENT**
 - Last reviewed at commit: `uncommitted`
-- Reviewed SHA-256: `756630c470b26612b30d7110a92a9eed6adfa45c3286d6fb177252e0cfaad14a`
-- Current SHA-256: `756630c470b26612b30d7110a92a9eed6adfa45c3286d6fb177252e0cfaad14a`
+- Reviewed SHA-256: `129ccc5781c95fdbe45c9bcea6cc65587af6d4c7897ef6a9613d4a68268908b5`
+- Current SHA-256: `129ccc5781c95fdbe45c9bcea6cc65587af6d4c7897ef6a9613d4a68268908b5`
 - Summary: Measured local citation retrieval and direct versus LangGraph benchmark.
 - Search terms: `retrieval`
 - Neighboring records: none

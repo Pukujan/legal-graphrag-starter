@@ -1,12 +1,12 @@
 # Current Repository Checkpoint
 
-<!-- continuity:current {"active_task":"LGR-0002","active_task_file":"tasks/TASK-LGR-0002-citation-retrieval-baseline.md","protocol_version":"0.1.0-draft","schema":"project-continuity.current.v1"} -->
+<!-- continuity:current {"active_task":"LGR-0003","active_task_file":"tasks/TASK-LGR-0003-decision-graph-enrichment.md","protocol_version":"0.1.0-draft","schema":"project-continuity.current.v1"} -->
 
 This is an as-of projection; live GitHub issues own progression. Link the owning leaf, parent ancestry and dependencies for active work.
 
 ## Program state
 
-Phase: bounded retrieval implementation.
+Phase: decision and evidence graph enrichment.
 
 ## Completed
 
@@ -17,19 +17,20 @@ Phase: bounded retrieval implementation.
 - Local ACS setup commit `645f016c84cc7853745614e0c986a0a76f8331de` passed the local validator stack; remote PR/required gates are still pending.
 - The unchanged starter baseline was executed at `102cf1cf347cc753622a753ae4cd16438abe8f8d`; see `baseline-audit.md` in the session scratch area for timing, graph counts and checksums.
 - The bounded retrieval/ranking kernel, LangGraph wrapper, CLI, and Python contract-test job are implemented locally on `codex/citation-retrieval-baseline`. The unchanged public retrieval/ranking suite passes 66/66; see `docs/retrieval-baseline.md` for input hashes and the observed benchmark.
+- The decision/evidence overlay, Jev Decisions adapter, strict answer parser, exact span/linker helpers, and runnable synthetic pipeline are implemented locally on `codex/decision-graph-enrichment`. The combined public suite passes 112/112; see `docs/decision-enrichment.md`. A synthetic Jev call succeeded, while local GLiNER model inference remains blocked by CPU metadata initialization.
 
 ## Active
 
-- [LGR-0002 — citation retrieval baseline](../tasks/TASK-LGR-0002-citation-retrieval-baseline.md), owning leaf [issue #3](https://github.com/Pukujan/legal-graphrag-starter/issues/3), parent [issue #1](https://github.com/Pukujan/legal-graphrag-starter/issues/1), dependency: issue #2 / LGR-0001. External key: `KEYARGO-ENGINE-001`. Primary writer: Luna (`baseline_executor`). Branch: `codex/citation-retrieval-baseline`, based on local setup commit `645f016`.
+- [LGR-0003 — decision and evidence graph enrichment](../tasks/TASK-LGR-0003-decision-graph-enrichment.md), owning leaf [issue #4](https://github.com/Pukujan/legal-graphrag-starter/issues/4), parent [issue #1](https://github.com/Pukujan/legal-graphrag-starter/issues/1), dependencies: issue #2 / LGR-0001 and issue #3 / LGR-0002. Primary writer: Luna (`decision_executor`). Branch: `codex/decision-graph-enrichment`, based on frozen kernel `dffc60f`.
 
 ## Queued
 
-- Root-authored independent holdouts are pending. After they run read-only, hand the single checkout to the decision/extraction writer for the dependent product stage.
+- Independent decision-stage holdouts are pending. Do not read their source until root releases them for evaluation after this implementation freeze.
 
 ## Blockers
 
-Setup issue #2 and engine issue #3 are open. The repository API reports `allow_auto_merge: false`; the rulesets endpoint returned an empty list, and branch protection could not be read because the GitHub integration returned HTTP 403. The workflow needs the `ACS_READ_TOKEN` repository secret to check out the private ACS source; secret availability is unverified. No Actions run or PR exists yet. These are remote delivery blockers, not local validation claims.
+Setup issue #2 and engine issue #3 remain upstream dependencies. The repository API reports `allow_auto_merge: false`; the rulesets endpoint returned an empty list, and branch protection could not be read because the GitHub integration returned HTTP 403. The workflow needs the `ACS_READ_TOKEN` repository secret to check out the private ACS source; hosted evidence reports the ACS adopter gate failed for the missing token while engine tests and stack-train passed. These are remote delivery blockers, not local validation claims.
 
 ## Next atomic action
 
-Freeze and verify the implementation commit, run root-owned independent holdouts read-only, then hand off the checkout to the decision/extraction writer. Remote CI and merge gates remain unverified; do not claim remote delivery.
+Freeze the tested enrichment increment and give root the exact local SHA for independent decision holdouts. Remote ACS validation and merge gates remain unresolved; do not claim remote delivery.

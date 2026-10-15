@@ -1,0 +1,2 @@
+# Optional local extractor runtime; not required by the citation/decision tests.
+gliner2[local]==2.1.0
