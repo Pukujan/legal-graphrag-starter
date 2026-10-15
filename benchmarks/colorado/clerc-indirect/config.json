@@ -1,0 +1,69 @@
+{
+  "name": "clerc-indirect-rerun",
+  "label": "CLERC test single-removed indirect rerun through legal_graph.retrieval_bench (same frozen queries as benchmarks/clerc/indirect). Seeds = other case citations in the query text; graph = PR #25 expanded graph with holdout edges removed.",
+  "queries_file": "../../clerc/indirect/queries.jsonl",
+  "nodes_file": "data-expanded/nodes.jsonl",
+  "edges_file": "data-expanded/edges.jsonl",
+  "graph": {
+    "depth": 2,
+    "direction": "both",
+    "edge_kinds": [
+      "cites"
+    ]
+  },
+  "k_values": [
+    5,
+    10,
+    20
+  ],
+  "ndcg_k": 10,
+  "systems": [
+    {
+      "name": "seeds",
+      "kind": "seeds"
+    },
+    {
+      "name": "seeds+graph",
+      "kind": "graph",
+      "from": "seeds",
+      "n_seeds": 1000,
+      "fuse": "append"
+    },
+    {
+      "name": "bm25_pr42",
+      "kind": "plugin",
+      "callable": "precomputed_plugin:load",
+      "params": {
+        "path": "/workspace/lgr-text-data/work/bm25-indirect.jsonl"
+      }
+    },
+    {
+      "name": "bm25_pr42+graph_append",
+      "kind": "graph",
+      "from": "bm25_pr42",
+      "n_seeds": 10,
+      "fuse": "append"
+    },
+    {
+      "name": "bm25_pr42+graph_rrf",
+      "kind": "graph",
+      "from": "bm25_pr42",
+      "n_seeds": 10,
+      "fuse": "rrf"
+    },
+    {
+      "name": "bm25_pr42+seeds+graph_rrf",
+      "kind": "fuse",
+      "from": [
+        "bm25_pr42",
+        "seeds+graph"
+      ]
+    }
+  ],
+  "frozen": {
+    "queries_sha256": "3b220be5cd44d6cb55d3fa5744459a0aad9846e392a8c6131a8a6e6d3b3cb7b0",
+    "nodes_sha256": "addfb62264568cb5d9862654c928c5f5c6dcbae12fe31a3baf599f7eb1a4b894",
+    "edges_sha256": "be2efb51566a6145ff8c1706efe4f6c13c0011adf2207303f4c4bc766b3cbaca",
+    "n_queries": 2851
+  }
+}

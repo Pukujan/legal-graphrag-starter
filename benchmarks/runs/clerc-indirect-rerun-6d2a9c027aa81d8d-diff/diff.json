@@ -1,0 +1,347 @@
+{
+  "run": "benchmarks/runs/clerc-indirect-rerun-6d2a9c027aa81d8d",
+  "n_queries": 2851,
+  "found_k": 10,
+  "pairs": [
+    {
+      "a": "seeds",
+      "b": "seeds+graph",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.05191160996141705,
+          "mean_b": 0.10242020343739039,
+          "mean_diff": -0.05050859347597334,
+          "win": 0,
+          "tie": 2707,
+          "loss": 144,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            -0.058926692388635564,
+            -0.04244124868467204
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.028363228415841536,
+          "mean_b": 0.04754283602227979,
+          "mean_diff": -0.019179607606438255,
+          "win": 0,
+          "tie": 1885,
+          "loss": 966,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            -0.020816322244125766,
+            -0.017550499774378975
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 0,
+        "only_b": 144
+      },
+      "examples": {
+        "only_a": [],
+        "only_b": [
+          {
+            "query_id": "clerc-indirect-750",
+            "text": "",
+            "gold": [
+              "Chapman v. California, 386 U.S. 18"
+            ]
+          },
+          {
+            "query_id": "clerc-indirect-1963",
+            "text": "",
+            "gold": [
+              "United States v. Margiotta, 646 F.2d 729"
+            ]
+          },
+          {
+            "query_id": "clerc-indirect-1532",
+            "text": "",
+            "gold": [
+              "Flying Tiger Line v. Teamsters Pension Trust Fund, 830 F.2d 1241"
+            ]
+          },
+          {
+            "query_id": "clerc-indirect-4912",
+            "text": "",
+            "gold": [
+              "Sullivan v. DB Investments, Inc., 667 F.3d 273"
+            ]
+          },
+          {
+            "query_id": "clerc-indirect-732",
+            "text": "",
+            "gold": [
+              "Burger King Corp. v. Rudzewicz, 471 U.S. 462"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "a": "bm25_pr42",
+      "b": "bm25_pr42+graph_append",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.12732374605401614,
+          "mean_b": 0.12732374605401614,
+          "mean_diff": 0.0,
+          "win": 0,
+          "tie": 2851,
+          "loss": 0,
+          "p_permutation": 1.0,
+          "ci95_bootstrap": [
+            0.0,
+            0.0
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.05373195456853091,
+          "mean_b": 0.06072616549023377,
+          "mean_diff": -0.006994210921702861,
+          "win": 452,
+          "tie": 1470,
+          "loss": 929,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            -0.008107472498137903,
+            -0.005950291711902056
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 0,
+        "only_b": 0
+      },
+      "examples": {
+        "only_a": [],
+        "only_b": []
+      }
+    },
+    {
+      "a": "bm25_pr42",
+      "b": "bm25_pr42+graph_rrf",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.12732374605401614,
+          "mean_b": 0.13188354963170817,
+          "mean_diff": -0.004559803577692038,
+          "win": 102,
+          "tie": 2634,
+          "loss": 115,
+          "p_permutation": 0.41755824417558246,
+          "ci95_bootstrap": [
+            -0.014731673097158891,
+            0.0056120659417748155
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.05373195456853091,
+          "mean_b": 0.05049856810238691,
+          "mean_diff": 0.003233386466143998,
+          "win": 808,
+          "tie": 1173,
+          "loss": 870,
+          "p_permutation": 0.1496850314968503,
+          "ci95_bootstrap": [
+            -0.0011325970250609504,
+            0.007584296991843813
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 102,
+        "only_b": 115
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "clerc-indirect-2916",
+            "text": "",
+            "gold": [
+              "United States v. Reyna, 130 F.3d 104"
+            ]
+          },
+          {
+            "query_id": "clerc-indirect-2478",
+            "text": "",
+            "gold": [
+              "Northern States Power Co. v. Prairie Island Mdewakanton Sioux Indian Community, 991 F.2d 458"
+            ]
+          },
+          {
+            "query_id": "clerc-indirect-2297",
+            "text": "",
+            "gold": [
+              "Branding Iron Motel, Inc. v. Sandlian Equity, Inc., 798 F.2d 396"
+            ]
+          },
+          {
+            "query_id": "clerc-indirect-630",
+            "text": "",
+            "gold": [
+              "St. Anthony Hospital Systems v. National Labor Relations Board, 655 F.2d 1028"
+            ]
+          },
+          {
+            "query_id": "clerc-indirect-2917",
+            "text": "",
+            "gold": [
+              "United States v. Gamboa, 543 F.2d 545"
+            ]
+          }
+        ],
+        "only_b": [
+          {
+            "query_id": "clerc-indirect-3995",
+            "text": "",
+            "gold": [
+              "Markman v. Westview Instruments, Inc., 52 F.3d 967"
+            ]
+          },
+          {
+            "query_id": "clerc-indirect-895",
+            "text": "",
+            "gold": [
+              "Chapman v. California, 386 U.S. 18"
+            ]
+          },
+          {
+            "query_id": "clerc-indirect-750",
+            "text": "",
+            "gold": [
+              "Chapman v. California, 386 U.S. 18"
+            ]
+          },
+          {
+            "query_id": "clerc-indirect-4152",
+            "text": "",
+            "gold": [
+              "Consolidated Edison Co. v. National Labor Relations Board, 305 U.S. 197"
+            ]
+          },
+          {
+            "query_id": "clerc-indirect-2163",
+            "text": "",
+            "gold": [
+              "Farrar v. Hobby, 506 U.S. 103"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "a": "bm25_pr42",
+      "b": "bm25_pr42+seeds+graph_rrf",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.12732374605401614,
+          "mean_b": 0.2199228340933006,
+          "mean_diff": -0.09259908803928446,
+          "win": 37,
+          "tie": 2513,
+          "loss": 301,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            -0.10452472816555594,
+            -0.07997193967029112
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.05373195456853091,
+          "mean_b": 0.0935498494718206,
+          "mean_diff": -0.0398178949032897,
+          "win": 235,
+          "tie": 1691,
+          "loss": 925,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            -0.04549727998140133,
+            -0.034242401135504086
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 37,
+        "only_b": 301
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "clerc-indirect-2478",
+            "text": "",
+            "gold": [
+              "Northern States Power Co. v. Prairie Island Mdewakanton Sioux Indian Community, 991 F.2d 458"
+            ]
+          },
+          {
+            "query_id": "clerc-indirect-3554",
+            "text": "",
+            "gold": [
+              "Intermountain Fair Housing Council v. Boise Rescue Mission Ministries, 655 F. Supp. 2d 1150"
+            ]
+          },
+          {
+            "query_id": "clerc-indirect-2406",
+            "text": "",
+            "gold": [
+              "Montgomery v. Omnisec International Security Services Inc., 961 F. Supp. 2d 178"
+            ]
+          },
+          {
+            "query_id": "clerc-indirect-1186",
+            "text": "",
+            "gold": [
+              "Gottlieb v. Wiles, 11 F.3d 1004"
+            ]
+          },
+          {
+            "query_id": "clerc-indirect-490",
+            "text": "",
+            "gold": [
+              "Griffen v. City of Oklahoma City, 3 F.3d 336"
+            ]
+          }
+        ],
+        "only_b": [
+          {
+            "query_id": "clerc-indirect-62",
+            "text": "",
+            "gold": [
+              "Kawaauhau v. Geiger, 523 U.S. 57"
+            ]
+          },
+          {
+            "query_id": "clerc-indirect-4441",
+            "text": "",
+            "gold": [
+              "Hollywood Marine, Inc. v. M/V Artie James, 755 F.2d 414"
+            ]
+          },
+          {
+            "query_id": "clerc-indirect-828",
+            "text": "",
+            "gold": [
+              "Volkswagenwerk Aktiengesellschaft v. Church, 411 F.2d 350"
+            ]
+          },
+          {
+            "query_id": "clerc-indirect-1662",
+            "text": "",
+            "gold": [
+              "McClaughry v. Deming, 186 U.S. 49"
+            ]
+          },
+          {
+            "query_id": "clerc-indirect-183",
+            "text": "",
+            "gold": [
+              "Addison v. Holly Hill Fruit Products, Inc., 322 U.S. 607"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

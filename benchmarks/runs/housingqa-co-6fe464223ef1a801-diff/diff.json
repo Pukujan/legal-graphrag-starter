@@ -1,0 +1,601 @@
+{
+  "run": "benchmarks/runs/housingqa-co-6fe464223ef1a801",
+  "n_queries": 192,
+  "found_k": 10,
+  "pairs": [
+    {
+      "a": "bm25",
+      "b": "bm25+graph_append",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.40972222222222227,
+          "mean_b": 0.3013888888888889,
+          "mean_diff": 0.10833333333333334,
+          "win": 44,
+          "tie": 148,
+          "loss": 0,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            0.07552083333333333,
+            0.14409722222222224
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.3349953827517142,
+          "mean_b": 0.31062757989691375,
+          "mean_diff": 0.02436780285480047,
+          "win": 58,
+          "tie": 131,
+          "loss": 3,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            0.017860808320337176,
+            0.03145472612164098
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 29,
+        "only_b": 0
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "hqa-co-1924",
+            "text": "Must a landlord accept a tenant's attempt to cure for material breach?",
+            "gold": [
+              "hq:499822"
+            ]
+          },
+          {
+            "query_id": "hqa-co-6061",
+            "text": "Is it required that the evictions summons served to tenants mention the tenant's right to a jury trial?",
+            "gold": [
+              "hq:499829",
+              "hq:499831",
+              "hq:499832"
+            ]
+          },
+          {
+            "query_id": "hqa-co-606",
+            "text": "Does state/territory eviction law explicitly regulate floating home landlords?",
+            "gold": [
+              "hq:499822",
+              "hq:524186",
+              "hq:524219"
+            ]
+          },
+          {
+            "query_id": "hqa-co-7599",
+            "text": "Is the term 'Order of possession' used to refer to the order from the court to the authorities to remove a tenant?",
+            "gold": [
+              "hq:499842"
+            ]
+          },
+          {
+            "query_id": "hqa-co-3994",
+            "text": "Are eviction cases first heard in county court?",
+            "gold": [
+              "hq:499828",
+              "hq:512849"
+            ]
+          }
+        ],
+        "only_b": []
+      }
+    },
+    {
+      "a": "bm25",
+      "b": "bm25+graph_rrf",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.40972222222222227,
+          "mean_b": 0.3013888888888889,
+          "mean_diff": 0.10833333333333334,
+          "win": 44,
+          "tie": 148,
+          "loss": 0,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            0.07552083333333333,
+            0.14409722222222224
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.3349953827517142,
+          "mean_b": 0.249282085969224,
+          "mean_diff": 0.08571329678249019,
+          "win": 116,
+          "tie": 75,
+          "loss": 1,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            0.0672569367076745,
+            0.10515495011124094
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 29,
+        "only_b": 0
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "hqa-co-1924",
+            "text": "Must a landlord accept a tenant's attempt to cure for material breach?",
+            "gold": [
+              "hq:499822"
+            ]
+          },
+          {
+            "query_id": "hqa-co-6061",
+            "text": "Is it required that the evictions summons served to tenants mention the tenant's right to a jury trial?",
+            "gold": [
+              "hq:499829",
+              "hq:499831",
+              "hq:499832"
+            ]
+          },
+          {
+            "query_id": "hqa-co-606",
+            "text": "Does state/territory eviction law explicitly regulate floating home landlords?",
+            "gold": [
+              "hq:499822",
+              "hq:524186",
+              "hq:524219"
+            ]
+          },
+          {
+            "query_id": "hqa-co-7599",
+            "text": "Is the term 'Order of possession' used to refer to the order from the court to the authorities to remove a tenant?",
+            "gold": [
+              "hq:499842"
+            ]
+          },
+          {
+            "query_id": "hqa-co-3994",
+            "text": "Are eviction cases first heard in county court?",
+            "gold": [
+              "hq:499828",
+              "hq:512849"
+            ]
+          }
+        ],
+        "only_b": []
+      }
+    },
+    {
+      "a": "bm25",
+      "b": "dense_bge_small",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.40972222222222227,
+          "mean_b": 0.31571180555555556,
+          "mean_diff": 0.09401041666666667,
+          "win": 51,
+          "tie": 104,
+          "loss": 37,
+          "p_permutation": 0.0045995400459954,
+          "ci95_bootstrap": [
+            0.028038194444444442,
+            0.16197916666666667
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.3349953827517142,
+          "mean_b": 0.2633593994723562,
+          "mean_diff": 0.071635983279358,
+          "win": 82,
+          "tie": 44,
+          "loss": 66,
+          "p_permutation": 0.022497750224977502,
+          "ci95_bootstrap": [
+            0.0100282978806397,
+            0.13374551110120142
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 39,
+        "only_b": 17
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "hqa-co-935",
+            "text": "Can a landlord evict a tenant for nonpayment of rent?",
+            "gold": [
+              "hq:499822",
+              "hq:499826"
+            ]
+          },
+          {
+            "query_id": "hqa-co-1924",
+            "text": "Must a landlord accept a tenant's attempt to cure for material breach?",
+            "gold": [
+              "hq:499822"
+            ]
+          },
+          {
+            "query_id": "hqa-co-6670",
+            "text": "In an eviction action, can a tenant rebut/raise the defense that eviction is unlawful because it was motivated by a legally recognized form of discrimination?",
+            "gold": [
+              "hq:499822",
+              "hq:499826",
+              "hq:499831",
+              "hq:524224",
+              "hq:524225"
+            ]
+          },
+          {
+            "query_id": "hqa-co-606",
+            "text": "Does state/territory eviction law explicitly regulate floating home landlords?",
+            "gold": [
+              "hq:499822",
+              "hq:524186",
+              "hq:524219"
+            ]
+          },
+          {
+            "query_id": "hqa-co-7601",
+            "text": "Is the term 'Warrant of eviction' used to refer to the order from the court to the authorities to remove a tenant?",
+            "gold": [
+              "hq:499842"
+            ]
+          }
+        ],
+        "only_b": [
+          {
+            "query_id": "hqa-co-3996",
+            "text": "Are eviction cases first heard in circuit court?",
+            "gold": [
+              "hq:499828",
+              "hq:512849"
+            ]
+          },
+          {
+            "query_id": "hqa-co-8657",
+            "text": "Does the law require that writs of execution not be executed on holidays?",
+            "gold": [
+              "hq:499842"
+            ]
+          },
+          {
+            "query_id": "hqa-co-9264",
+            "text": "Are court records for eviction cases automatically made inaccessible for cases after certain time period?",
+            "gold": [
+              "hq:499830"
+            ]
+          },
+          {
+            "query_id": "hqa-co-7456",
+            "text": "For eviction proceedings, does a tenant have to request a stay of execution for an appeal?",
+            "gold": [
+              "hq:499837"
+            ]
+          },
+          {
+            "query_id": "hqa-co-6669",
+            "text": "In an eviction action, can a tenant raise \"any equitable defense\" available to them? This is true when the relevant law refers broadly to all equitable defenses that might be raised.",
+            "gold": [
+              "hq:499822",
+              "hq:499826",
+              "hq:499831",
+              "hq:524224",
+              "hq:524225"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "a": "bm25",
+      "b": "hybrid_rrf",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.40972222222222227,
+          "mean_b": 0.42473958333333334,
+          "mean_diff": -0.015017361111111112,
+          "win": 24,
+          "tie": 121,
+          "loss": 47,
+          "p_permutation": 0.6207379262073792,
+          "ci95_bootstrap": [
+            -0.06901041666666667,
+            0.04253472222222222
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.3349953827517142,
+          "mean_b": 0.407911897467091,
+          "mean_diff": -0.07291651471537677,
+          "win": 44,
+          "tie": 74,
+          "loss": 74,
+          "p_permutation": 0.0045995400459954,
+          "ci95_bootstrap": [
+            -0.12138001209461681,
+            -0.022381495932047062
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 19,
+        "only_b": 21
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "hqa-co-1924",
+            "text": "Must a landlord accept a tenant's attempt to cure for material breach?",
+            "gold": [
+              "hq:499822"
+            ]
+          },
+          {
+            "query_id": "hqa-co-7599",
+            "text": "Is the term 'Order of possession' used to refer to the order from the court to the authorities to remove a tenant?",
+            "gold": [
+              "hq:499842"
+            ]
+          },
+          {
+            "query_id": "hqa-co-1929",
+            "text": "Must a landlord accept a tenant's attempt to cure for nonpayment of rent?",
+            "gold": [
+              "hq:499822"
+            ]
+          },
+          {
+            "query_id": "hqa-co-169",
+            "text": "Does the law specify a minimum number of days a tenant can be late on rent before the landlord can file an eviction action for nonpayment?",
+            "gold": [
+              "hq:499822"
+            ]
+          },
+          {
+            "query_id": "hqa-co-1921",
+            "text": "Is it specified for which cause a landlord must accept a tenant's attempt to cure?",
+            "gold": [
+              "hq:499822"
+            ]
+          }
+        ],
+        "only_b": [
+          {
+            "query_id": "hqa-co-3997",
+            "text": "Are eviction cases first heard in state court?",
+            "gold": [
+              "hq:499828",
+              "hq:512849"
+            ]
+          },
+          {
+            "query_id": "hqa-co-3996",
+            "text": "Are eviction cases first heard in circuit court?",
+            "gold": [
+              "hq:499828",
+              "hq:512849"
+            ]
+          },
+          {
+            "query_id": "hqa-co-8657",
+            "text": "Does the law require that writs of execution not be executed on holidays?",
+            "gold": [
+              "hq:499842"
+            ]
+          },
+          {
+            "query_id": "hqa-co-9264",
+            "text": "Are court records for eviction cases automatically made inaccessible for cases after certain time period?",
+            "gold": [
+              "hq:499830"
+            ]
+          },
+          {
+            "query_id": "hqa-co-7456",
+            "text": "For eviction proceedings, does a tenant have to request a stay of execution for an appeal?",
+            "gold": [
+              "hq:499837"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "a": "dense_bge_small",
+      "b": "hybrid_rrf",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.31571180555555556,
+          "mean_b": 0.42473958333333334,
+          "mean_diff": -0.10902777777777778,
+          "win": 14,
+          "tie": 128,
+          "loss": 50,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            -0.15520833333333334,
+            -0.06493055555555556
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.2633593994723562,
+          "mean_b": 0.407911897467091,
+          "mean_diff": -0.14455249799473477,
+          "win": 29,
+          "tie": 60,
+          "loss": 103,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            -0.18818747005528055,
+            -0.10312935485279935
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 4,
+        "only_b": 28
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "hqa-co-603",
+            "text": "Does state/territory eviction law explicitly regulate residential landlords generally?",
+            "gold": [
+              "hq:499822",
+              "hq:524186",
+              "hq:524219"
+            ]
+          },
+          {
+            "query_id": "hqa-co-9265",
+            "text": "Are court records for eviction cases which result in judgement for the tenant automatically made inaccessible?",
+            "gold": [
+              "hq:499830"
+            ]
+          },
+          {
+            "query_id": "hqa-co-518",
+            "text": "Does the law require a tenant to pay a bond in order to appeal an eviction judgment?",
+            "gold": [
+              "hq:499838",
+              "hq:499840"
+            ]
+          },
+          {
+            "query_id": "hqa-co-9262",
+            "text": "Are court records for foreclosure cases automatically made inaccessible to the public?",
+            "gold": [
+              "hq:499830"
+            ]
+          }
+        ],
+        "only_b": [
+          {
+            "query_id": "hqa-co-3997",
+            "text": "Are eviction cases first heard in state court?",
+            "gold": [
+              "hq:499828",
+              "hq:512849"
+            ]
+          },
+          {
+            "query_id": "hqa-co-935",
+            "text": "Can a landlord evict a tenant for nonpayment of rent?",
+            "gold": [
+              "hq:499822",
+              "hq:499826"
+            ]
+          },
+          {
+            "query_id": "hqa-co-6670",
+            "text": "In an eviction action, can a tenant rebut/raise the defense that eviction is unlawful because it was motivated by a legally recognized form of discrimination?",
+            "gold": [
+              "hq:499822",
+              "hq:499826",
+              "hq:499831",
+              "hq:524224",
+              "hq:524225"
+            ]
+          },
+          {
+            "query_id": "hqa-co-606",
+            "text": "Does state/territory eviction law explicitly regulate floating home landlords?",
+            "gold": [
+              "hq:499822",
+              "hq:524186",
+              "hq:524219"
+            ]
+          },
+          {
+            "query_id": "hqa-co-7601",
+            "text": "Is the term 'Warrant of eviction' used to refer to the order from the court to the authorities to remove a tenant?",
+            "gold": [
+              "hq:499842"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "a": "hybrid_rrf",
+      "b": "hybrid+graph_append",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.42473958333333334,
+          "mean_b": 0.34756944444444443,
+          "mean_diff": 0.07717013888888889,
+          "win": 38,
+          "tie": 154,
+          "loss": 0,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            0.05043402777777778,
+            0.10512152777777778
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.407911897467091,
+          "mean_b": 0.3932193804754896,
+          "mean_diff": 0.01469251699160135,
+          "win": 50,
+          "tie": 132,
+          "loss": 10,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            0.01016039700328591,
+            0.019425334495605576
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 11,
+        "only_b": 0
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "hqa-co-7601",
+            "text": "Is the term 'Warrant of eviction' used to refer to the order from the court to the authorities to remove a tenant?",
+            "gold": [
+              "hq:499842"
+            ]
+          },
+          {
+            "query_id": "hqa-co-8657",
+            "text": "Does the law require that writs of execution not be executed on holidays?",
+            "gold": [
+              "hq:499842"
+            ]
+          },
+          {
+            "query_id": "hqa-co-932",
+            "text": "Can a landlord evict a tenant for refusal of new lease terms? This includes when the law allows for eviction if the tenant refused to sign a lease extension; refused to agree to a fair rent increase; or refused to agree to lease changes at the time of renewal",
+            "gold": [
+              "hq:499822",
+              "hq:499826"
+            ]
+          },
+          {
+            "query_id": "hqa-co-7594",
+            "text": "Is it specified what term is used to refer to the order from the court to the authorities to remove a tenant?",
+            "gold": [
+              "hq:499842"
+            ]
+          },
+          {
+            "query_id": "hqa-co-517",
+            "text": "Is it specified whether the law requires a tenant to pay a bond in order to appeal an eviction judgment?",
+            "gold": [
+              "hq:499838",
+              "hq:499840"
+            ]
+          }
+        ],
+        "only_b": []
+      }
+    }
+  ]
+}
