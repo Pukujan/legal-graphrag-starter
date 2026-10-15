@@ -1,0 +1,31 @@
+{
+  "schema_version": "content-generation.filename-legend.v1",
+  "feature": "legal-graph-concept",
+  "module": "human-output-naming",
+  "title": "Legal Graph concept image filename",
+  "glossary": [
+    {
+      "token": "Legal Graph",
+      "meaning": "The project identity; it leads the speakable asset basename."
+    },
+    {
+      "token": "concept",
+      "meaning": "Marks this image as a design reference, not an implemented product screenshot."
+    }
+  ],
+  "rules_summary": [
+    "Keep the project identity first and the asset role second.",
+    "Use the helper's safe-twin form when a path requires lowercase letters and hyphens.",
+    "Keep the content hash in the asset manifest, not in the basename."
+  ],
+  "files": [
+    {
+      "path": "assets/legal-graph-concept.png",
+      "identity": "Legal Graph concept",
+      "pitch": null,
+      "speed_pct": null,
+      "style": "safe_twin",
+      "note": "Reference concept only; the prompt record preserves the image's original warm editorial direction and sample-data label."
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "schema_version": "content-generation.visual-style.v1",
+  "reference_asset": "assets/legal-graph-concept.png",
+  "generation_workflow": "built-in image_gen",
+  "narrative_roles": [
+    "hero",
+    "problem",
+    "evidence",
+    "story"
+  ],
+  "palette": {
+    "background": "dark navy",
+    "surface": "deep blue",
+    "primary_text": "warm white",
+    "secondary_text": "muted blue-gray",
+    "graph_links": "fine muted blue lines",
+    "selected_node": "restrained gold",
+    "accent": "blue and gold, used sparingly"
+  },
+  "roles": {
+    "heading": "Large editorial serif headings with compact sans-serif controls.",
+    "graph": "A sparse authority graph with fine directed links, a small number of readable nodes, and clear spatial hierarchy.",
+    "source_inspector": "A compact, legible panel for the selected node, relationship, and source URL.",
+    "sample_labels": "Clearly label illustrative cases and sample data."
+  },
+  "reject_when": [
+    "The graph becomes a dense hairball or its links obscure labels.",
+    "The design uses neon glow, excessive gradients, or generic KPI cards.",
+    "Legal examples look like verified opinions when they are illustrative.",
+    "A source inspector hides the selected node or omits source provenance.",
+    "Ranking or graph position implies legal validity or current precedential status."
+  ]
+}

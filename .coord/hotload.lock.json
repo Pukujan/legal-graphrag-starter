@@ -1,0 +1,53 @@
+{
+  "schema": "acs.hotload.lock.v1",
+  "installed_at": "2026-10-14T04:31:37+00:00",
+  "state": "READY",
+  "acs": {
+    "module_id": "multi-agent-hotload",
+    "module_version": "0.1.0",
+    "commit": "5352653f4348e74afdf49e04cacc753f2b4beeb7"
+  },
+  "pins": {
+    "cgm": {
+      "version": "0.5.12",
+      "module_count": 8,
+      "module_count_word": "eight",
+      "modules": [
+        "brand-foundation",
+        "content-context",
+        "writing-direction",
+        "human-sounding-writing",
+        "human-output-naming",
+        "visual-direction",
+        "image-generation",
+        "html-demo"
+      ],
+      "commit": "fe2054ba323257510eff4e31de1dcd4a1460d1c7"
+    },
+    "pcm": {
+      "cli_version": "0.7.0",
+      "commit": "8cbfc3c8e9f13eadf2663fd6dd060588ee29399d"
+    },
+    "acs_hotload_module": {
+      "id": "multi-agent-hotload",
+      "version": "0.1.0"
+    }
+  },
+  "stack_manifest": "stack-manifest.json",
+  "checkouts": {
+    "pcm": {
+      "commit": "8cbfc3c8e9f13eadf2663fd6dd060588ee29399d",
+      "verified": true
+    },
+    "cgm": {
+      "commit": "fe2054ba323257510eff4e31de1dcd4a1460d1c7",
+      "verified": true
+    },
+    "oio": {
+      "commit": "2d1215502bc683e5bcbc6dc637b8b2b4cf28f3b7",
+      "verified": true
+    }
+  },
+  "oio_install": "OK",
+  "hotload_check": "OK"
+}

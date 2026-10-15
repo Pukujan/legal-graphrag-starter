@@ -1,0 +1,34 @@
+name: Issue Triage
+
+on:
+  issues:
+    types: [opened, edited, labeled, unlabeled]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  triage:
+    name: Validate ontology and classify issue log
+    concurrency:
+      group: oio-issue-triage-${{ github.event.issue.number }}
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pinned OIO validator dependency
+        run: |
+          requirements="requirements.txt"
+          if [ -f .oio/requirements.txt ]; then requirements=".oio/requirements.txt"; fi
+          python -m pip install --requirement "$requirements"
+
+      - name: Validate and label issue
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/scripts/oio_triage.py

@@ -1,0 +1,18 @@
+{
+  "schema_version": "content-generation.brand-language.v1",
+  "name": "Legal Graph",
+  "personality": [
+    "precise",
+    "editorial",
+    "measured",
+    "source-conscious"
+  ],
+  "promise": "A clearer way to explore how legal authorities connect and inspect the sources behind each link.",
+  "avoid": [
+    "claims of legal advice or legal correctness",
+    "unverified claims that an authority is controlling or current",
+    "fabricated citations, quotations, or outcomes",
+    "unmeasured accuracy or performance claims",
+    "hype, generic AI language, and opaque ranking language"
+  ]
+}

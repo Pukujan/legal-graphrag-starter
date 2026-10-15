@@ -1,0 +1,162 @@
+{
+  "schema_version": "0.1.0",
+  "project": "Legal Graph",
+  "recorded_at": "2026-10-14T04:53:00+00:00",
+  "notes": "Complete ACS adopter install for Pukujan/legal-graphrag-starter. Parent issue #1 tracks the project; leaf issue #2 is setup task KEYARGO-SETUP-001 and canonical PCM task LGR-0001 on branch codex/acs-hotload-install. The seed list is a hint; live join/continue order fills roles. First continuer is the decision boss; claim_file remains the authority for live lease. FULL PCM + FULL eight-module CGM are required. claim_file writes local state only, not GitHub governance. PR-only, required CI checks, branch rules, and auto-merge require separate remote setup and verification.",
+  "role_fill": {
+    "mode": "join_continue_order",
+    "seed_is_hint_only": true,
+    "notes": "Owner-approved project roster: root coordinates and owns planning/tests; acs_executor (Luna) is primary setup writer; baseline_executor, decision_executor and prd_aba_executor are implementation workers after setup handoff. These are seeds only; live join order fills roles."
+  },
+  "agents": [
+    {
+      "agent_id": "root",
+      "role_seed": "decision_boss",
+      "harness": "codex",
+      "machine_label": "orchestrator",
+      "may_implement": true,
+      "notes": "Root planner/orchestrator; owns PDD/SDD/TDD, differential/metamorphic tests, frozen holdout and setup decisions."
+    },
+    {
+      "agent_id": "acs_executor",
+      "role_seed": "coder",
+      "harness": "codex",
+      "machine_label": "Luna setup writer",
+      "may_implement": true,
+      "notes": "Primary writer for issue #2 / LGR-0001 / KEYARGO-SETUP-001 on codex/acs-hotload-install."
+    },
+    {
+      "agent_id": "baseline_executor",
+      "role_seed": "worker",
+      "harness": "codex",
+      "machine_label": "baseline executor",
+      "may_implement": true,
+      "notes": "Project baseline work after setup handoff; only on its issue-linked sequential task branch."
+    },
+    {
+      "agent_id": "decision_executor",
+      "role_seed": "worker",
+      "harness": "codex",
+      "machine_label": "decision executor",
+      "may_implement": true,
+      "notes": "Jev decision integration after setup handoff; only on its issue-linked sequential task branch."
+    },
+    {
+      "agent_id": "prd_aba_executor",
+      "role_seed": "worker",
+      "harness": "codex",
+      "machine_label": "PRD and ABA executor",
+      "may_implement": true,
+      "notes": "PRD/ABA workflow investigation and UI ownership after setup handoff; record runtime blockers."
+    }
+  ],
+  "boss_failover": {
+    "lease_ttl_minutes": 30,
+    "check_in": {
+      "mechanism": "claim_file",
+      "interval_hint_minutes": 15,
+      "claim_file_path": ".coord/boss_claim.json",
+      "notes": "No live lease claimed yet. Root is the decision_boss seed; claim_file is authoritative when the role is claimed."
+    },
+    "claim_queue": [],
+    "standby": [],
+    "grace_minutes": 10,
+    "who_is_boss_now": null,
+    "as_of_history": []
+  },
+  "watchdog": {
+    "watchdog_interval_minutes": 10,
+    "idle_window": {
+      "minutes": 20
+    },
+    "runner": "github_action",
+    "inputs": [
+      "claim_heartbeat",
+      "github_commit",
+      "github_pr",
+      "local_telemetry_optional"
+    ],
+    "on_fresh_heartbeat": "noop",
+    "on_stale_with_github_activity": "nudge_check_in_keep_boss",
+    "on_stale_idle": "flag_seat_at_risk",
+    "on_past_lease_ttl": "write_vacant_in_claim_file",
+    "notes": "AGENT-LESS. Cron/Action/script only. No LLM. No peer agent. Watchdog != failover. ~10m liveness/nudge only."
+  },
+  "pins": {
+    "pcm": {
+      "repo": "https://github.com/Pukujan/project-continuity-modules",
+      "revision": "8cbfc3c8e9f13eadf2663fd6dd060588ee29399d",
+      "cli_version": "0.7.0",
+      "protocol": "0.1.0-draft",
+      "role": "full_stack",
+      "required_features": [
+        "checkout_continuity_checkpoints",
+        "github_issues_own_task_progression",
+        "pr_only_to_default_branch",
+        "required_ci_gates",
+        "branch_protection_preference",
+        "github_auto_merge_preference",
+        "fail_closed_on_missing_gates",
+        "leaf_parent_dependency_receipts"
+      ],
+      "notes": "Full PCM for adopters: continuity/checkpoints plus PR-only, required CI gates, protection/auto-merge preference, fail-closed gates, leaf/parent receipts. The commit comes from stack-mesh.json. An older checkout is refused. Do not vendor PCM source."
+    },
+    "cgm": {
+      "repo": "https://github.com/Pukujan/content-generation-modules",
+      "revision": "fe2054ba323257510eff4e31de1dcd4a1460d1c7",
+      "version": "0.5.12",
+      "role": "full_stack",
+      "modules": [
+        "brand-foundation",
+        "content-context",
+        "writing-direction",
+        "human-sounding-writing",
+        "human-output-naming",
+        "visual-direction",
+        "image-generation",
+        "html-demo"
+      ],
+      "human_output_contract": [
+        "docs/README_PLAYBOOK.md",
+        "templates/README.template.md",
+        "templates/readme-contract.json",
+        "schemas/readme-contract.schema.json",
+        "docs/README_QUALITY_PDD.md",
+        "docs/README_QUALITY_SDD.md",
+        "docs/README_QUALITY_TDD.md",
+        "docs/PROVENANCE_AND_CITATION.md",
+        "docs/WRITING_ROUTING.md",
+        "docs/ACS_VERIFY.md",
+        "docs/writing-routing.json",
+        "docs/HUMAN_SOUNDING_WRITING.md",
+        "docs/human-sounding-rules.json",
+        "docs/IMAGE_GUIDE.md",
+        "docs/CONTENT_RESEARCH.md",
+        "docs/BRAND_DIRECTION.md",
+        "AGENTS.md",
+        "system-version.json",
+        "docs/HUMAN_OUTPUT_NAMING.md",
+        "docs/human-output-naming.json"
+      ],
+      "routing": {
+        "readme_product_entry": "writing-direction (MUST load; scan-first selective bold; do not apply HSW bold restraints)",
+        "pr_issue_docs_commits": "human-sounding-writing / hsw (MUST load for PR/issue titles+bodies, docs, commits)",
+        "posts_blogs_papers": "human-sounding-writing (hsw / HSW)",
+        "contract": "docs/writing-routing.json + docs/ACS_VERIFY.md \u2014 application=must_load; human_facing_default; acs_prompt_inject after VALID",
+        "html_reports_compare_appendable": "human-sounding-writing / hsw (MUST; default ON; no per-report opt-in)",
+        "generated_artifact_filenames": "human-output-naming / hon (MUST; basenames + legends)"
+      },
+      "notes": "FULL CGM required for ACS and every hotloader adopter: all eight modules including human-output-naming. The commit comes from stack-mesh.json. An older checkout is refused. Validate with CGM's validate_content_system.py; then apply acs_prompt_inject. Do not vendor CGM source."
+    }
+  },
+  "ticket_links": {
+    "parent_issue": "https://github.com/Pukujan/legal-graphrag-starter/issues/1",
+    "child_issues": [
+      "https://github.com/Pukujan/legal-graphrag-starter/issues/2"
+    ],
+    "external_task_key": "KEYARGO-SETUP-001",
+    "canonical_pcm_task_id": "LGR-0001",
+    "active_branch": "codex/acs-hotload-install",
+    "notes": "Parent/child links and issue IDs identify deliverables; GitHub owns progression. Parent: none. Setup task dependencies: none."
+  }
+}

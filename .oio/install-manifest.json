@@ -1,0 +1,24 @@
+{
+  "schema_version": "oio.install-manifest.v1",
+  "oio_version": "0.1.0",
+  "ontology_id": "oio:issue-log",
+  "ontology_version": "1.0.0",
+  "project_id": "Pukujan/legal-graphrag-starter",
+  "namespace": "pukujan-legal-graphrag-starter",
+  "managed_files": {
+    ".oio/ontology/default.json": "7465911c7071b448977ce508a9786b5cc79f4906a5d48b58afdc97f058425db8",
+    ".oio/ontology/project-template.json": "ab7957e5d540717302dd39d1a96a11e46e8b2a79fa793426f8c3271bce0857e3",
+    ".oio/ontology/ISSUE_LOG_ONTOLOGY.md": "bc766ec70e8865c3ffb916508c71f679caaf740ebae22f6302ae1ad398aec3c6",
+    ".oio/ontology/AGENT_GUIDE.md": "df0e82b79b77266b6ace2c6ebf2f6e22f5f96752fb2516f07bb436db783f2c9b",
+    ".oio/requirements.txt": "cb9e5058abe248be8579db704a1c9e30e655b30cb7d5dd093bebf97f44766591",
+    ".oio/schemas/v1/default-ontology.schema.json": "5e70e5059f4752a130341efe5c51b6d566e19360704649af9e54ab5e9607f99a",
+    ".oio/schemas/v1/project-ontology.schema.json": "976c8cb8272352ec9b83f2f42559191e2200ed71c795b34832490f9ca60b6455",
+    ".oio/schemas/v1/issue-log-record.schema.json": "bcab6c3e77b10bf2cfde23a617753b39be5941e89988f6f6b58d97763143b79d",
+    ".github/ISSUE_TEMPLATE/observational-issue.yml": "65e84fb2026fb010693b73baf4ff4f2691896a9326d92ff5abfb7ee2e7f18dcc",
+    ".github/workflows/issue-triage.yml": "9c42b5a9f763df15d510f117076dd3f237c1e5ad4c77c6a69520321a8ad9cb76",
+    ".github/scripts/oio_installer.py": "4ab94efc021b538c86d8cd28640ab0523841b280fd3a50fc57f8093a03c39de8",
+    ".github/scripts/oio_triage.py": "dd59a0cb4171b98652af2b605ff04fd644403bb3761c5e0330885e8b944e5882"
+  },
+  "agents_block_sha256": "dd08b0a68f4af90c53d164dfdde8dc1996547193a2404965bf4c4adeffa5b9dc",
+  "project_extension": ".oio/ontology/project.json"
+}

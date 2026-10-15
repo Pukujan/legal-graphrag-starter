@@ -1,0 +1,12 @@
+{
+  "schema_version": "agent-stack-train.stack-manifest.v1",
+  "adopter": "Legal Graph",
+  "release_train": "current",
+  "source": "https://raw.githubusercontent.com/Pukujan/agent-stack-train/main/stack-releases.json",
+  "pins": {
+    "agent-custom-setup": {},
+    "content-generation-modules": {},
+    "observational-issue-ops": {},
+    "project-continuity-modules": {}
+  }
+}
