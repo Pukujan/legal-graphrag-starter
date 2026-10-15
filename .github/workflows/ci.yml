@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+          enable-cache: true
+          cache-dependency-glob: "requirements*.txt"
+      - name: Install dependencies
+        run: |
+          uv venv
+          if [ -f requirements-dev.txt ]; then
+            uv pip install -r requirements-dev.txt
+          else
+            uv pip install -r requirements.txt pytest
+          fi
+      - name: Run tests (offline; live/integration tests excluded)
+        run: |
+          if [ -d tests ] && ls tests/test_*.py >/dev/null 2>&1; then
+            uv run --no-project python -m pytest -q -m "not live and not integration"
+          else
+            echo "No tests/ directory found; running import smoke check instead."
+            uv run --no-project python -c "import networkx, numpy, scipy; print('deps ok')"
+          fi
