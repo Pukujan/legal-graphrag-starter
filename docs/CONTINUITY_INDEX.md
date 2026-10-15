@@ -1,6 +1,6 @@
 # Continuity Document Index
 
-<!-- continuity:documents-index {"catalog_sha256":"834dfbf1ed284b1ac4a70acb35808d5dfc5e16b98eced3ae9c24f004322aaca5","schema":"project-continuity.documents-index.v1"} -->
+<!-- continuity:documents-index {"catalog_sha256":"22785de12d71174d226b562464179edc9c6b173a0b09878f093f0040ae9c962c","schema":"project-continuity.documents-index.v1"} -->
 
 > Generated from `.continuity/documents.json`. Edit the JSON inventory, then run `continuity docs render`; do not edit this view directly.
 > Freshness below compares local file bytes; after `git fetch origin`, use `continuity docs find` for cached remote freshness.
@@ -113,6 +113,18 @@
 - Neighboring records: none
 - Task associations: none
 
+## Retrieval-engine HTTP API (`engine-api`)
+
+- File: [`docs/engine-api.md`](../docs/engine-api.md)
+- Local content status: **CURRENT**
+- Last reviewed at commit: `e30d8bbab6180f2cb6806387b1826f2fbad520ed`
+- Reviewed SHA-256: `6340145777717a123372bd6d750a5674a902250049d4ef62697ba3d890c0527a`
+- Current SHA-256: `6340145777717a123372bd6d750a5674a902250049d4ef62697ba3d890c0527a`
+- Summary: Bearer-token engine routes for ABA: SSE staged retrieval, answer check, cases, benchmarks; env vars and Octo data notes.
+- Search terms: `ABA`, `SSE`, `engine`
+- Neighboring records: none
+- Task associations: none
+
 ## Handoff (`handoff`)
 
 - File: [`HANDOFF.md`](../HANDOFF.md)
@@ -129,9 +141,9 @@
 
 - File: [`docs/http-service.md`](../docs/http-service.md)
 - Local content status: **CURRENT**
-- Last reviewed at commit: `uncommitted`
-- Reviewed SHA-256: `90a9bde207337c29442ec62ddba8038c82ed38ba5440838f96508d8a8968530d`
-- Current SHA-256: `90a9bde207337c29442ec62ddba8038c82ed38ba5440838f96508d8a8968530d`
+- Last reviewed at commit: `e30d8bbab6180f2cb6806387b1826f2fbad520ed`
+- Reviewed SHA-256: `d87dc44b03817624d40613275a85258d07c674f76a19338f4614d8927f1724c1`
+- Current SHA-256: `d87dc44b03817624d40613275a85258d07c674f76a19338f4614d8927f1724c1`
 - Summary: Implementation, runtime and local execution notes for the graph API.
 - Search terms: `FastAPI`, `HTTP`
 - Neighboring records: none

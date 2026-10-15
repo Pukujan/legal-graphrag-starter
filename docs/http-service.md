@@ -17,3 +17,9 @@ Pinned runtime packages: FastAPI 0.143.0, Pydantic 2.14.1, Starlette 1.8.0, and 
 After that freeze and holdout, a real Uvicorn process on `127.0.0.1:8000` loaded the original JSONL snapshot and served all six route families plus `/openapi.json`. Health returned 119,770 nodes, 160,793 edges, the checksummed source revision, and `synthetic: false`. Search and exact authority lookup returned §1983 records. The default neighborhood returned 500 nodes/499 edges after scanning 1,856 edges and reported `node_budget` truncation; citation ranking returned three results; experiments correctly returned an empty list. No model calls were made. The current local server was left running for the downstream ABA integration.
 
 This prototype has no authentication or deployment configuration. Do not expose it outside a trusted local environment until those concerns are designed separately.
+
+## Retrieval-engine routes (2026-10-15)
+
+The same factory now also serves the token-protected engine routes (`POST /api/v1/retrieve` with a `query` body as an
+SSE stage stream, `POST /api/v1/check`, `GET /api/v1/cases/{id}`, `GET /api/v1/benchmarks[/{run_id}]`). The original
+`{"seeds", "k"}` retrieve body is unchanged. Contract, env vars and data notes: [`engine-api.md`](engine-api.md).

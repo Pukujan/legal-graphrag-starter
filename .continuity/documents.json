@@ -157,6 +157,21 @@
       "title": "Design Brief"
     },
     {
+      "id": "engine-api",
+      "keywords": [
+        "ABA",
+        "SSE",
+        "engine"
+      ],
+      "path": "docs/engine-api.md",
+      "related": [],
+      "reviewed_commit": "e30d8bbab6180f2cb6806387b1826f2fbad520ed",
+      "reviewed_sha256": "6340145777717a123372bd6d750a5674a902250049d4ef62697ba3d890c0527a",
+      "summary": "Bearer-token engine routes for ABA: SSE staged retrieval, answer check, cases, benchmarks; env vars and Octo data notes.",
+      "tasks": [],
+      "title": "Retrieval-engine HTTP API"
+    },
+    {
       "id": "handoff",
       "keywords": [
         "cold start",
@@ -179,8 +194,8 @@
       ],
       "path": "docs/http-service.md",
       "related": [],
-      "reviewed_commit": "uncommitted",
-      "reviewed_sha256": "90a9bde207337c29442ec62ddba8038c82ed38ba5440838f96508d8a8968530d",
+      "reviewed_commit": "e30d8bbab6180f2cb6806387b1826f2fbad520ed",
+      "reviewed_sha256": "d87dc44b03817624d40613275a85258d07c674f76a19338f4614d8927f1724c1",
       "summary": "Implementation, runtime and local execution notes for the graph API.",
       "tasks": [
         "LGR-0005"
