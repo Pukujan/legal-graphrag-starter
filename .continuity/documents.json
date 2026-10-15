@@ -62,7 +62,7 @@
       "path": "checkpoints/CURRENT.md",
       "related": [],
       "reviewed_commit": "uncommitted",
-      "reviewed_sha256": "b3c7b021b0ebf2ada9fb13303c5ef9be9ecdf257b8a7adaa0f1ea9d322f4513b",
+      "reviewed_sha256": "33b0e5c2a23cb40befa3424ec4133551546363d0b3073c2c96aa9af811b8de6f",
       "summary": "As-of project phase, active work, blockers, and next action.",
       "tasks": [],
       "title": "Current"
@@ -128,6 +128,66 @@
       "summary": "Starter overview of the legal graph data, traversal demo, current limits, and prototype goals.",
       "tasks": [],
       "title": "Readme"
+    },
+    {
+      "id": "retrieval-baseline",
+      "keywords": [
+        "retrieval"
+      ],
+      "path": "docs/retrieval-baseline.md",
+      "related": [],
+      "reviewed_commit": "uncommitted",
+      "reviewed_sha256": "756630c470b26612b30d7110a92a9eed6adfa45c3286d6fb177252e0cfaad14a",
+      "summary": "Measured local citation retrieval and direct versus LangGraph benchmark.",
+      "tasks": [
+        "LGR-0002"
+      ],
+      "title": "Retrieval Baseline"
+    },
+    {
+      "id": "retrieval-design",
+      "keywords": [
+        "retrieval"
+      ],
+      "path": "docs/product-design.md",
+      "related": [],
+      "reviewed_commit": "uncommitted",
+      "reviewed_sha256": "c62c47a822237222459796421d7fbc8de81c0b624b2a3602350e59dd64f92c80",
+      "summary": "Bounded neighborhood and citation prior product contract.",
+      "tasks": [
+        "LGR-0002"
+      ],
+      "title": "Retrieval Product Design"
+    },
+    {
+      "id": "retrieval-system",
+      "keywords": [
+        "retrieval"
+      ],
+      "path": "docs/system-design.md",
+      "related": [],
+      "reviewed_commit": "uncommitted",
+      "reviewed_sha256": "edc72d3ba0229f9d89f6115c99232233a1ce153af41282f774fce749789054b8",
+      "summary": "NetworkX and LangGraph retrieval architecture with traceable provenance.",
+      "tasks": [
+        "LGR-0002"
+      ],
+      "title": "Retrieval System Design"
+    },
+    {
+      "id": "retrieval-tests",
+      "keywords": [
+        "retrieval"
+      ],
+      "path": "docs/test-design.md",
+      "related": [],
+      "reviewed_commit": "uncommitted",
+      "reviewed_sha256": "1e3f319e113888fad81dfa22f34b63f2c5e3e784017aa471f42d800a9a23210c",
+      "summary": "Public retrieval and ranking contract and verification approach.",
+      "tasks": [
+        "LGR-0002"
+      ],
+      "title": "Retrieval Test Design"
     },
     {
       "id": "setup-task",

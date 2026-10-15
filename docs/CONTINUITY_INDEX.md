@@ -1,6 +1,6 @@
 # Continuity Document Index
 
-<!-- continuity:documents-index {"catalog_sha256":"ec077a4558993f47599ed2512fab1c8e7aa76664ff9448a4b2e6dfe96e184e76","schema":"project-continuity.documents-index.v1"} -->
+<!-- continuity:documents-index {"catalog_sha256":"e99dc372d686bb1fe443ab45d6411e797036316eae38fb30607523f9258e10d6","schema":"project-continuity.documents-index.v1"} -->
 
 > Generated from `.continuity/documents.json`. Edit the JSON inventory, then run `continuity docs render`; do not edit this view directly.
 > Freshness below compares local file bytes; after `git fetch origin`, use `continuity docs find` for cached remote freshness.
@@ -46,8 +46,8 @@
 - File: [`checkpoints/CURRENT.md`](../checkpoints/CURRENT.md)
 - Local content status: **CURRENT**
 - Last reviewed at commit: `uncommitted`
-- Reviewed SHA-256: `b3c7b021b0ebf2ada9fb13303c5ef9be9ecdf257b8a7adaa0f1ea9d322f4513b`
-- Current SHA-256: `b3c7b021b0ebf2ada9fb13303c5ef9be9ecdf257b8a7adaa0f1ea9d322f4513b`
+- Reviewed SHA-256: `33b0e5c2a23cb40befa3424ec4133551546363d0b3073c2c96aa9af811b8de6f`
+- Current SHA-256: `33b0e5c2a23cb40befa3424ec4133551546363d0b3073c2c96aa9af811b8de6f`
 - Summary: As-of project phase, active work, blockers, and next action.
 - Search terms: `blockers`, `current state`, `next action`
 - Neighboring records: none
@@ -100,6 +100,54 @@
 - Search terms: `legal graph`, `prototype`, `starter`
 - Neighboring records: none
 - Task associations: none
+
+## Retrieval Baseline (`retrieval-baseline`)
+
+- File: [`docs/retrieval-baseline.md`](../docs/retrieval-baseline.md)
+- Local content status: **CURRENT**
+- Last reviewed at commit: `uncommitted`
+- Reviewed SHA-256: `756630c470b26612b30d7110a92a9eed6adfa45c3286d6fb177252e0cfaad14a`
+- Current SHA-256: `756630c470b26612b30d7110a92a9eed6adfa45c3286d6fb177252e0cfaad14a`
+- Summary: Measured local citation retrieval and direct versus LangGraph benchmark.
+- Search terms: `retrieval`
+- Neighboring records: none
+- Task associations: `LGR-0002`
+
+## Retrieval Product Design (`retrieval-design`)
+
+- File: [`docs/product-design.md`](../docs/product-design.md)
+- Local content status: **CURRENT**
+- Last reviewed at commit: `uncommitted`
+- Reviewed SHA-256: `c62c47a822237222459796421d7fbc8de81c0b624b2a3602350e59dd64f92c80`
+- Current SHA-256: `c62c47a822237222459796421d7fbc8de81c0b624b2a3602350e59dd64f92c80`
+- Summary: Bounded neighborhood and citation prior product contract.
+- Search terms: `retrieval`
+- Neighboring records: none
+- Task associations: `LGR-0002`
+
+## Retrieval System Design (`retrieval-system`)
+
+- File: [`docs/system-design.md`](../docs/system-design.md)
+- Local content status: **CURRENT**
+- Last reviewed at commit: `uncommitted`
+- Reviewed SHA-256: `edc72d3ba0229f9d89f6115c99232233a1ce153af41282f774fce749789054b8`
+- Current SHA-256: `edc72d3ba0229f9d89f6115c99232233a1ce153af41282f774fce749789054b8`
+- Summary: NetworkX and LangGraph retrieval architecture with traceable provenance.
+- Search terms: `retrieval`
+- Neighboring records: none
+- Task associations: `LGR-0002`
+
+## Retrieval Test Design (`retrieval-tests`)
+
+- File: [`docs/test-design.md`](../docs/test-design.md)
+- Local content status: **CURRENT**
+- Last reviewed at commit: `uncommitted`
+- Reviewed SHA-256: `1e3f319e113888fad81dfa22f34b63f2c5e3e784017aa471f42d800a9a23210c`
+- Current SHA-256: `1e3f319e113888fad81dfa22f34b63f2c5e3e784017aa471f42d800a9a23210c`
+- Summary: Public retrieval and ranking contract and verification approach.
+- Search terms: `retrieval`
+- Neighboring records: none
+- Task associations: `LGR-0002`
 
 ## ACS setup task (`setup-task`)
 
