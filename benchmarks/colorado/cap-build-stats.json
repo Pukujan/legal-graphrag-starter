@@ -1,0 +1,13 @@
+{
+  "corpus_docs": 40897,
+  "graph_nodes": 40897,
+  "graph_edges": 237405,
+  "test_direct_candidates": 5649,
+  "test_direct": 2000,
+  "dev_direct_candidates": 10085,
+  "dev_direct": 1000,
+  "test_indirect_candidates": 3966,
+  "test_indirect": 2000,
+  "dev_indirect_candidates": 7457,
+  "dev_indirect": 1000
+}

@@ -1,0 +1,347 @@
+{
+  "run": "benchmarks/runs/clerc-direct-rerun-8b40e33769d753f2",
+  "n_queries": 1498,
+  "found_k": 10,
+  "pairs": [
+    {
+      "a": "seeds",
+      "b": "seeds+graph",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.04005340453938585,
+          "mean_b": 0.10947930574098798,
+          "mean_diff": -0.06942590120160214,
+          "win": 0,
+          "tie": 1394,
+          "loss": 104,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            -0.08344459279038718,
+            -0.056742323097463285
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.024721851357365376,
+          "mean_b": 0.04791999590384935,
+          "mean_diff": -0.023198144546483973,
+          "win": 0,
+          "tie": 941,
+          "loss": 557,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            -0.02586467931941452,
+            -0.020674364321691806
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 0,
+        "only_b": 104
+      },
+      "examples": {
+        "only_a": [],
+        "only_b": [
+          {
+            "query_id": "clerc-direct-4659",
+            "text": "",
+            "gold": [
+              "Thompson v. Keohane, 516 U.S. 99"
+            ]
+          },
+          {
+            "query_id": "clerc-direct-114",
+            "text": "",
+            "gold": [
+              "Lehman v. Nakshian, 453 U.S. 156"
+            ]
+          },
+          {
+            "query_id": "clerc-direct-4625",
+            "text": "",
+            "gold": [
+              "Jackson v. Virginia, 443 U.S. 307"
+            ]
+          },
+          {
+            "query_id": "clerc-direct-133",
+            "text": "",
+            "gold": [
+              "Magee v. United States, 121 F.3d 1"
+            ]
+          },
+          {
+            "query_id": "clerc-direct-4375",
+            "text": "",
+            "gold": [
+              "Moses H. Cone Memorial Hospital v. Mercury Construction Corp., 460 U.S. 1"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "a": "bm25_pr42",
+      "b": "bm25_pr42+graph_append",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.1068090787716956,
+          "mean_b": 0.1068090787716956,
+          "mean_diff": 0.0,
+          "win": 0,
+          "tie": 1498,
+          "loss": 0,
+          "p_permutation": 1.0,
+          "ci95_bootstrap": [
+            0.0,
+            0.0
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.04970302642336229,
+          "mean_b": 0.05924161117693126,
+          "mean_diff": -0.009538584753568974,
+          "win": 215,
+          "tie": 719,
+          "loss": 564,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            -0.011018841166504116,
+            -0.008011948788114497
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 0,
+        "only_b": 0
+      },
+      "examples": {
+        "only_a": [],
+        "only_b": []
+      }
+    },
+    {
+      "a": "bm25_pr42",
+      "b": "bm25_pr42+graph_rrf",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.1068090787716956,
+          "mean_b": 0.12149532710280374,
+          "mean_diff": -0.014686248331108143,
+          "win": 44,
+          "tie": 1388,
+          "loss": 66,
+          "p_permutation": 0.0446955304469553,
+          "ci95_bootstrap": [
+            -0.02870493991989319,
+            -0.0013351134846461949
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.04970302642336229,
+          "mean_b": 0.05053035130833673,
+          "mean_diff": -0.0008273248849744482,
+          "win": 370,
+          "tie": 593,
+          "loss": 535,
+          "p_permutation": 0.7904209579042096,
+          "ci95_bootstrap": [
+            -0.00709521978602523,
+            0.005231530113603626
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 44,
+        "only_b": 66
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "clerc-direct-3862",
+            "text": "",
+            "gold": [
+              "United States v. Mateo, 560 F.3d 152"
+            ]
+          },
+          {
+            "query_id": "clerc-direct-2059",
+            "text": "",
+            "gold": [
+              "Burns v. Barnhart, 312 F.3d 113"
+            ]
+          },
+          {
+            "query_id": "clerc-direct-300",
+            "text": "",
+            "gold": [
+              "Winter v. Hollingsworth Properties, Inc., 777 F.2d 1444"
+            ]
+          },
+          {
+            "query_id": "clerc-direct-4554",
+            "text": "",
+            "gold": [
+              "Weiner v. San Diego County, 210 F.3d 1025"
+            ]
+          },
+          {
+            "query_id": "clerc-direct-3783",
+            "text": "",
+            "gold": [
+              "Fly Fish, Inc. v. City of Cocoa Beach, 337 F.3d 1301"
+            ]
+          }
+        ],
+        "only_b": [
+          {
+            "query_id": "clerc-direct-3702",
+            "text": "",
+            "gold": [
+              "Ashcroft v. Iqbal, 556 U.S. 662"
+            ]
+          },
+          {
+            "query_id": "clerc-direct-2718",
+            "text": "",
+            "gold": [
+              "Katsaros v. Cody, 744 F.2d 270"
+            ]
+          },
+          {
+            "query_id": "clerc-direct-2823",
+            "text": "",
+            "gold": [
+              "Camara v. Ashcroft, 378 F.3d 361"
+            ]
+          },
+          {
+            "query_id": "clerc-direct-3533",
+            "text": "",
+            "gold": [
+              "Harlow v. Fitzgerald, 457 U.S. 800"
+            ]
+          },
+          {
+            "query_id": "clerc-direct-248",
+            "text": "",
+            "gold": [
+              "Matsushita Electric Industrial Co. v. Zenith Radio Corp., 475 U.S. 574"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "a": "bm25_pr42",
+      "b": "bm25_pr42+seeds+graph_rrf",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.1068090787716956,
+          "mean_b": 0.20026702269692923,
+          "mean_diff": -0.09345794392523364,
+          "win": 18,
+          "tie": 1322,
+          "loss": 158,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            -0.11014686248331108,
+            -0.07610146862483311
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.04970302642336229,
+          "mean_b": 0.08852544844266874,
+          "mean_diff": -0.038822422019306455,
+          "win": 126,
+          "tie": 864,
+          "loss": 508,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            -0.04723324595786239,
+            -0.03063655854943005
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 18,
+        "only_b": 158
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "clerc-direct-4222",
+            "text": "",
+            "gold": [
+              "Doe v. Swank, 332 F. Supp. 61"
+            ]
+          },
+          {
+            "query_id": "clerc-direct-631",
+            "text": "",
+            "gold": [
+              "Southwest Community Health Services v. National Labor Relations Board, 726 F.2d 611"
+            ]
+          },
+          {
+            "query_id": "clerc-direct-3638",
+            "text": "",
+            "gold": [
+              "United States v. Ossana, 638 F.3d 895"
+            ]
+          },
+          {
+            "query_id": "clerc-direct-716",
+            "text": "",
+            "gold": [
+              "State Farm Fire & Casualty Co. v. Smith, 907 F.2d 900"
+            ]
+          },
+          {
+            "query_id": "clerc-direct-2286",
+            "text": "",
+            "gold": [
+              "United States v. Windfelder, 790 F.2d 576"
+            ]
+          }
+        ],
+        "only_b": [
+          {
+            "query_id": "clerc-direct-1111",
+            "text": "",
+            "gold": [
+              "Somerset Consulting, LLC v. United Capital Lenders, LLC, 832 F. Supp. 2d 474"
+            ]
+          },
+          {
+            "query_id": "clerc-direct-4659",
+            "text": "",
+            "gold": [
+              "Thompson v. Keohane, 516 U.S. 99"
+            ]
+          },
+          {
+            "query_id": "clerc-direct-170",
+            "text": "",
+            "gold": [
+              "United States v. St. Louis, San Francisco & Texas Railway Co., 270 U.S. 1"
+            ]
+          },
+          {
+            "query_id": "clerc-direct-4625",
+            "text": "",
+            "gold": [
+              "Jackson v. Virginia, 443 U.S. 307"
+            ]
+          },
+          {
+            "query_id": "clerc-direct-4375",
+            "text": "",
+            "gold": [
+              "Moses H. Cone Memorial Hospital v. Mercury Construction Corp., 460 U.S. 1"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

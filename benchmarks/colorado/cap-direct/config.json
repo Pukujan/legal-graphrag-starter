@@ -1,0 +1,51 @@
+{
+  "name": "capco-direct",
+  "label": "Self-built Colorado CAP citation retrieval (direct). Query = citing paragraph with the target citation masked; gold = cited Colorado CAP case (CAP cites_to). Temporal split: test = citing opinions decided >= 2015-01-01, dev = 2008-2014. All query opinions' outgoing cites removed from the graph; citing opinion excluded; docs/graph results decided after the citing opinion dropped.",
+  "queries_file": "queries.jsonl",
+  "corpus_file": "cap-co/corpus.jsonl",
+  "nodes_file": "cap-co/nodes.jsonl",
+  "edges_file": "cap-co/edges.jsonl",
+  "split": "test",
+  "graph": {
+    "depth": 2,
+    "direction": "both",
+    "edge_kinds": [
+      "cites"
+    ]
+  },
+  "k_values": [
+    5,
+    10,
+    20
+  ],
+  "ndcg_k": 10,
+  "systems": [
+    {
+      "name": "bm25",
+      "kind": "bm25",
+      "k1": 0.9,
+      "b": 0.4
+    },
+    {
+      "name": "bm25+graph_append",
+      "kind": "graph",
+      "from": "bm25",
+      "n_seeds": 10,
+      "fuse": "append"
+    },
+    {
+      "name": "bm25+graph_rrf",
+      "kind": "graph",
+      "from": "bm25",
+      "n_seeds": 10,
+      "fuse": "rrf"
+    }
+  ],
+  "frozen": {
+    "queries_sha256": "ab8336e4a2bed637050d485f7efdd5604e44f385f5c3b80113d7539de5706ffb",
+    "corpus_sha256": "e767a036392e5b9dfd7a000c0aa8f2e75ea8d2789f30f68258ff327ace358d3a",
+    "nodes_sha256": "fcd40325b16489db49549640d0e9771fe943f0e8d3f3ae03757323f5a7c6bd36",
+    "edges_sha256": "2b6bf76e5e74adf45f53e96b8ac8a4139fd607335a90cd7973fb0f9fa455d0a8",
+    "n_queries": 3000
+  }
+}

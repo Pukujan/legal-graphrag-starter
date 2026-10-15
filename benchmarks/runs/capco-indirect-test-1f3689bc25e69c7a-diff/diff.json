@@ -1,0 +1,347 @@
+{
+  "run": "benchmarks/runs/capco-indirect-test-1f3689bc25e69c7a",
+  "n_queries": 2000,
+  "found_k": 10,
+  "pairs": [
+    {
+      "a": "bm25",
+      "b": "bm25+graph_append",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.385,
+          "mean_b": 0.385,
+          "mean_diff": 0.0,
+          "win": 0,
+          "tie": 2000,
+          "loss": 0,
+          "p_permutation": 1.0,
+          "ci95_bootstrap": [
+            0.0,
+            0.0
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.19269818624429622,
+          "mean_b": 0.1836560561495041,
+          "mean_diff": 0.009042130094792105,
+          "win": 571,
+          "tie": 1312,
+          "loss": 117,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            0.008005995821393037,
+            0.010145532776992143
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 0,
+        "only_b": 0
+      },
+      "examples": {
+        "only_a": [],
+        "only_b": []
+      }
+    },
+    {
+      "a": "bm25",
+      "b": "bm25+graph_rrf",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.385,
+          "mean_b": 0.2905,
+          "mean_diff": 0.0945,
+          "win": 208,
+          "tie": 1773,
+          "loss": 19,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            0.0815,
+            0.1085
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.19269818624429622,
+          "mean_b": 0.10951553918150343,
+          "mean_diff": 0.08318264706279277,
+          "win": 1314,
+          "tie": 613,
+          "loss": 73,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            0.07618958583745856,
+            0.09058733760713514
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 208,
+        "only_b": 19
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "coc-indirect-6802514-14",
+            "text": "116 In this jurisdiction, it is now well-settled that in addition to contractual remedies for breach of an insurance contract, an insurer's bad faith breach also gives rise to tort liability. Nunn v. Mid-Century Ins. Co., 244 P.3d 116, 121 (Colo.2010) (citing [CITATION]). To the extent that an insurer unreasonably delays or denies payment of a claim, its insured is provided specific statutory reme",
+            "gold": [
+              "cap:9258123"
+            ]
+          },
+          {
+            "query_id": "coc-indirect-6802919-22",
+            "text": "26 To prove an 1nverse condemnation claim under the Colorado Consututlon, property owner must show that (1) there has been a taking or damaging of a property interest; (2) for a public purpose; (8) without just compensation; (4) by a governmental or public entity that has the power of eminent domain, but which has refused to exercise that power. Kobobel v. State, Dep't of Natural Res, 249 P.3d 112",
+            "gold": [
+              "cap:8394285"
+            ]
+          },
+          {
+            "query_id": "coc-indirect-6795094-28",
+            "text": "$89 In construing a document, we look to its terms and apply them as written unless they are ambiguous. See USI Props. E., Inc. v. Simpson, 938 P.2d 168, 178 (Colo. 1997). To determine whether an ambiguity exists, we ask whether the document's plain language \"is reasonably susceptible on its face to more than one interpretation.\" See [CITATION]. If the document is unambiguous, we will \"neither rew",
+            "gold": [
+              "cap:9110859"
+            ]
+          },
+          {
+            "query_id": "coc-indirect-12178271-13",
+            "text": "¶ 15 The purpose of the relation back doctrine is to “ease procedural problems when the statute of limitations poses a technical, not substantive, bar to maintaining suit.” [CITATION]. . Indeed, “[rjelation back is intimately connected with the policy of the statute of limitations,” as the doctrine is designed to ameliorate the effect of such limitations periods. Beaver Creek Prop. Owners Ass’n v.",
+            "gold": [
+              "cap:6996591"
+            ]
+          },
+          {
+            "query_id": "coc-indirect-12343584-11",
+            "text": ". ¶ 13 “Before 1971, public entities enjoyed common-law sovereign, immunity from suit and were liable for compensatory damages for injuries in tort only when constitutional or,statutory provisions operated to waive the government’s immunity.” City of Colorado Springs, v. Conners, 993 P.2d 1167, 1171 (Colo. 2000). In 1971, the supreme court decided three cases that abrogated Colorado’s common law o",
+            "gold": [
+              "cap:11150817"
+            ]
+          }
+        ],
+        "only_b": [
+          {
+            "query_id": "coc-indirect-12566037-7",
+            "text": "¶ 10 \"The Due Process Clauses of the Colorado and United States Constitutions require the prosecution to prove the existence of every element of a charged offense beyond a reasonable doubt.\" People v. Espinoza , 195 P.3d 1122, 1127-28 (Colo. App. 2008) ; see U.S. Const. amends. V, VI, XIV ; Colo. Const. art. II, §§ 16, 23, 25 ; In re Winship , 397 U.S. 358, 363-64, 90 S.Ct. 1068, 25 L.Ed.2d 368 (1",
+            "gold": [
+              "cap:4605924"
+            ]
+          },
+          {
+            "query_id": "coc-indirect-6887453-20",
+            "text": "122 When presented with a challenge to the sufficiency of the evidence, we review the record de novo to determine whether the prosecution has met its burden of proof with respect to each element of the crime charged. Dempsey v. People, 117 P.3d 800, 807 (Colo.2005). We ask \"whether the relevant evidence, both direct and cireum-stantial, when viewed as a whole and in the light most favorable to the",
+            "gold": [
+              "cap:4605924"
+            ]
+          },
+          {
+            "query_id": "coc-indirect-12572016-21",
+            "text": "¶ 29 We review a trial court's ruling on evidentiary issues, including the admission of alternate suspect evidence, for an abuse of discretion. [CITATION]. A trial court abuses its discretion when its ruling \"is based on an erroneous view of the law.\" People v. Elmarr , 2015 CO 53, ¶ 20, 351 P.3d 431.",
+            "gold": [
+              "cap:11343817"
+            ]
+          },
+          {
+            "query_id": "coc-indirect-12564918-28",
+            "text": "¶ 36 Statutes should be interpreted \"in strict accordance with the General Assembly's purpose and intent in enacting them.\" In re 2000-2001 [CASE]. Grand Jury , 97 P.3d 921, 924 (Colo. 2004). In determining both purpose and intent, we first look to the language chosen by the General Assembly, see Martin v. People , 27 P.3d 846, 851 (Colo. 2001), giving words and phrases their \"plain and ordinary m",
+            "gold": [
+              "cap:10418363"
+            ]
+          },
+          {
+            "query_id": "coc-indirect-6823384-12",
+            "text": "T 14 In the eriminal law context, the U.S. Supreme Court has held that where a defendant's conduct violates more than one criminal statute, the government's choice to prosecute under the statute with the harsher, penalty does not violate federal equal protection, absent evidence of selective enforcement based on a prohibited standard such as race, religion, or other arbitrary classification. See U",
+            "gold": [
+              "cap:2373762"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "a": "seeds",
+      "b": "seeds+graph",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.0,
+          "mean_b": 0.04,
+          "mean_diff": -0.04,
+          "win": 0,
+          "tie": 1920,
+          "loss": 80,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            -0.049,
+            -0.032
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.0,
+          "mean_b": 0.013501062448964471,
+          "mean_diff": -0.013501062448964471,
+          "win": 0,
+          "tie": 1543,
+          "loss": 457,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            -0.015620647547643399,
+            -0.011547246754323002
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 0,
+        "only_b": 80
+      },
+      "examples": {
+        "only_a": [],
+        "only_b": [
+          {
+            "query_id": "coc-indirect-6775054-24",
+            "text": "127 It also follows that, in addition to interlocutory review, the determination regarding a public employee's claim to sovereign immunity is subject to all of the other procedures applicable to sovereign immunity determinations. Thus, when a public employee raises the issue of sovereign immunity, the trial court \"shall suspend discovery\" except for \"discovery necessary to decide the issue of sove",
+            "gold": [
+              "cap:10367492"
+            ]
+          },
+          {
+            "query_id": "coc-indirect-12569676-26",
+            "text": "¶ 29 Significantly, although the jury found Zoll guilty of multiple charges, it acquitted him of the charge of attempting to disarm a peace officer. If, as Zoll surmises, the jury had such a negative reaction to his absence that its verdicts were influenced by bias or prejudice, it presumably would have found him guilty of all the charges. That the jury found him not guilty of one charge and guilt",
+            "gold": [
+              "cap:10350738"
+            ]
+          },
+          {
+            "query_id": "coc-indirect-12342325-39",
+            "text": "¶ 49 When, as in this case, a defendant fails to object to a written jury instruction, we review it for plain error., People v. Garcia, 28 P.3d 340, 344 (Colo.2001). Plain errors are obvious and substantial errors that so undemine the fundamental fairness of the trial itself as to cast serious doubt on the reliability of the. judgment of conviction. Id.; [CITATION], . With respect to jury instruct",
+            "gold": [
+              "cap:8962461"
+            ]
+          },
+          {
+            "query_id": "coc-indirect-12566037-7",
+            "text": "¶ 10 \"The Due Process Clauses of the Colorado and United States Constitutions require the prosecution to prove the existence of every element of a charged offense beyond a reasonable doubt.\" People v. Espinoza , 195 P.3d 1122, 1127-28 (Colo. App. 2008) ; see U.S. Const. amends. V, VI, XIV ; Colo. Const. art. II, §§ 16, 23, 25 ; In re Winship , 397 U.S. 358, 363-64, 90 S.Ct. 1068, 25 L.Ed.2d 368 (1",
+            "gold": [
+              "cap:4605924"
+            ]
+          },
+          {
+            "query_id": "coc-indirect-6887453-20",
+            "text": "122 When presented with a challenge to the sufficiency of the evidence, we review the record de novo to determine whether the prosecution has met its burden of proof with respect to each element of the crime charged. Dempsey v. People, 117 P.3d 800, 807 (Colo.2005). We ask \"whether the relevant evidence, both direct and cireum-stantial, when viewed as a whole and in the light most favorable to the",
+            "gold": [
+              "cap:4605924"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "a": "bm25",
+      "b": "seeds+graph_rrf_bm25",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.385,
+          "mean_b": 0.2905,
+          "mean_diff": 0.0945,
+          "win": 337,
+          "tie": 1515,
+          "loss": 148,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            0.073,
+            0.116
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.19269818624429622,
+          "mean_b": 0.09506056557179486,
+          "mean_diff": 0.09763762067250134,
+          "win": 1052,
+          "tie": 632,
+          "loss": 316,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            0.08568527793340526,
+            0.11081822954532919
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 337,
+        "only_b": 148
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "coc-indirect-6802514-14",
+            "text": "116 In this jurisdiction, it is now well-settled that in addition to contractual remedies for breach of an insurance contract, an insurer's bad faith breach also gives rise to tort liability. Nunn v. Mid-Century Ins. Co., 244 P.3d 116, 121 (Colo.2010) (citing [CITATION]). To the extent that an insurer unreasonably delays or denies payment of a claim, its insured is provided specific statutory reme",
+            "gold": [
+              "cap:9258123"
+            ]
+          },
+          {
+            "query_id": "coc-indirect-6851643-13",
+            "text": "115 Negligence per se occurs when a defendant violates a statute adopted for the public's safety and the violation causes the plaintiffs injuries. Scott v. Matlack, Inc, 39 P.3d 1160, 1166 (Colo.2002). A& plaintiff seeking recovery under this doctrine must show that he or she is a member of the class the statute intended to protect and that the injuries suffered were the kind the statute was enact",
+            "gold": [
+              "cap:6993948"
+            ]
+          },
+          {
+            "query_id": "coc-indirect-6777068-7",
+            "text": "110 The Sixth Amendment right to an impartial jury guarantees a defendant the right to a jury selected from a representative cross-section of the community. People v. Sepeda, 196 Colo. 13, 18, 581 P.2d 723, 727 (1978). A defendant is not entitled, however, to a \"jury of any particular composition.\" [CITATION] (quoting Taylor v. Louisiana, 419 U.S. 522, 588, 95 S.Ct. 692, 42 L.Ed.2d 690 (1975)). Th",
+            "gold": [
+              "cap:8215758"
+            ]
+          },
+          {
+            "query_id": "coc-indirect-12572586-14",
+            "text": "¶17 Although the trial court therefore abused its discretion in admitting expert testimony of \"overkill,\" reversal of the defendant's conviction is nevertheless not warranted in this case. Error in the trial process does not warrant the reversal of a conviction if it can be shown to be harmless. People v. Summitt , 132 P.3d 320, 327 (Colo. 2006). Even a properly objected-to trial error will be dis",
+            "gold": [
+              "cap:12565039"
+            ]
+          },
+          {
+            "query_id": "coc-indirect-12569681-21",
+            "text": "¶ 24 \"To determine whether the evidence is identical, a court must decide whether the separate convictions were based on more than one distinct act and, if so, whether those acts were separated by time and place.\" Glasser , 293 P.3d at 79. \"The mere fact that the offenses took place during one continuous criminal episode does not establish that they were supported by identical evidence.\" Jurado , ",
+            "gold": [
+              "cap:6964968"
+            ]
+          }
+        ],
+        "only_b": [
+          {
+            "query_id": "coc-indirect-6775054-24",
+            "text": "127 It also follows that, in addition to interlocutory review, the determination regarding a public employee's claim to sovereign immunity is subject to all of the other procedures applicable to sovereign immunity determinations. Thus, when a public employee raises the issue of sovereign immunity, the trial court \"shall suspend discovery\" except for \"discovery necessary to decide the issue of sove",
+            "gold": [
+              "cap:10367492"
+            ]
+          },
+          {
+            "query_id": "coc-indirect-12576571-38",
+            "text": "¶ 37 To obtain a conviction on these charges, the prosecution had to prove Bondsteel's \"willfulness or intent to do the act\" for the second degree kidnapping charges, People v. Henderson, 810 P.2d 1058, 1062 (Colo. 1991) (citation omitted), and that he intended to commit particular acts which, if completed, would constitute sexual assault for the attempt charges, see People v. Buerge, 240 P.3d 363",
+            "gold": [
+              "cap:10361074"
+            ]
+          },
+          {
+            "query_id": "coc-indirect-6820514-7",
+            "text": "T8 This case raises issues of both statutory interpretation and sufficiency of the evidence. We review questions of statutory interpretation de novo. People v. Cross 127 P.3d 71, 73 (Colo.2006). For a sufficiency of the evidence claim, we review the record de novo to determine whether the evidence, when viewed in the light most favorable to the prosecution, was both \"substantial and sufficient\" to",
+            "gold": [
+              "cap:8935635"
+            ]
+          },
+          {
+            "query_id": "coc-indirect-12568286-25",
+            "text": "¶ 27 Second, a long line of case law from this court makes clear that \"[i]n order to reuse or make successive use of return flows, all of the elements of an independent appropriation must be established and decreed as a separate water right.\" Santa Fe Trail Ranches Prop. Owners Ass'n v. Simpson, 990 P.2d 46, 54 (Colo. 1999) ; accord [CITATION] ; Water Supply & Storage Co., 733 P.2d at 682-83.",
+            "gold": [
+              "cap:10309842"
+            ]
+          },
+          {
+            "query_id": "coc-indirect-6851738-19",
+            "text": "Faretta, 422 U.S. at 835, 95 S.Ct. 2525 (internal quotation marks omitted); see also Mogul, 812 P.2d at 709 (\"A defendant's technical legal knowledge is not a factor to be considered by the trial court in deciding whether to grant or deny the motion.\"). But in this context, \"intelligently\" does not refer to the wisdom of the waiver; rather, the court must honor a defendant's request to self-repres",
+            "gold": [
+              "cap:4531395"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "name": "housingqa-co",
+  "label": "reglab/housing_qa Colorado (CC-BY-SA-4.0): 192 questions, gold = C.R.S. sections in statutes.tsv. Graph = statute hierarchy (part_of) + in-text C.R.S. cross references (cites).",
+  "queries_file": "queries.jsonl",
+  "corpus_file": "housing_qa/corpus.jsonl",
+  "nodes_file": "housing_qa/nodes.jsonl",
+  "edges_file": "housing_qa/edges.jsonl",
+  "graph": {
+    "depth": 2,
+    "direction": "both",
+    "edge_kinds": [
+      "cites",
+      "part_of"
+    ]
+  },
+  "k_values": [
+    1,
+    5,
+    10,
+    20
+  ],
+  "ndcg_k": 10,
+  "systems": [
+    {
+      "name": "bm25",
+      "kind": "bm25",
+      "k1": 0.9,
+      "b": 0.4
+    },
+    {
+      "name": "dense_bge_small",
+      "kind": "plugin",
+      "callable": "dense_plugin:retrieve",
+      "params": {
+        "model": "BAAI/bge-small-en-v1.5",
+        "max_chars": 2000,
+        "k": 100,
+        "cache": "/workspace/coeval-data/emb/housingqa"
+      }
+    },
+    {
+      "name": "hybrid_rrf",
+      "kind": "fuse",
+      "from": [
+        "bm25",
+        "dense_bge_small"
+      ]
+    },
+    {
+      "name": "bm25+graph_append",
+      "kind": "graph",
+      "from": "bm25",
+      "n_seeds": 5,
+      "fuse": "append"
+    },
+    {
+      "name": "bm25+graph_rrf",
+      "kind": "graph",
+      "from": "bm25",
+      "n_seeds": 5,
+      "fuse": "rrf"
+    },
+    {
+      "name": "hybrid+graph_append",
+      "kind": "graph",
+      "from": "hybrid_rrf",
+      "n_seeds": 5,
+      "fuse": "append"
+    }
+  ],
+  "frozen": {
+    "queries_sha256": "79670e53499f0db2eaf35aea34356d5f43fa58e0d93248c54478e6bd5f6c22f0",
+    "corpus_sha256": "50ae5f08048fc0fe39ecc00d691422efaa43c72a3071e43f2b16d266db15040a",
+    "nodes_sha256": "ef99db763075da4ca8456a77833c7b3fe6ae047b2fb4e41e46b2fe1eeda938b7",
+    "edges_sha256": "851a6da85f74f8fb607a63904b468dbee8b0d2fe2eaa88f8125714f94dada43d",
+    "n_queries": 192
+  }
+}

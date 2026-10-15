@@ -1,0 +1,4 @@
+seeds vs seeds+graph: recall@10 0.040 vs 0.109 W/T/L 0/1394/104 p=0.0001; mrr 0.025 vs 0.048 W/T/L 0/941/557 p=0.0001; only-found {'only_a': 0, 'only_b': 104}
+bm25_pr42 vs bm25_pr42+graph_append: recall@10 0.107 vs 0.107 W/T/L 0/1498/0 p=1.0000; mrr 0.050 vs 0.059 W/T/L 215/719/564 p=0.0001; only-found {'only_a': 0, 'only_b': 0}
+bm25_pr42 vs bm25_pr42+graph_rrf: recall@10 0.107 vs 0.121 W/T/L 44/1388/66 p=0.0447; mrr 0.050 vs 0.051 W/T/L 370/593/535 p=0.7904; only-found {'only_a': 44, 'only_b': 66}
+bm25_pr42 vs bm25_pr42+seeds+graph_rrf: recall@10 0.107 vs 0.200 W/T/L 18/1322/158 p=0.0001; mrr 0.050 vs 0.089 W/T/L 126/864/508 p=0.0001; only-found {'only_a': 18, 'only_b': 158}

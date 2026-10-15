@@ -1,0 +1,159 @@
+{
+  "run": "benchmarks/runs/capco-direct-test-401a3f6df39480bc",
+  "n_queries": 2000,
+  "found_k": 10,
+  "pairs": [
+    {
+      "a": "bm25",
+      "b": "bm25+graph_append",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.5435,
+          "mean_b": 0.5435,
+          "mean_diff": 0.0,
+          "win": 0,
+          "tie": 2000,
+          "loss": 0,
+          "p_permutation": 1.0,
+          "ci95_bootstrap": [
+            0.0,
+            0.0
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.3479145069577282,
+          "mean_b": 0.3397249901657518,
+          "mean_diff": 0.00818951679197634,
+          "win": 449,
+          "tie": 1499,
+          "loss": 52,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            0.007248594341147492,
+            0.009137004262668816
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 0,
+        "only_b": 0
+      },
+      "examples": {
+        "only_a": [],
+        "only_b": []
+      }
+    },
+    {
+      "a": "bm25",
+      "b": "bm25+graph_rrf",
+      "metrics": {
+        "recall@10": {
+          "mean_a": 0.5435,
+          "mean_b": 0.4725,
+          "mean_diff": 0.071,
+          "win": 148,
+          "tie": 1846,
+          "loss": 6,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            0.06,
+            0.083
+          ]
+        },
+        "mrr": {
+          "mean_a": 0.3479145069577282,
+          "mean_b": 0.2031841607590464,
+          "mean_diff": 0.14473034619868175,
+          "win": 1436,
+          "tie": 532,
+          "loss": 32,
+          "p_permutation": 9.999000099990002e-05,
+          "ci95_bootstrap": [
+            0.13575750510319398,
+            0.15299483519348975
+          ]
+        }
+      },
+      "only_found_counts": {
+        "only_a": 148,
+        "only_b": 6
+      },
+      "examples": {
+        "only_a": [
+          {
+            "query_id": "coc-direct-6776720-33",
+            "text": "T388 We agree with Mr. Baca that the district court erred in applying the extraordinary risk sentencing provision. In so holding, we disagree with a division of this court, which previously concluded that because attempted second degree murder is a crime of violence it is necessarily an extraordinary risk crime. See [CITATION].",
+            "gold": [
+              "cap:9118182"
+            ]
+          },
+          {
+            "query_id": "coc-direct-12569681-19",
+            "text": "¶ 22 While the claim is unpreserved, we need not review the trial court's imposition of consecutive sentences for plain error because a defendant may raise a claim at any time that his or her sentence was not authorized by law. See [CITATION]; see also People v. Fransua , 2016 COA 79, ¶ 17, --- P.3d ----, ---- (citing Crim. P. 35(a) ), cert. granted , (Dec. 5, 2016).",
+            "gold": [
+              "cap:12568326"
+            ]
+          },
+          {
+            "query_id": "coc-direct-6776855-49",
+            "text": "155 Finally, Dickinson has not adequately demonstrated that she was prejudiced by the absence of a negligence per se jury instruction. To the contrary, the special verdict forms reflect that the jury determined (1) Dickinson sustained injuries, (2) GAS was not negligent, and (8) GAS, if negligent, did not cause Dickinson's injuries. In other words, the jury determined that even if (GAS was neglige",
+            "gold": [
+              "cap:6906922"
+            ]
+          },
+          {
+            "query_id": "coc-direct-12565547-76",
+            "text": "We reject the People's argument that Waller did not preserve his contention that the use of the word \"will\" rather than \"should\" in the general reasonable doubt jury instruction violated his constitutional rights. Prior to closing argument, when the parties were modifying the jury instructions that would be provided to the jury, Waller's counsel orally requested the court to modify the word \"will\"",
+            "gold": [
+              "cap:11639035"
+            ]
+          },
+          {
+            "query_id": "coc-direct-12567942-49",
+            "text": "¶ 51 Assuming without deciding that the expert's proffered testimony was admissible under CRE 702 and CRE 403, the exclusion of the testimony does not necessarily require reversal. \"[W]e will reverse only if we can say with fair assurance that the trial court's exclusion of [the] evidence substantially influenced the outcome of the case or impaired the basic fairness of the trial itself.\" [CITATIO",
+            "gold": [
+              "cap:6979317"
+            ]
+          }
+        ],
+        "only_b": [
+          {
+            "query_id": "coc-direct-12576570-21",
+            "text": "¶29 Plaintiffs' contemporaneous actions and course of performance speak louder than their post-judgment words. Cf. [CITATION] (noting that extrinsic evidence of the parties' performance under a contract before any controversy arose is indicative of their intent at the time of contracting). Indeed, it was only after the water court ruled against them and in defendant's favor on all claims in this c",
+            "gold": [
+              "cap:10428332"
+            ]
+          },
+          {
+            "query_id": "coc-direct-6837378-3",
+            "text": ". T4 In response to the City's motion, the district court conducted an evidentiary hearing, in accordance with [CITATION]. The court found that section 24-10-106(1)(d)(I) waives immunity for injuries occurring in parking areas in municipalities. The court also found that the depression was a dangerous condition that interfered with traffic.",
+            "gold": [
+              "cap:10367492"
+            ]
+          },
+          {
+            "query_id": "coc-direct-12409005-37",
+            "text": "¶ 40 First, the error was not “obvious.” [CITATION]. The therapist did not directly testify that the child victims were telling the truth, which would have been obviously impermissible. Conversely, under the existing case law, it 'is not always clear (or even consistent among cases) where to draw the line between expert testimony on the typical characteristics of sexual assault victims that is per",
+            "gold": [
+              "cap:8962461"
+            ]
+          },
+          {
+            "query_id": "coc-direct-12577551-37",
+            "text": "¶ 42 In sum, and notwithstanding the \"presumption against waiver,\" Rediger II , ¶ 46 (quoting [CITATION] ), defense counsel's affirmative statements constitute a waiver. So, as to Tee's contention that predeliberation constituted structural error or a due process violation entitling him to a new trial, we have nothing to review. See United States v. Montoya , 782 F.2d 1554, 1556 (11th Cir. 1986) (",
+            "gold": [
+              "cap:10423017"
+            ]
+          },
+          {
+            "query_id": "coc-direct-12564954-14",
+            "text": "¶ 19 Standing alone, the words \"as ordered by the court\" suggest that the court has discretion whether to issue an order and as to the extent of any order issued. The statute does not contain mandatory language directed at the court, such as \"must,\" \"shall,\" or \"is required to.\" See [CITATION] (indicating that \"shall\" and \"require\" are most often interpreted as mandatory). Instead, the only mandat",
+            "gold": [
+              "cap:10418363"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

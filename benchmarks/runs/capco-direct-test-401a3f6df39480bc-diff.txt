@@ -1,0 +1,2 @@
+bm25 vs bm25+graph_append: recall@10 0.543 vs 0.543 W/T/L 0/2000/0 p=1.0000; mrr 0.348 vs 0.340 W/T/L 449/1499/52 p=0.0001; only-found {'only_a': 0, 'only_b': 0}
+bm25 vs bm25+graph_rrf: recall@10 0.543 vs 0.472 W/T/L 148/1846/6 p=0.0001; mrr 0.348 vs 0.203 W/T/L 1436/532/32 p=0.0001; only-found {'only_a': 148, 'only_b': 6}
