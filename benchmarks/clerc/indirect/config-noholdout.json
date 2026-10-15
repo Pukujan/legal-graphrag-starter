@@ -1,0 +1,30 @@
+{
+  "name": "clerc-indirect-noholdout",
+  "label": "CLERC test single-removed indirect (real CLERC doc qrels). Seeds = other case citations in the query text (eyecite), not a hybrid retriever. Holdout of possible source-opinion edges: false.",
+  "queries_file": "queries.jsonl",
+  "apply_holdout_edges": false,
+  "graph": {
+    "depth": 2,
+    "direction": "both",
+    "edge_kinds": [
+      "cites"
+    ]
+  },
+  "k_values": [
+    5,
+    10,
+    20
+  ],
+  "ndcg_k": 10,
+  "frozen": {
+    "queries_sha256": "3b220be5cd44d6cb55d3fa5744459a0aad9846e392a8c6131a8a6e6d3b3cb7b0",
+    "dataset_revision": "sha256:addfb62264568cb5d9862654c928c5f5c6dcbae12fe31a3baf599f7eb1a4b894:be2efb51566a6145ff8c1706efe4f6c13c0011adf2207303f4c4bc766b3cbaca",
+    "graph_digest": "sha256:3e1f735f8f4d7ddb57ccaa68f0665cf6a416d11e789877b38d948fa0bc9b3505",
+    "source": {
+      "kind": "local_jsonl",
+      "nodes_sha256": "addfb62264568cb5d9862654c928c5f5c6dcbae12fe31a3baf599f7eb1a4b894",
+      "edges_sha256": "be2efb51566a6145ff8c1706efe4f6c13c0011adf2207303f4c4bc766b3cbaca"
+    },
+    "n_queries": 2851
+  }
+}

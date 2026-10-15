@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import os
+import time
 import urllib.error
 import urllib.request
 from typing import Any
@@ -16,12 +17,13 @@ DEFAULT_BASE_URL = "https://octodb.design-bakery.com/api"
 
 class OctoSqlExecutor:
     def __init__(self, workspace_id: str, *, key_env: str = "octo_db_legal",
-                 base_url: str = DEFAULT_BASE_URL, timeout: float = 120.0):
+                 base_url: str = DEFAULT_BASE_URL, timeout: float = 120.0, retries: int = 5):
         if not os.environ.get(key_env):
             raise RuntimeError(f"environment variable {key_env} is not set")
         self.workspace_id, self._key_env = workspace_id, key_env
         self.url = f"{base_url.rstrip('/')}/workspaces/{workspace_id}/query"
         self.timeout = timeout
+        self.retries = retries
 
     def __call__(self, sql: str, params: list[Any], row_limit: int) -> dict[str, Any]:
         body = {"sql": sql, "rowLimit": row_limit}
@@ -33,9 +35,20 @@ class OctoSqlExecutor:
             self.url, data=json.dumps(body, ensure_ascii=True).encode(),
             headers={"Authorization": "Bearer " + os.environ[self._key_env],
                      "Content-Type": "application/json", "User-Agent": "legal-graph/0.1"})
-        try:
-            with urllib.request.urlopen(request, timeout=self.timeout) as response:
-                return json.load(response)
-        except urllib.error.HTTPError as exc:  # surface the server envelope, not headers
-            detail = exc.read()[:500].decode("utf-8", "replace")
-            raise RuntimeError(f"Octo SQL HTTP {exc.code}: {detail}") from None
+        # Retries cover transport failures and 5xx only. Callers send idempotent
+        # statements (ON CONFLICT DO NOTHING inserts, guarded UPDATEs, upserts).
+        for attempt in range(self.retries + 1):
+            try:
+                with urllib.request.urlopen(request, timeout=self.timeout) as response:
+                    return json.load(response)
+            except urllib.error.HTTPError as exc:  # surface the server envelope, not headers
+                if exc.code >= 500 and attempt < self.retries:
+                    time.sleep(2 ** attempt)
+                    continue
+                detail = exc.read()[:500].decode("utf-8", "replace")
+                raise RuntimeError(f"Octo SQL HTTP {exc.code}: {detail}") from None
+            except (urllib.error.URLError, TimeoutError, ConnectionError):
+                if attempt >= self.retries:
+                    raise
+                time.sleep(2 ** attempt)
+        raise RuntimeError("unreachable")

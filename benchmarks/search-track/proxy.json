@@ -1,0 +1,29 @@
+{
+  "dataset": "proxy",
+  "args": {
+    "dataset": "proxy",
+    "variants": "/workspace/lgr-search-data/v_proxy.json",
+    "n": "200",
+    "n_corpus": "20000",
+    "max_chars": "4000",
+    "seed": "20261014",
+    "clerc_dir": "None",
+    "clerc_docs": "None",
+    "out": "/workspace/lgr-search-data/proxy.json"
+  },
+  "results": [
+    {
+      "variant": "bm25",
+      "R@5": 0.0,
+      "R@10": 0.0006,
+      "R@20": 0.0011,
+      "NDCG@10": 0.0004,
+      "MRR": 0.0014,
+      "p50_ms": 3.9,
+      "build_s": 0.5,
+      "n_queries": 200,
+      "n_docs": 20000,
+      "n_chunks": 20052
+    }
+  ]
+}

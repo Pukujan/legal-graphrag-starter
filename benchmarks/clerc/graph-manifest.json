@@ -1,0 +1,23 @@
+{
+  "sources": {
+    "cap": "https://static.case.law/{reporter}/{vol}/CasesMetadata.json",
+    "reporters": [
+      "us",
+      "f2d",
+      "f3d",
+      "f-supp",
+      "f-supp-2d",
+      "f-appx"
+    ],
+    "clerc": "https://huggingface.co/datasets/jhu-clsp/CLERC (test single-removed, doc qrels)"
+  },
+  "cap_cases_scanned": 1378342,
+  "T_gold_and_seed_cases": 4152,
+  "C_cociters_not_in_T": 305028,
+  "federal_nodes_total": 309180,
+  "federal_nodes_reused_from_starter": 1503,
+  "nodes_added": 307677,
+  "edges_added": 1151535,
+  "expanded_nodes_sha256": "addfb62264568cb5d9862654c928c5f5c6dcbae12fe31a3baf599f7eb1a4b894",
+  "expanded_edges_sha256": "be2efb51566a6145ff8c1706efe4f6c13c0011adf2207303f4c4bc766b3cbaca"
+}

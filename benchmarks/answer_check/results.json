@@ -1,0 +1,71 @@
+{
+  "minicheck-roberta-large": {
+    "model": "lytang/MiniCheck-RoBERTa-Large",
+    "version": "74c8919647e6",
+    "n": 248,
+    "acc": 0.9919354838709677,
+    "auroc": 0.9994775339602926,
+    "ece_raw": 0.043574083535443814,
+    "acc_cal": 0.9919354838709677,
+    "ece_cal": 0.013128026468906803,
+    "temperature": 0.4451992782999432,
+    "p50_ms": 437.4441769978148,
+    "p95_ms": 1218.3485319983447,
+    "acc_by_kind_cal": {
+      "neg": 1.0,
+      "supported": 1.0,
+      "wrong_case": 1.0,
+      "wrong_holding": 0.9444444444444444
+    },
+    "ece_raw_ci": [
+      0.03971654120100391,
+      0.056877553620706144
+    ],
+    "ece_cal_ci": [
+      0.005722578965577988,
+      0.026033810187332394
+    ],
+    "auroc_ci": [
+      0.9983465608465608,
+      1.0
+    ],
+    "conformal_threshold_cal": 0.1455154149114889,
+    "conformal_false_accept": 0.034482758620689655,
+    "conformal_false_abstain": 0.0
+  },
+  "hhem-2.1-open": {
+    "model": "vectara/hallucination_evaluation_model",
+    "version": "de9a5e6ba9ba",
+    "n": 248,
+    "acc": 0.7741935483870968,
+    "auroc": 0.8956374085684431,
+    "ece_raw": 0.18811958792690758,
+    "acc_cal": 0.7741935483870968,
+    "ece_cal": 0.12159696350958485,
+    "temperature": 1.9330151784236456,
+    "p50_ms": 181.47746750037186,
+    "p95_ms": 3213.3644870045828,
+    "acc_by_kind_cal": {
+      "neg": 0.2222222222222222,
+      "supported": 1.0,
+      "wrong_case": 1.0,
+      "wrong_holding": 0.2222222222222222
+    },
+    "ece_raw_ci": [
+      0.1434106906658158,
+      0.23720565126765703
+    ],
+    "ece_cal_ci": [
+      0.09410157045543682,
+      0.17298208988526456
+    ],
+    "auroc_ci": [
+      0.8516508662961753,
+      0.9317308318676307
+    ],
+    "conformal_threshold_cal": 0.8606218797766545,
+    "conformal_false_accept": 0.034482758620689655,
+    "conformal_false_abstain": 0.7272727272727273
+  },
+  "jev": "skipped: OPENROUTER_API_KEY not set"
+}
