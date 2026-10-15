@@ -1,6 +1,6 @@
 # Continuity Document Index
 
-<!-- continuity:documents-index {"catalog_sha256":"22785de12d71174d226b562464179edc9c6b173a0b09878f093f0040ae9c962c","schema":"project-continuity.documents-index.v1"} -->
+<!-- continuity:documents-index {"catalog_sha256":"401f41562e213115902c1a7d11052ebedb88c93e129ee5193d2e0e45226ad1b6","schema":"project-continuity.documents-index.v1"} -->
 
 > Generated from `.continuity/documents.json`. Edit the JSON inventory, then run `continuity docs render`; do not edit this view directly.
 > Freshness below compares local file bytes; after `git fetch origin`, use `continuity docs find` for cached remote freshness.
@@ -117,9 +117,9 @@
 
 - File: [`docs/engine-api.md`](../docs/engine-api.md)
 - Local content status: **CURRENT**
-- Last reviewed at commit: `e30d8bbab6180f2cb6806387b1826f2fbad520ed`
-- Reviewed SHA-256: `6340145777717a123372bd6d750a5674a902250049d4ef62697ba3d890c0527a`
-- Current SHA-256: `6340145777717a123372bd6d750a5674a902250049d4ef62697ba3d890c0527a`
+- Last reviewed at commit: `2d6a6c0648c7e20a68301fc13cd855d3156e70a0`
+- Reviewed SHA-256: `8741cb7146d68f6d36e233a744fe3e9bf4059ec932329ec5ee5c91b9ac5dc7e8`
+- Current SHA-256: `8741cb7146d68f6d36e233a744fe3e9bf4059ec932329ec5ee5c91b9ac5dc7e8`
 - Summary: Bearer-token engine routes for ABA: SSE staged retrieval, answer check, cases, benchmarks; env vars and Octo data notes.
 - Search terms: `ABA`, `SSE`, `engine`
 - Neighboring records: none

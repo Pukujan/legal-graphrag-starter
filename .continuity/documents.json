@@ -165,8 +165,8 @@
       ],
       "path": "docs/engine-api.md",
       "related": [],
-      "reviewed_commit": "e30d8bbab6180f2cb6806387b1826f2fbad520ed",
-      "reviewed_sha256": "6340145777717a123372bd6d750a5674a902250049d4ef62697ba3d890c0527a",
+      "reviewed_commit": "2d6a6c0648c7e20a68301fc13cd855d3156e70a0",
+      "reviewed_sha256": "8741cb7146d68f6d36e233a744fe3e9bf4059ec932329ec5ee5c91b9ac5dc7e8",
       "summary": "Bearer-token engine routes for ABA: SSE staged retrieval, answer check, cases, benchmarks; env vars and Octo data notes.",
       "tasks": [],
       "title": "Retrieval-engine HTTP API"
