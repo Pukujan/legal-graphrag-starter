@@ -169,7 +169,8 @@ def create_app(
                     "lexical": app.state.pipeline.lexical.name,
                     "dense_model": app.state.pipeline.dense_model,
                     "rerank_model": app.state.pipeline.rerank_model,
-                    "jev_model": app.state.pipeline.jev_model} if app.state.pipeline is not None else {}),
+                    "jev_model": app.state.pipeline.jev_model,
+                    "dense_index": app.state.pipeline.dense_index_info, "graph_edge_cap": app.state.pipeline.graph_edge_cap} if app.state.pipeline is not None else {}),
                 "auth": "bearer" if app.state.api_token else "unconfigured",
             }} if (app.state.pipeline is not None or live or app.state.api_token) else {}),
         }

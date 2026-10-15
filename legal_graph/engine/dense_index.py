@@ -80,6 +80,31 @@ def query_prefix(model: str) -> str:
     return BGE_QUERY_PREFIX if "bge" in model.lower() and "m3" not in model.lower() else ""
 
 
+class EmbeddingBadRequest(RuntimeError):
+    pass
+
+
+def robust_encode(encode, texts: Sequence[str], dim: int, stats: dict[str, int]) -> np.ndarray:
+    """Encode a batch; on HTTP 400 bisect, then truncate a single bad text, then give it a zero vector."""
+    try:
+        return encode(texts)
+    except EmbeddingBadRequest:
+        if len(texts) > 1:
+            h = len(texts) // 2
+            return np.concatenate([robust_encode(encode, texts[:h], dim, stats),
+                                   robust_encode(encode, texts[h:], dim, stats)])
+        t = texts[0]
+        for cut in (1500, 600):
+            try:
+                v = encode([t[:cut] if t.strip() else "(empty)"])
+                stats["truncated"] = stats.get("truncated", 0) + 1
+                return v
+            except EmbeddingBadRequest:
+                continue
+        stats["zero"] = stats.get("zero", 0) + 1
+        return np.zeros((1, dim), dtype=np.float32)
+
+
 class OpenRouterEncoder:
     """Batch text -> L2-normalised float32 vectors via OpenRouter embeddings. Key from env, never logged."""
 
@@ -111,6 +136,13 @@ class OpenRouterEncoder:
                 return v / np.maximum(np.linalg.norm(v, axis=1, keepdims=True), 1e-12)
             except (urllib.error.URLError, TimeoutError, ConnectionError, OSError, ValueError, KeyError) as exc:
                 code = getattr(exc, "code", 0)
+                if code == 400:
+                    detail = ""
+                    try:
+                        detail = exc.read()[:200].decode("utf-8", "replace")  # type: ignore[attr-defined]
+                    except Exception:  # noqa: BLE001
+                        pass
+                    raise EmbeddingBadRequest(detail) from None
                 if attempt >= self.retries or (code and code < 500 and code not in (408, 429)):
                     raise RuntimeError(f"embedding request failed: {type(exc).__name__} {code or ''}".strip()) from None
                 time.sleep(delay)
@@ -137,11 +169,29 @@ def storage_for(dim: int) -> tuple[str, str]:
 
 
 class DenseIndex:
+    """Exact inner-product search. Uses a faiss fp16 scalar-quantizer flat index when faiss is
+    installed (SIMD, multithreaded; ~0.3 s for 804k x 1024 on the loaded box vs ~3 s in numpy)."""
+
     def __init__(self, vectors: np.ndarray, encode_query, meta: dict[str, Any]):
         self.vectors, self.encode_query, self.meta = vectors, encode_query, meta
+        self.faiss = None
+        self.n, self.dim = int(vectors.shape[0]), int(vectors.shape[1])
+        if os.environ.get("ENGINE_DENSE_FAISS", "1") == "1":
+            try:
+                import faiss
+            except ImportError:
+                faiss = None
+            if faiss is not None:
+                idx = faiss.IndexScalarQuantizer(self.dim, faiss.ScalarQuantizer.QT_fp16, faiss.METRIC_INNER_PRODUCT)
+                for a in range(0, self.n, 65536):
+                    idx.add(np.ascontiguousarray(vectors[a:a + 65536], dtype=np.float32))
+                self.faiss, self.vectors = idx, None  # the fp16 codes live in faiss; drop the numpy copy
 
     def search(self, query: str, k: int) -> list[tuple[int, float]]:
         q = np.asarray(self.encode_query(query), dtype=np.float32)
+        if self.faiss is not None:
+            scores, ids = self.faiss.search(q.reshape(1, -1), k)
+            return [(int(i), float(s)) for i, s in zip(ids[0], scores[0]) if i >= 0]
         n = self.vectors.shape[0]
         best_i, best_s = [], []
         step = 131072
@@ -156,8 +206,8 @@ class DenseIndex:
         return [(int(bi[j]), float(bs[j])) for j in order]
 
     def info(self) -> dict[str, Any]:
-        return {"index_chunks": int(self.vectors.shape[0]), "dim": int(self.vectors.shape[1]),
-                "storage": self.meta.get("storage", "local-cache")}
+        return {"index_chunks": self.n, "dim": self.dim, "storage": self.meta.get("storage", "local-cache"),
+                "search": "faiss-sq-fp16" if self.faiss is not None else "numpy"}
 
 
 def load(cache_dir: Path, model: str, chunk_ids: Sequence[str], encode_query) -> DenseIndex | None:
@@ -171,7 +221,7 @@ def load(cache_dir: Path, model: str, chunk_ids: Sequence[str], encode_query) ->
                     meta.get("n"), len(chunk_ids))
         return None
     vecs = np.load(vp, mmap_mode="r")
-    if os.environ.get("ENGINE_DENSE_IN_RAM", "1") == "1":
+    if os.environ.get("ENGINE_DENSE_IN_RAM", "1") == "1" and os.environ.get("ENGINE_DENSE_FAISS", "1") != "1":
         vecs = np.ascontiguousarray(vecs)
     return DenseIndex(vecs, encode_query, meta)
 
@@ -203,7 +253,9 @@ def build(texts: Iterable[str], chunk_ids: Sequence[str], model_name: str, cache
         block = [next(it) for _ in range(min(step, n - a))]
         b = a + len(block)
         if backend == "openrouter":
-            parts = list(pool.map(encode, [block[i:i + batch] for i in range(0, len(block), batch)]))
+            bad = meta.setdefault("bad_texts", {})
+            parts = list(pool.map(lambda x: robust_encode(encode, x, dim, bad),
+                                  [block[i:i + batch] for i in range(0, len(block), batch)]))
             vecs = np.concatenate(parts)
         else:
             vecs = encode(block)

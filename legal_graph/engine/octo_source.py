@@ -71,12 +71,31 @@ def load_corpus(sql, cache_dir: Path, refresh_only: bool = False) -> Corpus | No
         r = json.loads(line)
         chunks.append(Chunk(r["chunk_id"], r["work_id"], int(r["ord"]), r["body"]))
     docs: dict[str, dict[str, Any]] = {}
-    for r in sql("SELECT work_id, court_id, decided_on, case_name, ext_ids FROM legal_graph.work", [], 100000)["rows"]:
-        ext = r.get("ext_ids") or {}
-        docs[r["work_id"]] = {"name": r.get("case_name"), "court": r.get("court_id"),
-                              "year": int(r["decided_on"][:4]) if r.get("decided_on") else None,
-                              "cap_id": ext.get("cap_id"), "link": ext.get("link"), "html": ext.get("html")}
+    last = ""
+    while True:  # Octo caps a response at 10,000 rows, so page by work_id
+        page = sql("SELECT work_id, court_id, decided_on, case_name, ext_ids FROM legal_graph.work WHERE work_id > $1 "
+                   "ORDER BY work_id LIMIT " + str(PAGE), [last], PAGE)["rows"]
+        if not page:
+            break
+        for r in page:
+            ext = r.get("ext_ids") or {}
+            docs[r["work_id"]] = {"name": r.get("case_name"), "court": r.get("court_id"),
+                                  "year": int(r["decided_on"][:4]) if r.get("decided_on") else None,
+                                  "cap_id": ext.get("cap_id"), "link": ext.get("link"), "html": ext.get("html"),
+                                  "cites": ext.get("cites") or []}
+        last = page[-1]["work_id"]
     return Corpus(chunks, docs, revision=f"octo-chunk:{len(chunks)}")
+
+
+def corpus_citation_index(corpus: Corpus) -> dict[str, str]:
+    """Reporter cite -> work_id for cases with stored text (work_id suffix 'Name, 103 P.3d 322' and ext_ids.cites)."""
+    out: dict[str, str] = {}
+    for doc_id, meta in corpus.docs.items():
+        if doc_id not in corpus.by_doc:
+            continue
+        for c in [doc_id.rsplit(", ", 1)[-1], *meta.get("cites", [])]:
+            out.setdefault(" ".join(c.split()), doc_id)
+    return out
 
 
 class OctoGraph:
@@ -116,7 +135,13 @@ def build_live_pipeline() -> tuple[Pipeline, OctoGraph]:
     except ImportError:
         lexical = PurePythonBM25(texts)
     graph = OctoGraph(sql, snapshot, limit=int(os.environ.get("ENGINE_GRAPH_EDGE_CAP", GRAPH_EDGE_CAP_DEFAULT)))
-    p = Pipeline(corpus, lexical, resolve_citations=graph.resolve, neighbours=graph.neighbours,
+    cite_index = corpus_citation_index(corpus)
+
+    def resolve(cites: Sequence[str]) -> dict[str, str]:
+        out = {c: cite_index[" ".join(c.split())] for c in cites if " ".join(c.split()) in cite_index}
+        rest = [c for c in cites if c not in out]
+        return {**out, **(graph.resolve(rest) if rest else {})}
+    p = Pipeline(corpus, lexical, resolve_citations=resolve, neighbours=graph.neighbours,
                  graph_revision=snapshot, graph_edge_cap=graph.limit)
     try:
         from sentence_transformers import CrossEncoder, SentenceTransformer
