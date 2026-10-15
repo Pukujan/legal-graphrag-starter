@@ -1,0 +1,37 @@
+{
+  "edges_total": 62804,
+  "edges_labelled": 62804,
+  "label_distribution": {
+    "followed": 49027,
+    "cited-neutral": 9405,
+    "distinguished": 3674,
+    "overruled": 276,
+    "criticized": 265,
+    "questioned": 157
+  },
+  "order_consistency": 0.9671040061142603,
+  "api_cost_usd": 2.7842,
+  "cost_per_1k_calls_usd": 0.0443,
+  "handcheck": {
+    "n": 50,
+    "agreement": 0.7,
+    "agreement_by_jev_label": {
+      "followed": 0.8,
+      "cited-neutral": 0.8,
+      "distinguished": 0.8,
+      "criticized": 0.2,
+      "overruled": 0.6,
+      "questioned": 0.6
+    },
+    "population_weighted_agreement": 0.7960894210559838,
+    "ece_raw": 0.17579999999999996,
+    "ece_cal_cv": 0.0627307656587337,
+    "temperature": 2.192666285020755
+  },
+  "threshold_calibrated": 0.722,
+  "accepted": 29665,
+  "accepted_share": 0.4723425259537609,
+  "model_versions": {
+    "typesafe/jev-1.14-20261014": 62804
+  }
+}

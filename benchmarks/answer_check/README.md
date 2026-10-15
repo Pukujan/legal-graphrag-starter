@@ -1,6 +1,6 @@
 # Answer-time citation and confidence checker: benchmark
 
-Refs issue #30. Module: `legal_graph/answer_check.py`.
+Refs issue #30; Jev added in #43. Module: `legal_graph/answer_check.py`.
 
 ## Why it matters
 A legal answer can cite a real Colorado case that does not say what the sentence claims. The checker scores each claim
@@ -20,10 +20,23 @@ against the text it cites, calibrates that score, and tells the answer to abstai
 |---|---|---|---|---|---|---|---|
 | MiniCheck-RoBERTa-Large (`74c8919647e6`) | 0.992 | 0.999 [0.998-1.000] | 0.044 [0.040-0.057] | 0.013 [0.006-0.026] | 0.45 | 0.146 / 0.034 / 0.000 | 437 / 1218 |
 | HHEM-2.1-Open (`de9a5e6ba9ba`) | 0.774 | 0.896 [0.852-0.932] | 0.188 [0.143-0.237] | 0.122 [0.094-0.173] | 1.93 | 0.861 / 0.034 / 0.727 | 181 / 3213 |
-| Jev yes/no | skipped: `OPENROUTER_API_KEY` not set | | | | | | |
+| Jev 1.14 (`typesafe/jev-1.14-20261014`, OpenRouter) | 0.996 | 1.000 [1.000-1.000] | 0.015 [0.010-0.022] | 0.004 [0.000-0.013] | 0.39 | 0.003 / 0.043 / 0.000 | 98 / 712 (HTTP, 8 parallel) |
 
 Accuracy by kind (calibrated): MiniCheck 1.00 on supported, neg and wrong_case, and 0.94 on wrong_holding. HHEM 1.00 on supported and wrong_case,
 but only 0.22 on neg and 0.22 on wrong_holding: it misses flipped holdings. Temperature scaling does not change accuracy at 0.5 (it is monotonic).
+Jev: 1.00 on supported, neg and wrong_case, 0.97 on wrong_holding (1 miss). Jev score = mean of a Noul ("does the passage
+support the claim?") and a 2-way Choice {supported, not_supported} asked in both option orders and averaged; Noul alone and
+Choice alone each give acc 0.996 / AUROC 1.000. 248 calls, $0.0076 total ($0.031 per 1,000 calls). `run_jev.py`.
+
+### Differential test (`diff.py` -> `diff.json`, correct@0.5 per claim, exact McNemar)
+| pair | W/T/L | McNemar b/c, p | paired diff in acc [95% CI] |
+|---|---|---|---|
+| MiniCheck vs HHEM | 54/194/0 | 54/0, p=1e-16 | +0.218 [+0.169, +0.270] |
+| MiniCheck vs Jev | 1/245/2 | 1/2, p=1.0 | -0.004 [-0.016, +0.008] |
+| HHEM vs Jev | 0/193/55 | 0/55, p=6e-17 | -0.222 [-0.274, -0.173] |
+
+MiniCheck and Jev are statistically tied on this set (3 discordant claims, all `wrong_holding`): only MiniCheck right on #245;
+only Jev right on #20 and #240. Only-one-right examples for every pair are in `diff.json`.
 
 ## Score schema (stored per claim; matches the merged `assertion` columns in PR #38)
 `raw_prob`, `calibrated_prob`, `threshold`, `accepted`, `decided_at` (UTC ISO-8601), `decider` (HF model id), `model_version`
