@@ -21,22 +21,12 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Require read-only access to private ACS source
-        env:
-          ACS_READ_TOKEN: ${{ secrets.ACS_READ_TOKEN }}
-        run: |
-          if [ -z "$ACS_READ_TOKEN" ]; then
-            echo "Configure the ACS_READ_TOKEN repository secret with read-only access to Pukujan/agent-custom-setup."
-            exit 1
-          fi
-
       - name: Check out pinned stack dependencies
         uses: actions/checkout@v4
         with:
           repository: Pukujan/agent-custom-setup
           ref: 5352653f4348e74afdf49e04cacc753f2b4beeb7
           path: .deps/acs
-          token: ${{ secrets.ACS_READ_TOKEN }}
 
       - uses: actions/checkout@v4
         with:
