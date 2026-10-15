@@ -74,3 +74,19 @@ workspace SQL endpoint (`POST /api/workspaces/<id>/query`), authenticating with 
   5. Read the whole snapshot back through `GraphSnapshotStore` and recompute the digest and counts. On any mismatch the snapshot stays `staging`.
   6. Mark the snapshot `ready`; the schema checks the counts.
   7. With `--activate`, run the ready-only atomic pointer statement.
+
+## Bitemporal property graph and evolving types (issue #31)
+
+Migration `004_bitemporal_property_graph.sql` adds new tables next to the snapshot tables and never alters them, so `GraphSnapshotStore` reads exactly as before. It follows `RESEARCH-data-model.md`: plain PostgreSQL 16 with pgvector, no Apache AGE.
+
+- `type_registry`: node, edge, decision and tag types are rows with status `proposed`, then `accepted`, then `deprecated`. A trigger rejects deletes, key changes, reviving a deprecated type and moving an accepted type back to proposed.
+- `work`, `work_alias`, `expression`: the case (CourtListener cluster), its reporter-cite aliases (trigram index) and each opinion text version.
+- `edge` and `assertion`: `valid_time` is when a fact is true in law, `sys_time` is when we believed it. `EXCLUDE USING gist` (needs `btree_gist`) blocks two overlapping beliefs about the same edge or decision. A correction closes `sys_time` and inserts a new row; nothing is updated in place. `assertion` also stores the gate fields: decider, decider version, raw probability, calibrated probability, threshold and accepted.
+- `prov_activity` and `evidence`: PROV-O-shaped runs (import, classifier, human review) and exact source spans for each edge or assertion.
+- `chunk`: text with a generated `tsvector` (GIN) and a 1024-dimension pgvector embedding (HNSW, cosine).
+
+The Octo workspace role owns its database, so it can create the trusted `btree_gist` and `pg_trgm` extensions (checked live on 2026-10-14). `legal_graph.bitemporal.BitemporalGraphStore` is the adapter and uses the same one-statement executor as `GraphSnapshotStore`.
+
+## Snapshot-keyed retrieval cache (issue #32)
+
+`legal_graph.retrieval_cache` caches retrieval candidates, never final answers. It uses stdlib SQLite because one process with a few thousand entries does not need Redis. The key is the snapshot id plus a sha256 of the L2-normalized, rounded query embedding plus the retrieval parameters. Entries expire by TTL. Activating a different snapshot drops every older entry, and writes for a stale snapshot are ignored. `cached_retrieve` reranks and checks results on every call, including hits.
