@@ -83,3 +83,24 @@ def test_readback_mismatch_leaves_staging(tmp_path):
     with pytest.raises(StorageError):
         si.import_snapshot(octo, _data(tmp_path), batch=3, activate=True, log=lambda *_: None)
     assert list(octo.snap.values())[0]["status"] == "staging" and octo.active is None
+
+
+def test_octo_client_retries_transport_errors(monkeypatch):
+    import io, urllib.error
+    from legal_graph import octo_client
+    monkeypatch.setenv("octo_test_key", "x")
+    calls = []
+
+    class Resp(io.BytesIO):
+        def __enter__(self): return self
+        def __exit__(self, *a): return False
+
+    def fake(req, timeout):
+        calls.append(1)
+        if len(calls) < 3:
+            raise urllib.error.URLError("handshake timed out")
+        return Resp(b'{"rows":[],"statementCount":1,"truncated":false}')
+    monkeypatch.setattr(octo_client.urllib.request, "urlopen", fake)
+    monkeypatch.setattr(octo_client.time, "sleep", lambda s: None)
+    ex = octo_client.OctoSqlExecutor("ws", key_env="octo_test_key")
+    assert ex("SELECT 1", [], 1)["statementCount"] == 1 and len(calls) == 3
