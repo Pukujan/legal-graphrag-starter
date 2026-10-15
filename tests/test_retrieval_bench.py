@@ -104,3 +104,18 @@ def test_bench_diff(bench, tmp_path):
     rec = json.loads((run / "results.json").read_text())
     bench_diff.write(out, rec["per_query"], bench_diff.systems_of(rec), tmp_path / "d")
     assert (tmp_path / "d" / "per_query.tsv").read_text().count("\n") == 3
+
+
+def test_qgraph_stage_runs_in_harness(bench):
+    cfg = json.loads((bench / "config.json").read_text())
+    cfg["systems"] = [{"name": "bm25", "kind": "bm25"},
+                      {"name": "bm25+ppr0", "kind": "qgraph", "from": "bm25", "text_scores_from": "bm25",
+                       "method": "ppr", "n_seeds": 2, "lam": 0.0},
+                      {"name": "bm25+ppr1", "kind": "qgraph", "from": "bm25", "text_scores_from": "bm25",
+                       "method": "ppr", "n_seeds": 2, "lam": 1.0}]
+    (bench / "config.json").write_text(json.dumps(cfg))
+    rb.seal(bench / "config.json")
+    rec = json.loads((rb.run(bench / "config.json", bench / "runs") / "results.json").read_text())
+    for r in rec["per_query"]:
+        assert r["bm25+ppr0"] == r["bm25"]            # lam=0 reproduces the first stage
+        assert r["bm25+ppr1"]["recall@5"] >= r["bm25"]["recall@5"]
