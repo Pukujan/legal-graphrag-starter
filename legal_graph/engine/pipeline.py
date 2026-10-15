@@ -1,13 +1,15 @@
 """Staged hybrid + graph retrieval that emits one event per stage.
 
-Stages: parse -> bm25 -> dense -> hybrid (RRF) -> graph (one hop) -> rerank ->
-jev (optional) -> result. Every component is injected so tests run offline; the
+Stages: parse (eyecite) -> bm25 -> dense (precomputed chunk index) -> hybrid (RRF) ->
+graph (one hop, capped edge scan) -> rerank (cross-encoder, then optional Jev relevance
+over the head) -> result. Every component is injected so tests run offline; the
 live wiring is in ``octo_source.build_live_pipeline``.
 """
 from __future__ import annotations
 
 import re
 import time
+from concurrent.futures import ThreadPoolExecutor
 from collections.abc import Callable, Iterator, Sequence
 from dataclasses import dataclass
 from typing import Any
@@ -19,6 +21,10 @@ from .models import EVENT_SCHEMA_VERSION, TextRetrieveRequest
 
 # Reporter citations such as "855 F.2d 874", "410 U.S. 113", "200 Colo. 1".
 _CITE = re.compile(r"\b(\d{1,4})\s+([A-Z][A-Za-z0-9.\s]{0,20}?\.?(?:\s?\d[a-z]{1,2})?)\s+(\d{1,5})\b")
+
+
+def _finite(x: float | None) -> float | None:
+    return round(x, 4) if x is not None and x == x else None
 
 
 def regex_citations(text: str) -> list[str]:
@@ -65,6 +71,11 @@ class Pipeline:
     jev: Callable[[str, str], float] | None = None
     jev_model: str | None = None
     graph_revision: str = "supplied"
+    # Full-corpus dense search over a precomputed index: (query, k) -> [(chunk_index, score)].
+    dense_index: Callable[[str, int], list[tuple[int, float]]] | None = None
+    dense_index_info: dict[str, Any] | None = None
+    graph_edge_cap: int | None = None
+    jev_workers: int = 8
 
     def run(self, req: TextRetrieveRequest) -> Iterator[dict[str, Any]]:
         t_start = time.perf_counter()
@@ -101,26 +112,50 @@ class Pipeline:
                     candidates=[{"doc_id": d, "chunk_id": corpus.chunks[best_chunk[d]].chunk_id, "rank": r + 1,
                                  "score": round(bm25_score[d], 4)} for r, d in enumerate(bm25_docs)])
 
-        # dense over the BM25 chunk pool
+        # dense: full-corpus search over the precomputed index, else re-encode the BM25 pool
         dense_docs: list[str] = []
         dense_score: dict[str, float] = {}
-        if req.dense and self.dense and order:
+        dense_chunk: dict[str, int] = {}
+        index_error = None
+        hits: list[tuple[int, float]] | None = None
+        if req.dense and self.dense_index is not None:
+            t0 = time.perf_counter()
+            try:
+                hits = self.dense_index(req.query, req.dense_pool)
+            except Exception as exc:  # e.g. the query-embedding API is down: fall back to pool mode
+                index_error = f"{type(exc).__name__}: {str(exc)[:120]}"
+        if hits is not None:
+            for i, sc in hits:
+                d = corpus.chunks[i].doc_id
+                if d not in dense_score:
+                    dense_score[d], dense_chunk[d] = float(sc), i
+                    dense_docs.append(d)
+            info = dict(self.dense_index_info or {})
+            yield event("dense", t0, model=info.pop("model", self.dense_model), mode="index",
+                        top_chunks=req.dense_pool, **info,
+                        candidates=[{"doc_id": d, "chunk_id": corpus.chunks[dense_chunk[d]].chunk_id, "rank": r + 1,
+                                     "score": round(dense_score[d], 4)} for r, d in enumerate(dense_docs)])
+        elif req.dense and self.dense and order:
             t0 = time.perf_counter()
             dpool = order[: req.dense_pool]
             sims = self.dense(req.query, [corpus.chunks[i].body for i in dpool])
             pairs = sorted(zip(sims, dpool), key=lambda p: (-float(p[0]), p[1]))
-            for s, i in pairs:
+            for sc, i in pairs:
                 d = corpus.chunks[i].doc_id
                 if d not in dense_score:
-                    dense_score[d] = float(s)
+                    dense_score[d], dense_chunk[d] = float(sc), i
                     dense_docs.append(d)
-            yield event("dense", t0, model=self.dense_model, pool_chunks=len(dpool),
+            yield event("dense", t0, model=self.dense_model, mode="pool", pool_chunks=len(dpool),
+                        **({"index_error": index_error} if index_error else {}),
                         candidates=[{"doc_id": d, "rank": r + 1, "score": round(dense_score[d], 4)}
                                     for r, d in enumerate(dense_docs)])
         else:
             yield {"type": "stage", "schema_version": EVENT_SCHEMA_VERSION, "stage": "dense", "skipped": True,
-                   "reason": "disabled by request" if not req.dense else "no dense model loaded" if not self.dense else "empty pool",
+                   "reason": "disabled by request" if not req.dense else "no dense model loaded"
+                   if not (self.dense or self.dense_index) else "empty pool",
                    "duration_ms": 0.0, "elapsed_ms": round((time.perf_counter() - t_start) * 1000, 2)}
+        for d, i in dense_chunk.items():
+            best_chunk.setdefault(d, i)
 
         # hybrid RRF (k=60)
         t0 = time.perf_counter()
@@ -146,6 +181,9 @@ class Pipeline:
             t0 = time.perf_counter()
             frontier = list(dict.fromkeys(seeds + hybrid[: req.graph_seed_docs]))
             edges = self.neighbours(frontier) if frontier else []
+            truncated = bool(self.graph_edge_cap is not None and len(edges) >= self.graph_edge_cap)
+            if self.graph_edge_cap is not None:
+                edges = edges[: self.graph_edge_cap]
             fset, added, used = set(frontier), [], []
             for e in edges:
                 for here, there, direction in ((e["source"], e["target"], "outgoing"), (e["target"], e["source"], "incoming")):
@@ -159,7 +197,8 @@ class Pipeline:
             for d in added:  # best passage for graph-only cases
                 idxs = corpus.by_doc[d]
                 best_chunk[d] = max(idxs, key=lambda i: (float(scores[i]), -i))
-            yield event("graph", t0, hops=1, frontier=frontier, edges_scanned=len(edges), edges=used[:500],
+            yield event("graph", t0, hops=1, frontier=frontier, edges_scanned=len(edges), edge_cap=self.graph_edge_cap,
+                        truncated=truncated, edges_used=len(used), edges=used[:500],
                         added=[{"doc_id": d, "via": [p for p in provenance[d] if p["source"] == "graph"]} for d in added],
                         graph_revision=self.graph_revision)
         else:
@@ -171,47 +210,61 @@ class Pipeline:
                 best_chunk[d] = max(corpus.by_doc[d], key=lambda i: (float(scores[i]), -i))
         pool = [d for d in pool if d in best_chunk]
 
-        # rerank
+        # rerank: cross-encoder over the head, then (optional, default on) Jev relevance over the top jev_k
         final_score = {d: fused.get(d, 0.0) for d in pool}
         ranked = sorted(pool, key=lambda d: (-final_score[d], d))
+        prev_rank = {d: r + 1 for r, d in enumerate(ranked)}
         method = "rrf"
-        if req.rerank and self.reranker and ranked:
+        jev_scores: dict[str, float] = {}
+        if req.rerank and ranked and (self.reranker or (req.jev and self.jev)):
             t0 = time.perf_counter()
             head = ranked[: req.rerank_k]
-            rs = self.reranker(req.query, [corpus.chunks[best_chunk[d]].body for d in head])
-            rr = {d: float(s) for d, s in zip(head, rs)}
-            ranked = sorted(head, key=lambda d: (-rr[d], d)) + ranked[req.rerank_k:]
-            final_score.update(rr)
-            method = "cross-encoder"
-            yield event("rerank", t0, model=self.rerank_model, reranked=len(head),
-                        candidates=[{"doc_id": d, "rank": r + 1, "score": round(rr[d], 4),
-                                     "prev_rank": pool_rank} for r, (d, pool_rank) in
-                                    enumerate((d, sorted(pool, key=lambda x: (-fused.get(x, 0), x)).index(d) + 1)
-                                              for d in ranked[: len(head)])])
+            info: dict[str, Any] = {}
+            if self.reranker:
+                t1 = time.perf_counter()
+                rs = self.reranker(req.query, [corpus.chunks[best_chunk[d]].body for d in head])
+                rr = {d: float(x) for d, x in zip(head, rs)}
+                ranked = sorted(head, key=lambda d: (-rr[d], d)) + ranked[req.rerank_k:]
+                final_score.update(rr)
+                method = "cross-encoder"
+                info["cross_encoder"] = {"model": self.rerank_model, "reranked": len(head),
+                                         "duration_ms": round((time.perf_counter() - t1) * 1000, 2)}
+            if req.jev and self.jev:
+                t1 = time.perf_counter()
+                jhead = ranked[: req.jev_k]
+
+                def one(d: str) -> float:
+                    try:
+                        return float(self.jev(req.query, corpus.chunks[best_chunk[d]].body))
+                    except Exception as exc:  # provider failure must not kill retrieval
+                        provenance.setdefault(d, []).append({"source": "jev_error", "error": type(exc).__name__})
+                        return float("nan")
+                with ThreadPoolExecutor(max(1, min(self.jev_workers, len(jhead)))) as ex:
+                    jev_scores = dict(zip(jhead, ex.map(one, jhead)))
+                ok = {d: v for d, v in jev_scores.items() if v == v}
+                if ok:  # Jev order within the head; failed calls keep their order after the scored cases
+                    pos = {d: r for r, d in enumerate(jhead)}
+                    jsorted = sorted(jhead, key=lambda d: (0, -ok[d], pos[d]) if d in ok else (1, 0.0, pos[d]))
+                    ranked = jsorted + ranked[len(jhead):]
+                    method = "jev" if method == "rrf" else method + "+jev"
+                info["jev"] = {"model": self.jev_model, "k": len(jhead), "scored": len(ok),
+                               "failed": len(jev_scores) - len(ok),
+                               "duration_ms": round((time.perf_counter() - t1) * 1000, 2)}
+            else:
+                info["jev"] = {"skipped": True, "reason": "disabled by request" if not req.jev
+                               else "OPENROUTER_API_KEY not configured"}
+            yield event("rerank", t0, method=method, model=self.rerank_model, reranked=len(head), **info,
+                        candidates=[{"doc_id": d, "rank": r + 1, "score": round(final_score[d], 4),
+                                     "jev_relevance": _finite(jev_scores.get(d)), "prev_rank": prev_rank[d]}
+                                    for r, d in enumerate(ranked[: len(head)])])
         else:
             yield {"type": "stage", "schema_version": EVENT_SCHEMA_VERSION, "stage": "rerank", "skipped": True,
                    "reason": "disabled by request" if not req.rerank else "no reranker loaded",
+                   "jev": {"skipped": True, "reason": "disabled by request" if not (req.rerank and req.jev)
+                           else "OPENROUTER_API_KEY not configured"},
                    "duration_ms": 0.0, "elapsed_ms": round((time.perf_counter() - t_start) * 1000, 2)}
 
         top = ranked[: req.k]
-        jev_scores: dict[str, float] = {}
-        if req.jev:
-            if self.jev:
-                t0 = time.perf_counter()
-                for d in top:
-                    try:
-                        jev_scores[d] = float(self.jev(req.query, corpus.chunks[best_chunk[d]].body))
-                    except Exception as exc:  # provider failure must not kill retrieval
-                        jev_scores[d] = float("nan")
-                        provenance.setdefault(d, []).append({"source": "jev_error", "error": type(exc).__name__})
-                yield event("jev", t0, model=self.jev_model,
-                            candidates=[{"doc_id": d, "relevance": None if jev_scores[d] != jev_scores[d] else round(jev_scores[d], 4)}
-                                        for d in top])
-            else:
-                yield {"type": "stage", "schema_version": EVENT_SCHEMA_VERSION, "stage": "jev", "skipped": True,
-                       "reason": "OPENROUTER_API_KEY not configured", "duration_ms": 0.0,
-                       "elapsed_ms": round((time.perf_counter() - t_start) * 1000, 2)}
-
         results = []
         for r, d in enumerate(top):
             idxs = sorted(corpus.by_doc[d], key=lambda i: (-float(scores[i]), i))
@@ -223,7 +276,7 @@ class Pipeline:
                             "score_kind": method, "rrf": round(fused.get(d, 0.0), 6),
                             "bm25": round(bm25_score[d], 4) if d in bm25_score else None,
                             "dense": round(dense_score[d], 4) if d in dense_score else None,
-                            "jev_relevance": (round(jev_scores[d], 4) if d in jev_scores and jev_scores[d] == jev_scores[d] else None),
+                            "jev_relevance": _finite(jev_scores.get(d)),
                             "provenance": provenance.get(d, []), "passages": passages})
         yield {"type": "result", "schema_version": EVENT_SCHEMA_VERSION, "query": req.query,
                "corpus_revision": corpus.revision, "graph_revision": self.graph_revision,

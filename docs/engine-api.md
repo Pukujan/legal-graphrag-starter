@@ -41,16 +41,17 @@ Request (unknown fields rejected, strict types):
 ```json
 {"query": "Is a warrantless search of an automobile allowed with probable cause? See 456 U.S. 798",
  "k": 10, "bm25_k": 100, "dense": true, "dense_pool": 50, "graph": true, "graph_seed_docs": 10,
- "rerank": true, "rerank_k": 30, "jev": false, "passages_per_case": 2, "stream": true}
+ "rerank": true, "rerank_k": 30, "jev": true, "jev_k": 10, "passages_per_case": 2, "stream": true}
 ```
 
 Only `query` (3 to 4000 chars) is required. Limits: `k` 1-50, `bm25_k` 10-500, `dense_pool` 1-200,
-`graph_seed_docs` 0-50, `rerank_k` 1-100, `passages_per_case` 1-5.
+`graph_seed_docs` 0-50, `rerank_k` 1-100, `jev_k` 1-30, `passages_per_case` 1-5. `jev` (default `true`) turns on
+the Jev relevance pass inside the `rerank` stage; it runs only when the engine has `OPENROUTER_API_KEY` and `rerank` is true.
 
 ### Stream framing
 
 `Content-Type: text/event-stream`. Each message is `event: <name>\ndata: <one-line ASCII JSON>\n\n`.
-Event names: `stage` (one per stage, in order `parse, bm25, dense, hybrid, graph, rerank[, jev]`), `result` (once),
+Event names: `stage` (one per stage, in order `parse, bm25, dense, hybrid, graph, rerank`; there is no separate `jev` stage any more), `result` (once),
 `error` (only on failure, after which the stream ends), `done` (always last). Non-finite numbers are sent as `null`.
 
 Every `stage` data object has:
@@ -67,24 +68,25 @@ Per-stage fields:
 
 | stage | extra fields |
 |---|---|
-| `parse` | `parser` (`eyecite` if installed, else `regex`), `citations: [{citation, doc_id or null}]` (reporter cites in the question, resolved against the active Octo snapshot) |
+| `parse` | `parser` (`eyecite`, the default and installed in the engine env; `regex` only if eyecite is missing), `citations: [{citation, doc_id or null}]` (reporter cites in the question, resolved against the active Octo snapshot) |
 | `bm25` | `retriever` (`bm25s`), `chunks_scored`, `candidates: [{doc_id, chunk_id, rank, score}]` (chunk hits max-pooled to cases) |
-| `dense` | `model`, `pool_chunks`, `candidates: [{doc_id, rank, score}]` (cosine; dense re-scores the top `dense_pool` BM25 chunks) |
+| `dense` | `model`, `mode`. `mode: "index"` (normal): full-corpus search of the precomputed chunk index; extra fields `top_chunks` (= `dense_pool`), `index_chunks`, `dim`, `storage`, `backend`, `candidates: [{doc_id, chunk_id, rank, score}]`. `mode: "pool"` (fallback when the index is missing, stale or its query call failed, then with `index_error`): re-encodes the top `dense_pool` BM25 chunks; `pool_chunks`, `candidates: [{doc_id, rank, score}]`. Scores are cosine. |
 | `hybrid` | `method: "rrf"`, `rrf_k: 60`, `inputs: ["bm25","dense"]`, `candidates: [{doc_id, rank, score, ranks: {bm25: r, dense: r}}]` |
-| `graph` | `hops: 1`, `frontier: [doc_id]`, `edges_scanned`, `edges: [{source, target, kind}]` (edges that added a case, max 500), `added: [{doc_id, via: [{source:"graph", edge, via, direction}]}]`, `graph_revision` |
-| `rerank` | `model`, `reranked`, `candidates: [{doc_id, rank, score, prev_rank}]` |
-| `jev` | `model`, `candidates: [{doc_id, relevance or null}]` (only when `"jev": true`) |
+| `graph` | `hops: 1`, `frontier: [doc_id]`, `edges_scanned` (edges returned by the one SQL read), `edge_cap` (`ENGINE_GRAPH_EDGE_CAP`, default 20,000), `truncated` (`true` when `edges_scanned` reached the cap, so some neighbours were not seen), `edges_used`, `edges: [{source, target, kind}]` (edges that added a case, max 500), `added: [{doc_id, via: [{source:"graph", edge, via, direction}]}]`, `graph_revision` |
+| `rerank` | `method` (`cross-encoder`, `cross-encoder+jev`, or `jev`), `model`, `reranked`, `cross_encoder: {model, reranked, duration_ms}`, `jev: {model, k, scored, failed, duration_ms}` or `jev: {skipped: true, reason}`, `candidates: [{doc_id, rank, score, jev_relevance or null, prev_rank}]`. Jev scores the top `jev_k` cross-encoder cases in parallel (relevance = mean of a Noul and an order-averaged Choice, `typesafe/jev-1.14`) and reorders that head by it; a failed Jev call keeps its case after the scored ones and adds a `jev_error` provenance entry. |
 
 ### `result` event (also the `result` key in JSON mode)
 
 ```json
 {"type": "result", "schema_version": "engine-retrieve/1", "query": "...",
- "corpus_revision": "octo-chunk:51636", "graph_revision": "5f469d7d-18b6-5bb5-95e6-72b348e59799",
+ "corpus_revision": "octo-chunk:804646", "graph_revision": "5f469d7d-18b6-5bb5-95e6-72b348e59799",
  "elapsed_ms": 4210.5,
  "results": [{
    "rank": 1,
    "case": {"id": "Brinegar v. United States, 338 U.S. 160", "name": "Brinegar v. United States",
-            "court": "Supreme Court of the United States", "year": 1949, "link": null, "cap_id": "..."},
+            "court": "Supreme Court of the United States", "year": 1949,
+            "link": "https://static.case.law/us/338/cases/0160-01.json",
+            "html_link": "https://case.law/caselaw/?reporter=us&volume=338&case=0160-01", "cap_id": "..."},
    "score": 3.39, "score_kind": "cross-encoder", "rrf": 0.0312, "bm25": 12.1, "dense": 0.71, "jev_relevance": null,
    "provenance": [{"source": "bm25", "rank": 4}, {"source": "dense", "rank": 2},
                   {"source": "graph", "edge": "cites", "via": "Ornelas v. United States, 517 U.S. 690", "direction": "outgoing"},
@@ -98,8 +100,8 @@ Rules the client can rely on:
 - `passages[].text` is the stored Octo chunk body, byte for byte. `spans[].text == text[start:end]`.
   Any quote shown to a user must be one of these spans or another exact substring of a returned passage.
 - `provenance` lists every retriever or graph edge that put the case in the pool. It drives a "why these cases" panel.
-- `score_kind` says which score `score` is (`cross-encoder` when reranked, else `rrf`).
-- `case.link` is `null` today (CAP records carry no public URL in the snapshot); `cap_id` is present.
+- `score_kind` says how the list was ordered (`cross-encoder+jev`, `cross-encoder`, `jev`, or `rrf`); `score` is the cross-encoder score when reranked, else RRF. `jev_relevance` is the Jev probability for the top `jev_k`.
+- `case.link` is the CAP static JSON (`https://static.case.law/<reporter>/<volume>/cases/<first page>-<ordinal>.json`) and `case.html_link` the case.law viewer URL. Colorado cases get both from their CAP metadata; CLERC cases were resolved once by fetching the candidate static file and accepting it only when its `id` equals the stored `cap_id` (`python -m legal_graph.engine.links`). Unresolved cases have `null`.
 
 ### Errors
 
@@ -123,7 +125,9 @@ text it cites. The engine scores support with `legal_graph.answer_check`.
 ```
 
 `scorer`: `minicheck` (default, `lytang/MiniCheck-RoBERTa-Large`), `hhem` (`vectara/hallucination_evaluation_model`), or
-`jev` (OpenRouter Decisions, model `JEV_MODEL`, default `typesafe/jev-router`; 503 unless `OPENROUTER_API_KEY` is set).
+`jev` (OpenRouter Decisions API via the `legal_graph.jev` client, model `JEV_MODEL`, default `typesafe/jev-1.14`;
+support = mean of a Noul and an order-averaged Choice; 503 unless `OPENROUTER_API_KEY` is set). `typesafe/jev-router` is a
+chat-completions router that the Decisions API rejects, so it is not a valid `JEV_MODEL`.
 1-50 claims per call.
 
 Response (`AnswerScore.to_dict()` plus quote checks):
@@ -145,8 +149,9 @@ claim with a `chunk_id` quotes text that is not in that stored chunk. Benchmarke
 
 ## Latency targets
 
-Targets on an idle 8-core CPU box with models warm: parse < 50 ms, bm25 < 150 ms, dense (50 chunks) < 1.5 s,
-graph < 600 ms (one Octo SQL round-trip), rerank (30) < 2.5 s, full stream < 5 s p50; `/check` MiniCheck < 300 ms per
+Targets on an idle 8-core CPU box with models warm: parse < 50 ms, bm25 < 1 s (804k chunks), dense (query encode +
+full index scan) < 1 s, graph < 1.5 s (one Octo SQL round-trip, up to 20,000 edges), rerank: cross-encoder (30) < 2.5 s
+plus Jev (10 parallel calls) about 3-6 s, full stream < 10 s p50 with Jev; `/check` MiniCheck < 300 ms per
 claim. Measured smoke results are in the PR; the box was heavily loaded by other jobs when they were taken, so they are
 upper bounds. The client must render stages as they arrive and not wait for `result`.
 
@@ -160,10 +165,15 @@ upper bounds. The client must render stages as they arrive and not wait for `res
 | `OCTO_WORKSPACE_ID` | default `76d7577b-2274-42b4-a8dc-1ff1c0efa741` (Octo Legal RAG) |
 | `OCTO_API_KEY` | Octo workspace key (falls back to legacy `octo_db_legal`) |
 | `OCTO_SNAPSHOT_ID` | pin a graph snapshot; default reads `legal_graph.active_snapshot` |
-| `ENGINE_CACHE_DIR` | chunk cache (`chunks.jsonl`), default `/workspace/lgr-text-data/engine-cache` |
-| `ENGINE_DENSE_MODEL`, `ENGINE_DENSE_MAX_LEN` | default `BAAI/bge-small-en-v1.5`, 256 |
+| `ENGINE_CACHE_DIR` | chunk cache (`chunks.jsonl`) and dense index (`dense-<model>.f16.npy` + `.json`), default `/workspace/lgr-text-data/engine-cache` |
+| `ENGINE_DENSE_MODEL`, `ENGINE_DENSE_MAX_LEN` | pool-mode fallback encoder, default `BAAI/bge-small-en-v1.5`, 256 |
+| `ENGINE_DENSE_INDEX_BACKEND`, `ENGINE_DENSE_INDEX_MODEL` | precomputed index: `local` (default model = `ENGINE_DENSE_MODEL`) or `openrouter` (default `baai/bge-large-en-v1.5`; box uses this) |
+| `ENGINE_DENSE_IN_RAM` | `1` (default) copies the dense index into RAM; `0` memory-maps it |
+| `ENGINE_GRAPH_EDGE_CAP` | max edges read per graph stage, default 20,000 |
 | `ENGINE_RERANK_MODEL`, `ENGINE_RERANK_MAX_LEN` | default `cross-encoder/ms-marco-MiniLM-L-6-v2`, 384 |
-| `OPENROUTER_API_KEY`, `JEV_MODEL` | optional Jev stage and Jev scorer; default model `typesafe/jev-router` |
+| `OPENROUTER_API_KEY`, `JEV_MODEL` | Jev rerank pass and `jev` scorer; default model `typesafe/jev-1.14` (Decisions API) |
+| `ENGINE_JEV_RERANK` | `1` (default) wires Jev into the rerank stage when the key is present; `0` disables it engine-wide |
+| `JEV_RETRIES`, `JEV_TIMEOUT` | Jev retries per call (default 2) and per-request timeout in seconds (default 30) |
 
 Client side (ABA app): `ENGINE_BASE_URL`, `ENGINE_API_TOKEN`, plus whatever its own answer model needs
 (for example `OLLAMA_BASE_URL` for an Ollama-compatible endpoint). The engine does not generate answers.
@@ -178,8 +188,39 @@ ENGINE_LIVE=1 ENGINE_API_TOKEN=... OCTO_API_KEY=... \
   python -m uvicorn legal_graph.server:create_app --factory --host 127.0.0.1 --port 8010
 ```
 
-On the box, `/workspace/octo-legal-graph/run-engine.sh` (not in git) does this with the env files. First start pages
-51,636 chunks out of Octo (about a minute) and caches them; later starts read the cache if the row count matches.
+On the box, `/workspace/octo-legal-graph/run-engine.sh` (copy in `scripts/run-engine.sh`) does this. It sources
+`/home/box/.config/study-os/openrouter.env` (for `OPENROUTER_API_KEY`) and the Octo and engine env files with `set -a`,
+and never echoes values. The engine env is a uv venv (`uv pip install -r requirements-search.txt -r requirements-dev.txt
+transformers`, which includes eyecite). First start pages 804,646 chunks out of Octo (about 12 minutes) into
+`chunks.jsonl`; later starts read that cache if the row count matches.
+
+### Dense index (build once)
+
+```sh
+ENGINE_DENSE_INDEX_BACKEND=openrouter python -m legal_graph.engine.dense_index --build --write-octo --workers 32
+```
+
+Every stored chunk is embedded once into `$ENGINE_CACHE_DIR/dense-<model>.f16.npy` (float16, L2-normalised) with a
+`.json` manifest (model, backend, dim, n, sha256 of the chunk-id order, API cost). The build streams `chunks.jsonl`,
+checkpoints after every block and resumes from the manifest. The engine loads the file at startup and encodes only the
+query at request time, so the dense stage no longer re-encodes passages under box load.
+
+Two backends (`ENGINE_DENSE_INDEX_BACKEND`):
+
+- `openrouter` (used on the box): `baai/bge-large-en-v1.5`, 1024-d, through the OpenRouter embeddings API. The full
+  build cost about USD 1.5 (see the manifest). The query is embedded by the same API (one call per request). If that call
+  fails, the stage falls back to `mode: "pool"` and reports `index_error`.
+- `local`: sentence-transformers on CPU, default `BAAI/bge-small-en-v1.5`, 384-d. Local CPU embedding of 804k chunks
+  measured 10-15 chunks/s on the shared box (other jobs held most cores), which is more than 15 hours. That is why the box
+  uses the API backend.
+
+**Where the vectors are stored.** Octo `legal_graph.chunk.embedding` is `vector(1024)`. bge-large vectors are 1024-d,
+so they fit. `--write-octo` writes them to `chunk.embedding` with `embed_model = 'baai/bge-large-en-v1.5'` as the
+store of record, and the engine reads the identical local cache at startup, which is faster than paging 3 GB of vectors
+out of Octo. A 384-d model (bge-small) does not fit the column. Its vectors stay in the local cache only and
+`chunk.embedding` stays NULL. The manifest's `storage` field says which case applies. If the chunk set changes, the
+manifest no longer matches. The engine then logs a warning and uses `mode: "pool"` (local bge-small over the BM25 pool)
+until the index is rebuilt.
 
 ## Engine layout (MVC, engine only)
 
@@ -197,7 +238,10 @@ On the box, `/workspace/octo-legal-graph/run-engine.sh` (not in git) does this w
 | `legal_graph.retrieval_cache` | `RetrievalCache(path=":memory:", ttl_seconds=3600).get/put/set_active_snapshot`; `cached_retrieve(cache, snapshot_id, embedding, ...)` |
 | `legal_graph.answer_check` | `Claim(text, cited_text, citation="")`; `CitationChecker(scorer, threshold=0.5, temperature=1.0).check(claims) -> AnswerScore`; `MiniCheckScorer()`, `HHEMScorer()`; `fit_temperature`, `conformal_threshold`, `expected_calibration_error` |
 | `legal_graph.decisions` | `OpenRouterJevProvider(api_key=None).decide(request)`; `parse_decision_response(raw, questions)` |
-| `legal_graph.engine.checks` | `JevScorer(model=None)` (SupportScorer over Jev, plus `.relevance(query, passage)`) |
+| `legal_graph.engine.checks` | `JevScorer(model=None)` (SupportScorer over `legal_graph.jev`, plus `.relevance(query, passage)`) |
+| `legal_graph.jev` | `JevClient(model="typesafe/jev-1.14").decide(state, questions)`, `choice_questions`, `average_choice`, `noul` |
+| `legal_graph.engine.dense_index` | `build(texts, chunk_ids, model, cache_dir)`, `load(cache_dir, model, chunk_ids, encode_query) -> DenseIndex` |
+| `legal_graph.engine.links` | `reporter_slug`, `cap_static_url`, `cap_html_url`, `resolve_cap_link(cap_id, cite)`, `backfill(sql)` |
 | `legal_graph.engine.pipeline` | `Pipeline(corpus, lexical, ...).run(TextRetrieveRequest) -> Iterator[event]` |
 | `legal_graph.octo_client` | `OctoSqlExecutor(workspace_id, key_env="octo_db_legal", base_url=...)(sql, params, row_limit)` |
 
@@ -209,8 +253,8 @@ On the box, `/workspace/octo-legal-graph/run-engine.sh` (not in git) does this w
 | `snapshots` | 6 | snapshot provenance and counts |
 | `authorities` | 547,219 (all snapshots) | graph nodes; `payload` has title, court, date, citations, cap_id |
 | `citation_edges` | 1,473,123 (all snapshots) | graph edges (`source_id`, `target_id`, `payload.kind`); hash-indexed on both ends |
-| `work`, `expression` | 4,151 each | cases with stored opinion text (migration 004) |
-| `chunk` | 51,636 | stored passages (`body`, `ord`), the only quotable text |
+| `work`, `expression` | 45,048 each (4,151 CLERC + 40,897 CAP Colorado) | cases with stored opinion text (migration 004) |
+| `chunk` | 804,646 (51,636 CLERC + 753,010 Colorado) | stored passages (`body`, `ord`), the only quotable text |
 | `type_registry` | 6 | node/edge/decision type keys |
 | `edge`, `assertion`, `evidence`, `work_alias`, `prov_activity` | 0 | migration 004 tables, not populated yet |
 
@@ -219,20 +263,25 @@ Example reads the engine runs (parameterised):
 ```sql
 SELECT snapshot_id FROM legal_graph.active_snapshot;
 SELECT source_id, target_id, payload->>'kind' AS kind FROM legal_graph.citation_edges
- WHERE snapshot_id = $1 AND (source_id = ANY($2::text[]) OR target_id = ANY($2::text[])) LIMIT 5000;
+ WHERE snapshot_id = $1 AND (source_id = ANY($2::text[]) OR target_id = ANY($2::text[])) LIMIT 20000;
 SELECT authority_id FROM legal_graph.authorities WHERE snapshot_id = $1 AND payload->'citations' ? $2 LIMIT 1;
 SELECT c.chunk_id, e.work_id, c.ord, c.body FROM legal_graph.chunk c
   JOIN legal_graph.expression e ON e.expr_id = c.expr_id WHERE c.chunk_id > $1 ORDER BY c.chunk_id LIMIT 2000;
 ```
 
-Coverage limit: text exists only for the 4,151 cases behind the frozen CLERC queries. The graph has 547k nodes but the
-engine can only return a case it has passages for. More text means loading more chunks (`benchmarks/clerc/text/octo_load.py`).
+Coverage: text exists for 45,048 cases: the 4,151 cases behind the frozen CLERC queries (federal and other states,
+opinions truncated to 12,000 chars) and all 40,897 CAP Colorado opinions (Colorado Supreme Court, Court of Appeals and a
+few district courts, 1864 to 2019, full text) loaded by `benchmarks/cap_colorado/octo_load_co.py` (streamed,
+checkpointed, idempotent). 27,515 of the Colorado cases are authorities in the active graph snapshot, so graph
+expansion works for them. The graph has 547k nodes but the engine can only return a case it has passages for. Outside
+Colorado, state coverage is still only the CLERC subset.
 
 ## Data on the box
 
 - `/workspace/lgr-text-data/` : CLERC source (`collection.doc.tsv.gz`, 7.7 GB), full chunked text for 307,510 cases
   (`chunks/`, 3.5 GB, 3.6M chunks), treatment edges/labels, benchmark logs, and `engine-cache/chunks.jsonl`
-  (the 51,636 Octo chunks the engine serves).
+  (the 804,646 Octo chunks the engine serves) and the dense index. Colorado source text: `/workspace/coeval-data/co/`
+  (`text/part-000.jsonl`, `meta/colo-*.jsonl`; the same CAP volumes as `/workspace/lgr-text-data/cap-colo/`).
 - `/workspace/lgr-search-data/` : search-track docs and results; its `.venv` is the Python env used to run the engine.
 - Models are in the Hugging Face cache (`~/.cache/huggingface/hub`): bge-small, MiniLM cross-encoder, MiniCheck, HHEM.
 

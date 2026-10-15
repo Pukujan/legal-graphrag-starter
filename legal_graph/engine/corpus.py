@@ -32,7 +32,7 @@ class Chunk:
 @dataclass
 class Corpus:
     chunks: list[Chunk]
-    docs: dict[str, dict[str, Any]]  # doc_id -> {name, court, year, link, cap_id}
+    docs: dict[str, dict[str, Any]]  # doc_id -> {name, court, year, link, html, cap_id}
     revision: str = "supplied"
     by_doc: dict[str, list[int]] = field(default_factory=dict)
     by_id: dict[str, int] = field(default_factory=dict)
@@ -47,7 +47,8 @@ class Corpus:
     def case(self, doc_id: str) -> dict[str, Any]:
         meta = self.docs.get(doc_id, {})
         return {"id": doc_id, "name": meta.get("name") or doc_id, "court": meta.get("court"),
-                "year": meta.get("year"), "link": meta.get("link"), "cap_id": meta.get("cap_id")}
+                "year": meta.get("year"), "link": meta.get("link"), "html_link": meta.get("html"),
+                "cap_id": meta.get("cap_id")}
 
 
 class LexicalScorer(Protocol):

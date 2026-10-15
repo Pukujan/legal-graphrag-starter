@@ -5,7 +5,7 @@ from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 
-STAGES = ("parse", "bm25", "dense", "hybrid", "graph", "rerank", "jev")
+STAGES = ("parse", "bm25", "dense", "hybrid", "graph", "rerank")
 EVENT_SCHEMA_VERSION = "engine-retrieve/1"
 CHECK_SCHEMA_VERSION = "engine-check/1"
 
@@ -24,7 +24,8 @@ class TextRetrieveRequest(_Strict):
     graph_seed_docs: Annotated[StrictInt, Field(ge=0, le=50)] = 10
     rerank: StrictBool = True
     rerank_k: Annotated[StrictInt, Field(ge=1, le=100)] = 30
-    jev: StrictBool = False
+    jev: StrictBool = True  # Jev relevance pass inside the rerank stage
+    jev_k: Annotated[StrictInt, Field(ge=1, le=30)] = 10
     passages_per_case: Annotated[StrictInt, Field(ge=1, le=5)] = 2
     stream: StrictBool = True
 
