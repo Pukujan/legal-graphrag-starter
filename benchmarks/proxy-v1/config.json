@@ -31,6 +31,7 @@
       "nodes_sha256": "fee8dc5a3b6f395391d04c0738595895f36733d76cb6aaaf0e833cb08ed4102e",
       "edges_sha256": "1fa8cc9d99d22f4de1b7226836e663a9589fcf1da6d954a10f717861c2b57367"
     },
-    "n_queries": 200
+    "n_queries": 200,
+    "graph_digest": "sha256:842750b0fdf7dcdd6d255cda53ac04966cf8b5d3be7dc46bce391f2c53e67d80"
   }
 }

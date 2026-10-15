@@ -59,3 +59,18 @@ value was stored in snapshot metadata. The SQL schema stores this supplied
 digest; it does not independently hash JSONB contents. This smoke test does not
 establish cryptographic verification of stored rows, corpus-scale throughput,
 production authorization policy, or a corpus ingestion pipeline.
+
+## Corpus snapshot import (issue #16)
+
+`python -m legal_graph.snapshot_import migrate|import --workspace <id> [--activate]` sends SQL to the existing
+workspace SQL endpoint (`POST /api/workspaces/<id>/query`), authenticating with a workspace-scoped key read from the `octo_db_legal` environment variable. The key is never printed, and no new database is provisioned.
+
+- `migrate` applies `migrations/*.sql` one statement per request. Every statement is idempotent: `IF NOT EXISTS`, `CREATE OR REPLACE`, or a drop-then-create of the same trigger.
+- `import` steps:
+  1. Compute a canonical, order-independent sha256 over the node records and the `{source,target,kind}` edge records.
+  2. Derive the snapshot UUID from that digest (uuid5), so a rerun reuses the same snapshot.
+  3. Insert a `staging` row with `source_kind='source_import'`.
+  4. Load 2,000-row batches via `jsonb_array_elements` with `ON CONFLICT DO NOTHING`. Each edge's `edge_key` is the canonical JSON array `[source,target,kind]`.
+  5. Read the whole snapshot back through `GraphSnapshotStore` and recompute the digest and counts. On any mismatch the snapshot stays `staging`.
+  6. Mark the snapshot `ready`; the schema checks the counts.
+  7. With `--activate`, run the ready-only atomic pointer statement.
