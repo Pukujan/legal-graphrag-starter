@@ -1,0 +1,68 @@
+{
+  "dataset": "clerc",
+  "args": {
+    "dataset": "clerc",
+    "variants": "/workspace/lgr-search-data/v_main.json",
+    "n": "200",
+    "n_corpus": "2000",
+    "max_chars": "4000",
+    "seed": "20261014",
+    "clerc_dir": "/workspace/clerc",
+    "clerc_docs": "/workspace/lgr-search-data/docs.tsv",
+    "out": "/workspace/lgr-search-data/clerc_main.json"
+  },
+  "results": [
+    {
+      "variant": "modernbert-legal fixed-500",
+      "R@5": 0.35,
+      "R@10": 0.49,
+      "R@20": 0.55,
+      "NDCG@10": 0.3041,
+      "MRR": 0.2583,
+      "p50_ms": 199.0,
+      "build_s": 530.1,
+      "n_queries": 200,
+      "n_docs": 2000,
+      "n_chunks": 14172
+    },
+    {
+      "variant": "hybrid bm25+modernbert RRF",
+      "R@5": 0.385,
+      "R@10": 0.47,
+      "R@20": 0.555,
+      "NDCG@10": 0.2998,
+      "MRR": 0.2576,
+      "p50_ms": 188.6,
+      "build_s": 0.8,
+      "n_queries": 200,
+      "n_docs": 2000,
+      "n_chunks": 14172
+    },
+    {
+      "variant": "hybrid + MiniLM-L6 rerank top30",
+      "R@5": 0.24,
+      "R@10": 0.37,
+      "R@20": 0.485,
+      "NDCG@10": 0.2051,
+      "MRR": 0.1718,
+      "p50_ms": 593.8,
+      "build_s": 0.0,
+      "n_queries": 200,
+      "n_docs": 2000,
+      "n_chunks": 14172
+    },
+    {
+      "variant": "modernbert-legal recursive-500",
+      "R@5": 0.385,
+      "R@10": 0.48,
+      "R@20": 0.595,
+      "NDCG@10": 0.3197,
+      "MRR": 0.2829,
+      "p50_ms": 206.5,
+      "build_s": 468.4,
+      "n_queries": 200,
+      "n_docs": 2000,
+      "n_chunks": 17652
+    }
+  ]
+}

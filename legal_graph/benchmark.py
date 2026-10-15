@@ -285,8 +285,14 @@ def run(config_path: Path, source: GraphSource, runs_dir: Path) -> Path:
 
 
 def main(argv: list[str] | None = None) -> int:
+    if argv is None:
+        import sys
+        argv = sys.argv[1:]
+    if argv[:1] == ["text"]:  # text retrieval variants (BM25/dense/RRF/rerank), see legal_graph/search
+        from .search.bench import main as text_main
+        return text_main(argv[1:])
     ap = argparse.ArgumentParser(description=PROXY_LABEL)
-    ap.add_argument("command", choices=["freeze", "seal", "run"])
+    ap.add_argument("command", choices=["freeze", "seal", "run", "text"])
     ap.add_argument("--config", type=Path, default=ROOT / "benchmarks/proxy-v1/config.json")
     ap.add_argument("--data-dir", type=Path, default=None)
     ap.add_argument("--runs-dir", type=Path, default=ROOT / "benchmarks/runs")
