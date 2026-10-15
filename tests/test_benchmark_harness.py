@@ -77,3 +77,21 @@ def test_octo_source_pages_through_store():
     assert len(nodes) == len(NODES) and len(edges) == len(EDGES)
     assert prov["snapshot_id"] == snap and rev.startswith(f"octo:{snap}:")
     assert {(e["source"], e["target"]) for e in edges} == {(e["source"], e["target"]) for e in EDGES}
+
+
+def test_seal_and_explicit_holdout_edges(tmp_path):
+    q = [{"query_id": "c1", "seeds": ["S0"], "gold": ["S2"], "label": "clerc",
+          "holdout_edges": [["C0", "S2", "cites"]]}]
+    (tmp_path / "q.jsonl").write_text(json.dumps(q[0]) + "\n")
+    cfg = {"name": "c", "label": "clerc-test", "queries_file": "q.jsonl",
+           "graph": {"depth": 2, "direction": "both", "edge_kinds": ["cites"]}, "k_values": [5], "ndcg_k": 5}
+    p = tmp_path / "config.json"
+    p.write_text(json.dumps(cfg))
+    b.seal(p, Src())
+    rec = json.loads((b.run(p, Src(), tmp_path / "runs") / "results.json").read_text())
+    assert rec["label"] == "clerc-test" and rec["summary"]["holdout_edges_removed"] == 1
+    assert rec["summary"]["answerable_subset"]["n"] == 1
+    cfg2 = json.loads(p.read_text()) | {"apply_holdout_edges": False, "name": "c2"}
+    p.write_text(json.dumps(cfg2))
+    rec2 = json.loads((b.run(p, Src(), tmp_path / "runs") / "results.json").read_text())
+    assert rec2["summary"]["holdout_edges_removed"] == 0

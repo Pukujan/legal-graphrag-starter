@@ -1,32 +1,30 @@
-# CLERC overlap check (2026-10-14): no adapter added
+# CLERC public benchmark
 
-CLERC (Case Law Evaluation and Retrieval Corpus) is at https://huggingface.co/datasets/jhu-clsp/CLERC (NAACL 2025 Findings; code at abehou/CLERC). It is built from Caselaw Access Project federal case law.
+CLERC (`jhu-clsp/CLERC` on Hugging Face) is built from Caselaw Access Project (CAP) federal case law, and its document ids are CAP case ids.
 
-**Files:**
-- **Retrieval task:**
-  - `collection/collection.doc.tsv.gz` (8.2 GB) and `collection.passage.tsv.gz` (9.2 GB);
-  - `queries/test.{single,all}-removed.{direct,indirect}.tsv`, with 2,851 indirect queries;
-  - `qrels/qrels-doc.test.*.tsv`, which map query ids to CAP document ids.
-- **Generation task:** `generation/{test,train,all}.jsonl`. Each record carries `citations` as a list of [reporter_citation, cited_case_text].
+**History:** the 2026-10-14 overlap check (`overlap.py`, `overlap-2026-10-14.json`) found only about 0.2% of CLERC's gold citations in the Colorado starter graph. We have since added a federal and Supreme Court extension.
 
-**Method:** the retrieval qrels use only CAP document ids. Mapping those ids to reporter citations would need the 8.2 GB document collection, which is over the size budget, so it was not downloaded. Instead, overlap was measured on the gold citations in the generation splits, which come from the same federal CAP source:
-- `generation/test.jsonl` (104 MB, all 1,000 records);
-- `generation/train.jsonl` (512 MB, all 5,000 records).
+## Federal and Supreme Court extension (`build_graph.py`)
+- **Source:** CAP static bulk metadata, `https://static.case.law/<reporter>/<vol>/CasesMetadata.json`, for the reporters U.S., F.2d, F.3d, F.Supp, F.Supp.2d and F.App'x. That is 5,216 volumes and 1,378,342 cases. The files are streamed, and only id/name/court/date/citations/cites_to are kept.
+- **Seeds:** the other full case citations in each CLERC query, found with eyecite and resolved to CAP ids by reporter citation.
+- **Nodes:**
+  - T = every CLERC test gold document plus every resolved seed (4,152 cases);
+  - plus every scanned case that cites at least 2 members of T (305,028 co-citing cases);
+  - 1,503 of these cases already existed in the starter graph and keep their starter id.
+  - **307,677 nodes added.** Each new node carries `cap_id`, `citations`, `reporter`, `court`, `date` and `title`.
+- **Edges:** CAP `cites_to` edges between graph nodes where at least one end is in T. **1,151,535 edges added.**
+- **Expanded graph:** 427,447 nodes and 1,312,328 edges, written to `data-expanded/` (gitignored). File hashes are in `graph-manifest.json`.
+- **Not included:** opinion text. CLERC's 8.2 GB `collection.doc.tsv.gz` has it, keyed by the same CAP ids.
 
-Each reporter citation was matched to the trailing reporter citation of a caselaw node id. 48,901 of the graph's 61,411 caselaw nodes have one.
+## Frozen queries (`indirect/`, `direct/`)
+- **Splits:** test, single-removed. Indirect has 2,851 queries and direct has 1,498. The gold answer is the CAP document from CLERC's doc-level qrels.
+- **Coverage:** the gold document is in the graph for 2,507 indirect and 1,390 direct queries. Queries whose gold falls outside the scanned reporters count as misses.
+- **Leakage control:** CLERC does not identify the opinion each query was taken from. Any node that cites the gold and all of a query's seeds could be that source, so its edge to the gold is listed in `holdout_edges` and removed before indexing. This is conservative. The `config-noholdout.json` variants run without the removal and give an upper bound.
+- **Seeds are not a retriever:** they are the case citations already present in the query text. No hybrid or BM25 retriever is involved. The baseline is that seed list; the graph-augmented list is the seeds followed by `graphrag_retrieve` results (depth 2, both directions, CITES only, ranked by global citation in-degree).
 
-| split | examples | unique gold cites | mapped | examples with >=1 mapped | examples with >=2 mapped |
-|---|---|---|---|---|---|
-| test | 1,000 | 2,648 | 3 | 2 | 1 |
-| train | 5,000 | 13,163 | 22 | 21 | 1 |
-
-**Why so little overlaps:**
-- CLERC's gold citations are mostly F.2d/F.3d (about 63%) and U.S./S.Ct./L.Ed.
-- The starter graph is Colorado-centred: P.2d/P.3d, Colo., Colo. App., D. Colo. F.Supp and B.R.
-- It contains almost no circuit-court or Supreme Court reporter citations (25 F.2d/F.3d ids and no U.S. ids).
-
-**Decision:** about 0.2% of gold citations map, and only 1–21 examples have any mapped citation. That is far below the roughly 100-query threshold, so no CLERC adapter was added. The proxy benchmark remains the only automated eval.
-
-**What could make CLERC usable:** a graph that includes federal appellate and Supreme Court authorities, or a Colorado-filtered CLERC subset. The latter would need the CAP document metadata to map document ids to courts.
-
-Reproduce: `python benchmarks/clerc/overlap.py generation/test.jsonl generation/train.jsonl`.
+Reproduce:
+```
+uv run --python 3.12 --with eyecite python benchmarks/clerc/build_graph.py fetch
+uv run --python 3.12 --with eyecite python benchmarks/clerc/build_graph.py build
+python -m legal_graph.benchmark run --config benchmarks/clerc/indirect/config.json --data-dir data-expanded
+```
