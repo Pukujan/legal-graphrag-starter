@@ -92,6 +92,11 @@ class OctoSnapshotSource:
         return nodes, edges, revision, prov
 
 
+def _graph_digest(nodes, edges) -> str:
+    from .snapshot_import import graph_digest
+    return "sha256:" + graph_digest(nodes, edges)
+
+
 # ---------------------------------------------------------------- freezing
 def build_proxy_queries(nodes, edges, *, n_queries: int, seed: int, seed_fraction: float,
                         distractors_per_seed: int, min_cites: int, max_cites: int) -> list[dict]:
@@ -136,6 +141,7 @@ def freeze(config_path: Path, source: GraphSource) -> dict:
         raise FileExistsError(f"{qpath} exists with different content; frozen files are immutable")
     qpath.write_bytes(payload)
     config["frozen"] = {"queries_sha256": _sha(payload), "dataset_revision": revision,
+                        "graph_digest": _graph_digest(nodes, edges),
                         "source": prov, "n_queries": len(queries)}
     config_path.write_text(json.dumps(config, indent=2, ensure_ascii=False) + "\n")
     return config["frozen"]
@@ -192,8 +198,9 @@ def run(config_path: Path, source: GraphSource, runs_dir: Path) -> Path:
     if _sha(qbytes) != frozen.get("queries_sha256"):
         raise ValueError("frozen queries do not match recorded sha256")
     nodes, edges, revision, prov = source.load()
-    if revision != frozen.get("dataset_revision"):
-        raise ValueError("graph revision differs from the frozen revision")
+    digest = _graph_digest(nodes, edges)
+    if revision != frozen.get("dataset_revision") and digest != frozen.get("graph_digest"):
+        raise ValueError("graph revision/content differs from the frozen graph")
     queries = [json.loads(line) for line in qbytes.decode().splitlines() if line]
     held = {q["held_out_opinion"] for q in queries}
     kept = [e for e in edges if not (e["kind"] == "cites" and e["source"] in held)]
@@ -231,11 +238,16 @@ def run(config_path: Path, source: GraphSource, runs_dir: Path) -> Path:
     summary["truncated_queries"] = sum(r["truncated"] for r in per_query)
     import platform, langgraph, networkx  # noqa: E401
     from importlib.metadata import version
-    record = {"label": PROXY_LABEL, "config": config, "dataset_revision": revision, "source": prov,
+    record = {"label": PROXY_LABEL, "config": config, "dataset_revision": revision,
+              "graph_digest": digest, "source": prov,
               "environment": {"python": platform.python_version(), "platform": platform.platform(),
                               "networkx": networkx.__version__, "langgraph": version("langgraph")},
               "summary": summary, "per_query": per_query}
-    run_id = _sha(_canon({"config": config, "revision": revision}))[:16]
+    # Local runs keep the original id scheme; other sources include their kind.
+    id_input = {"config": config, "revision": revision}
+    if prov["kind"] != "local_jsonl":
+        id_input["source"] = prov
+    run_id = _sha(_canon(id_input))[:16]
     target = runs_dir / f"{config['name']}-{run_id}"
     target.mkdir(parents=True, exist_ok=False)  # write-once: never overwrite a run
     body = json.dumps(record, indent=2, ensure_ascii=False).encode()
@@ -254,8 +266,15 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--config", type=Path, default=ROOT / "benchmarks/proxy-v1/config.json")
     ap.add_argument("--data-dir", type=Path, default=None)
     ap.add_argument("--runs-dir", type=Path, default=ROOT / "benchmarks/runs")
+    ap.add_argument("--source", choices=["local", "octo"], default="local")
+    ap.add_argument("--workspace", help="Octo workspace id (with --source octo)")
+    ap.add_argument("--snapshot", help="Octo snapshot id; default = active snapshot")
     a = ap.parse_args(argv)
-    src = LocalJsonlSource(a.data_dir)
+    if a.source == "octo":
+        from .octo_client import OctoSqlExecutor
+        src = OctoSnapshotSource(GraphSnapshotStore(OctoSqlExecutor(a.workspace)), a.snapshot)
+    else:
+        src = LocalJsonlSource(a.data_dir)
     if a.command == "freeze":
         print(json.dumps(freeze(a.config, src), indent=2))
     else:

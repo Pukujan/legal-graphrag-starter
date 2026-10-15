@@ -18,3 +18,9 @@
 - `graphrag_retrieve` ranks by global citation in-degree. It is a prior with no query text behind it.
 - Many queries hit the 500-node or scan-edge limits at depth 2, which truncates their results.
 - Gold = "authorities this opinion cited" measures co-citation recoverability, not legal relevance.
+
+## Reading the graph from Octo
+`python -m legal_graph.benchmark run --source octo --workspace <id>` loads the active snapshot through `GraphSnapshotStore`. A run is accepted when the graph's canonical content digest equals `frozen.graph_digest`; the original file revision only matches for local runs. Run ids for non-local sources also hash the source provenance, so a local run and an Octo run land in separate directories.
+
+### Octo parity (2026-10-14)
+Octo snapshot `ebcfa2f6-a025-5b3d-9966-9b34a2d4ffcd` (source_import; 119,770 authorities and 160,793 edges; digest `sha256:842750b0…7d80`) was staged, verified by readback, marked ready and activated in the legal-graph-rag workspace. The proxy-v1 benchmark was run from Octo (`proxy-v1-7e3a860fd17fbd63`) and from the local files (`proxy-v1-454d8f6a0edc4802`). Every per-query row and every summary metric is identical in the two runs, except timing. Both runs also match the original local run `proxy-v1-8d3a7690173dcebd`. The proxy caveats above still apply: these are not real qrels, and no uplift is claimed.
