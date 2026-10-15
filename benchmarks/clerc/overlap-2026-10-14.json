@@ -1,0 +1,85 @@
+{
+  "graph_caselaw_with_reporter_cite": 48901,
+  "test.jsonl": {
+    "examples": 1000,
+    "unique_cites": 2648,
+    "mapped_cites": 3,
+    "examples_with_ge1_mapped": 2,
+    "examples_with_ge2_mapped": 1,
+    "top_reporters": [
+      [
+        "F.d",
+        1700
+      ],
+      [
+        "U.S.",
+        598
+      ],
+      [
+        "B.R.",
+        134
+      ],
+      [
+        "L.Ed.",
+        55
+      ],
+      [
+        "S.Ct.",
+        27
+      ],
+      [
+        "F.R.D.",
+        27
+      ],
+      [
+        "F.",
+        26
+      ],
+      [
+        "T.C.",
+        22
+      ]
+    ]
+  },
+  "train.jsonl": {
+    "examples": 5000,
+    "unique_cites": 13163,
+    "mapped_cites": 22,
+    "examples_with_ge1_mapped": 21,
+    "examples_with_ge2_mapped": 1,
+    "top_reporters": [
+      [
+        "F.d",
+        8229
+      ],
+      [
+        "U.S.",
+        3013
+      ],
+      [
+        "B.R.",
+        702
+      ],
+      [
+        "L.Ed.",
+        267
+      ],
+      [
+        "S.Ct.",
+        169
+      ],
+      [
+        "F.",
+        159
+      ],
+      [
+        "M.J.",
+        131
+      ],
+      [
+        "F.R.D.",
+        126
+      ]
+    ]
+  }
+}
