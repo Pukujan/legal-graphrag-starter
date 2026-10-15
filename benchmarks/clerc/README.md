@@ -28,3 +28,28 @@ uv run --python 3.12 --with eyecite python benchmarks/clerc/build_graph.py fetch
 uv run --python 3.12 --with eyecite python benchmarks/clerc/build_graph.py build
 python -m legal_graph.benchmark run --config benchmarks/clerc/indirect/config.json --data-dir data-expanded
 ```
+
+## Jev reranker on the full CLERC test sets (#43, `text/rerank_jev.py`, `text/rerank_report.py`)
+Candidates: top 20 of `bm25 +graph` (bench.py, holdout edges removed) for every query; gold in the top 20 for 39.5% (indirect) /
+38.8% (direct), which caps every reranker. The dense hybrid list exists only for bench.py's 500-query sample, so it is not used.
+Candidate text = case name + best BM25-pool chunk (else first chunk), 600 chars. Jev: one request per query, a Noul per candidate
+("is candidate cXX the case the REDACTED citation refers to?") + a 21-way Choice (candidates + none) in two option orders,
+score = mean(Noul, mean Choice). MiniLM = ms-marco-MiniLM-L-6-v2 on the same (query window, name + text) pairs.
+
+| split | system | R@5 | R@10 | nDCG@10 | MRR |
+|---|---|---|---|---|---|
+| indirect (2,851) | none | 0.164 | 0.262 | 0.137 | 0.109 |
+| | MiniLM | 0.093 | 0.190 | 0.086 | 0.069 |
+| | Jev (Noul+Choice) | **0.294** | **0.345** | **0.247** | **0.220** |
+| | Jev Choice only | 0.308 | 0.346 | 0.256 | 0.230 |
+| direct (1,498) | none | 0.146 | 0.244 | 0.125 | 0.100 |
+| | MiniLM | 0.085 | 0.168 | 0.076 | 0.063 |
+| | Jev (Noul+Choice) | **0.270** | **0.326** | **0.229** | **0.202** |
+| | Jev Choice only | 0.286 | 0.333 | 0.241 | 0.216 |
+
+Paired differences (95% paired-bootstrap CI, W/T/L per query, sign-flip permutation p; full detail and only-one-right examples in
+`text/rerank-results.json`): indirect Jev vs none MRR +0.112 [+0.100,+0.123] W/T/L 756/1849/246, R@5 +0.131; Jev vs MiniLM MRR
++0.151 [+0.139,+0.163] 895/1809/147; direct Jev vs none MRR +0.103 [+0.088,+0.118] 375/981/142; Jev vs MiniLM MRR +0.139
+[+0.124,+0.155] 467/952/79. All p<=0.0002 (5,000 permutations). MiniLM is worse than no rerank on both splits (as in bench.py).
+Cost: 4,349 calls, $1.25, $0.287 per 1,000 calls; latency p50/p95 149/220 ms.
+Caveat: Jev sees case names and may recognise famous cases from pretraining (MiniLM gets the same names).

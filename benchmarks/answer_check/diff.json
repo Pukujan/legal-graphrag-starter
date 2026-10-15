@@ -1,0 +1,163 @@
+{
+  "minicheck-roberta-large vs hhem-2.1-open": {
+    "metric": "correct",
+    "n": 248,
+    "mean_a": 0.9919354838709677,
+    "mean_b": 0.7741935483870968,
+    "mean_diff": 0.21774193548387097,
+    "diff_ci95": [
+      0.1693548387096774,
+      0.2701612903225806
+    ],
+    "win_tie_loss": [
+      54,
+      194,
+      0
+    ],
+    "permutation_p": 0.0001999600079984003,
+    "only_a_right": [
+      {
+        "id": 1,
+        "kind": "neg",
+        "claim": "The court concluded that section 24-51-806 was amended in order to establish a limited and definite time period within which a surviving child, who was enrolled",
+        "minicheck-roberta-large": 0.1632,
+        "hhem-2.1-open": 0.9563
+      },
+      {
+        "id": 101,
+        "kind": "neg",
+        "claim": "The court held that judicial review is barred by the language of the legislation in question, and therefore, reverse the trial court.",
+        "minicheck-roberta-large": 0.1285,
+        "hhem-2.1-open": 0.9503
+      },
+      {
+        "id": 106,
+        "kind": "neg",
+        "claim": "The court concluded that the district judge did abuse his discretion or act beyond his jurisdiction and, therefore, we discharge the rule.",
+        "minicheck-roberta-large": 0.1046,
+        "hhem-2.1-open": 0.9337
+      },
+      {
+        "id": 108,
+        "kind": "wrong_holding",
+        "claim": "The court held that the court did not err in its interpretation of the criminal statute in holding that the effective date of a prior conviction is the time tha",
+        "minicheck-roberta-large": 0.0749,
+        "hhem-2.1-open": 0.6464
+      },
+      {
+        "id": 114,
+        "kind": "wrong_holding",
+        "claim": "The court concluded that there is not substantial evidence in the record to support the finding of the commission that the cost of customer conservation program",
+        "minicheck-roberta-large": 0.0609,
+        "hhem-2.1-open": 0.7324
+      }
+    ],
+    "only_b_right": [],
+    "mcnemar_b": 54,
+    "mcnemar_c": 0,
+    "mcnemar_p": 1.1102230246251565e-16
+  },
+  "minicheck-roberta-large vs jev-1.14": {
+    "metric": "correct",
+    "n": 248,
+    "mean_a": 0.9919354838709677,
+    "mean_b": 0.9959677419354839,
+    "mean_diff": -0.004032258064516129,
+    "diff_ci95": [
+      -0.016129032258064516,
+      0.008064516129032258
+    ],
+    "win_tie_loss": [
+      1,
+      245,
+      2
+    ],
+    "permutation_p": 1.0,
+    "only_a_right": [
+      {
+        "id": 245,
+        "kind": "wrong_holding",
+        "claim": "The court concluded that the court was justified, if compelled, to exclude the in-court visual identification.",
+        "minicheck-roberta-large": 0.3454,
+        "jev-1.14": 0.58
+      }
+    ],
+    "only_b_right": [
+      {
+        "id": 20,
+        "kind": "wrong_holding",
+        "claim": "The court held that the prosecutor\u2019s intitial and rebuttal references to the defendant\u2019s post-arrest silence violated his unconstitutional right to a fair trial",
+        "minicheck-roberta-large": 0.8304,
+        "jev-1.14": 0.4225
+      },
+      {
+        "id": 240,
+        "kind": "wrong_holding",
+        "claim": "The court held that the trial court correctly rejected the defendant\u2019s contention that he was not denied due process by failure to apply as the standard for rel",
+        "minicheck-roberta-large": 0.6672,
+        "jev-1.14": 0.0675
+      }
+    ],
+    "mcnemar_b": 1,
+    "mcnemar_c": 2,
+    "mcnemar_p": 1.0
+  },
+  "hhem-2.1-open vs jev-1.14": {
+    "metric": "correct",
+    "n": 248,
+    "mean_a": 0.7741935483870968,
+    "mean_b": 0.9959677419354839,
+    "mean_diff": -0.2217741935483871,
+    "diff_ci95": [
+      -0.27419354838709675,
+      -0.17338709677419356
+    ],
+    "win_tie_loss": [
+      0,
+      193,
+      55
+    ],
+    "permutation_p": 0.0001999600079984003,
+    "only_a_right": [],
+    "only_b_right": [
+      {
+        "id": 1,
+        "kind": "neg",
+        "claim": "The court concluded that section 24-51-806 was amended in order to establish a limited and definite time period within which a surviving child, who was enrolled",
+        "hhem-2.1-open": 0.9563,
+        "jev-1.14": 0.01
+      },
+      {
+        "id": 101,
+        "kind": "neg",
+        "claim": "The court held that judicial review is barred by the language of the legislation in question, and therefore, reverse the trial court.",
+        "hhem-2.1-open": 0.9503,
+        "jev-1.14": 0.01
+      },
+      {
+        "id": 106,
+        "kind": "neg",
+        "claim": "The court concluded that the district judge did abuse his discretion or act beyond his jurisdiction and, therefore, we discharge the rule.",
+        "hhem-2.1-open": 0.9337,
+        "jev-1.14": 0.01
+      },
+      {
+        "id": 108,
+        "kind": "wrong_holding",
+        "claim": "The court held that the court did not err in its interpretation of the criminal statute in holding that the effective date of a prior conviction is the time tha",
+        "hhem-2.1-open": 0.6464,
+        "jev-1.14": 0.01
+      },
+      {
+        "id": 114,
+        "kind": "wrong_holding",
+        "claim": "The court concluded that there is not substantial evidence in the record to support the finding of the commission that the cost of customer conservation program",
+        "hhem-2.1-open": 0.7324,
+        "jev-1.14": 0.01
+      }
+    ],
+    "mcnemar_b": 0,
+    "mcnemar_c": 55,
+    "mcnemar_p": 5.551115123125783e-17
+  }
+}

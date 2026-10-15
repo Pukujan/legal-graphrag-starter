@@ -67,5 +67,46 @@
     "conformal_false_accept": 0.034482758620689655,
     "conformal_false_abstain": 0.7272727272727273
   },
-  "jev": "skipped: OPENROUTER_API_KEY not set"
+  "jev-1.14": {
+    "model": "typesafe/jev-1.14",
+    "version": "typesafe/jev-1.14-20261014",
+    "n": 248,
+    "acc": 0.9959677419354839,
+    "auroc": 1.0,
+    "ece_raw": 0.014949596774193583,
+    "acc_cal": 0.9959677419354839,
+    "ece_cal": 0.004450800885315419,
+    "temperature": 0.39250336351074777,
+    "p50_ms": 98.10430349898525,
+    "p95_ms": 712.0423000014853,
+    "acc_by_kind_cal": {
+      "neg": 1.0,
+      "supported": 1.0,
+      "wrong_case": 1.0,
+      "wrong_holding": 0.9722222222222222
+    },
+    "acc_noul_only": 0.9959677419354839,
+    "acc_choice_only": 0.9959677419354839,
+    "auroc_noul_only": 1.0,
+    "auroc_choice_only": 1.0,
+    "api_calls": 248,
+    "api_cost_usd": 0.007644,
+    "cost_per_1k_calls_usd": 0.0308,
+    "note": "8 concurrent requests; latency is per HTTP call over the internet",
+    "ece_raw_ci": [
+      0.009939516129032261,
+      0.021643145161290296
+    ],
+    "ece_cal_ci": [
+      9.925139660081128e-05,
+      0.012866181563850212
+    ],
+    "auroc_ci": [
+      1.0,
+      1.0
+    ],
+    "conformal_threshold_cal": 0.0029654810686727735,
+    "conformal_false_accept": 0.04310344827586207,
+    "conformal_false_abstain": 0.0
+  }
 }
