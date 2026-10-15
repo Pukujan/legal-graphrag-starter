@@ -10,6 +10,10 @@ Refs #40. Folds in the interrupted search track (#28, #29, #33).
 - Octo (`octo_load.py`, migration 004 tables): only the gold+seed cases of the frozen CLERC queries are stored:
   4,151 `work` / 4,151 `expression` / 51,636 `chunk` rows, `embed_model='none'` (schema vector is 1024-d; benchmark used 384-d).
   Idempotent (`ON CONFLICT DO NOTHING`), so reruns resume.
+- CAP Colorado (`benchmarks/cap_colorado/octo_load_co.py`, 2026-10-15): all 40,897 Colorado opinions, full text, same
+  chunker (1000 chars, header), 753,010 chunks, streamed with a line checkpoint. Octo totals: 45,048 work/expression,
+  804,646 chunk. The engine's dense vectors (bge-small, 384-d) live in a local cache, not `chunk.embedding`
+  (see `docs/engine-api.md`, "Dense index").
 
 BM25 is a disk-backed re-implementation of bm25s scoring (`sparse.py`; same k1/b/idf/stopwords/stemmer), because
 bm25s needs every tokenized chunk in memory.

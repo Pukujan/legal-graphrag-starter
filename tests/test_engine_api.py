@@ -104,7 +104,7 @@ def test_question_citation_provenance_and_skips(client):
     events = stream(client, {"query": "contract dispute 12 F.3d 34", "dense": False, "rerank": False, "jev": True})
     by = {d.get("stage"): d for n, d in events if n == "stage"}
     assert by["dense"]["skipped"] and by["rerank"]["skipped"]
-    assert by["jev"]["skipped"] and "OPENROUTER" in by["jev"]["reason"]
+    assert "jev" not in by and by["rerank"]["jev"]["skipped"]
     top = events[-2][1]["results"]
     c = next(r for r in top if r["case"]["id"] == "C")
     assert c["provenance"][0] == {"source": "question_citation"}
@@ -157,3 +157,96 @@ def test_best_spans_offsets():
     body = "Header line\nFirst sentence about cats. Probable cause is a standard. End."
     spans = best_spans(body, "probable cause")
     assert spans and body[spans[0]["start"]:spans[0]["end"]] == spans[0]["text"]
+
+
+def run_events(p, **body):
+    from legal_graph.engine.models import TextRetrieveRequest
+    return list(p.run(TextRetrieveRequest(**body)))
+
+
+def test_graph_event_reports_cap_and_truncation():
+    by = {e.get("stage"): e for e in run_events(make_pipeline(graph_edge_cap=1), query="probable cause warrantless car")}
+    g = by["graph"]
+    assert g["edge_cap"] == 1 and g["edges_scanned"] == 1 and g["truncated"] is True
+    by = {e.get("stage"): e for e in run_events(make_pipeline(graph_edge_cap=20000), query="probable cause warrantless car")}
+    assert by["graph"]["truncated"] is False and by["graph"]["edge_cap"] == 20000
+
+
+def test_dense_index_mode_scores_full_corpus():
+    p = make_pipeline(dense_index=lambda q, k: [(3, 0.9), (2, 0.5)][:k], dense_index_info={"index_chunks": 5})
+    ev = run_events(p, query="probable cause warrantless car")
+    d = next(e for e in ev if e.get("stage") == "dense")
+    assert d["mode"] == "index" and d["index_chunks"] == 5
+    assert [c["doc_id"] for c in d["candidates"]] == ["C", "B"]
+
+
+def test_jev_rerank_is_part_of_rerank_stage():
+    calls = []
+
+    def jev(q, passage):
+        calls.append(passage)
+        return 0.99 if "vehicle" in passage else 0.1
+    p = make_pipeline(jev=jev, jev_model="typesafe/jev-1.14")
+    ev = run_events(p, query="probable cause warrantless car search", k=3, jev_k=3)
+    stages = [e["stage"] for e in ev if e["type"] == "stage"]
+    assert stages == ["parse", "bm25", "dense", "hybrid", "graph", "rerank"]
+    rr = next(e for e in ev if e.get("stage") == "rerank")
+    assert rr["method"] == "cross-encoder+jev" and rr["jev"]["model"] == "typesafe/jev-1.14" and rr["jev"]["scored"] == 3
+    res = ev[-1]["results"]
+    assert res[0]["case"]["id"] == "D" and res[0]["jev_relevance"] == 0.99 and len(calls) == 3
+    off = run_events(p, query="probable cause warrantless car search", jev=False)
+    assert next(e for e in off if e.get("stage") == "rerank")["jev"]["reason"] == "disabled by request"
+
+
+def test_jev_defaults():
+    from legal_graph.engine.checks import JEV_MODEL_DEFAULT
+    from legal_graph.engine.models import TextRetrieveRequest
+    assert JEV_MODEL_DEFAULT == "typesafe/jev-1.14" and TextRetrieveRequest(query="abc").jev is True
+
+
+def test_cap_links():
+    from legal_graph.engine import links
+    assert links.reporter_slug("F. Supp. 2d") == "f-supp-2d" and links.reporter_slug("U.S.") == "us"
+    assert links.reporter_slug("F.3d") == "f3d" and links.reporter_slug("S. Ct.") == "s-ct"
+    assert links.cap_static_url("colo", 1, "0001-01") == "https://static.case.law/colo/1/cases/0001-01.json"
+
+    class Resp:
+        def __init__(self, body):
+            self.body = body
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+        def read(self):
+            return self.body
+
+    def opener(req, timeout):
+        return Resp(b'{"id": 7}' if req.full_url.endswith("0874-02.json") else b'{"id": 1}')
+    got = links.resolve_cap_link("7", "855 F.2d 874", opener=opener)
+    assert got["link"] == "https://static.case.law/f2d/855/cases/0874-02.json"
+    assert got["html"] == "https://case.law/caselaw/?reporter=f2d&volume=855&case=0874-02"
+
+
+def test_eyecite_is_default_parser():
+    pytest.importorskip("eyecite")
+    from legal_graph.engine.pipeline import citation_parser_name, eyecite_citations
+    assert Pipeline.__dataclass_fields__["parse_citations"].default is eyecite_citations
+    assert citation_parser_name() == "eyecite"
+    assert eyecite_citations("See People v. Mason, 2 P.3d 1, and 410 U.S. 113.") == ["2 P.3d 1", "410 U.S. 113"]
+
+
+def test_dense_index_roundtrip(tmp_path):
+    import numpy as np
+    from legal_graph.engine import dense_index as di
+    ids = ["a", "b", "c"]
+    vp, mp = di.paths(tmp_path, "m/x")
+    v = np.eye(3, dtype=np.float16)
+    np.save(vp, v)
+    mp.write_text(json.dumps({"complete": True, "n": 3, "chunk_ids_sha256": di.ids_sha(ids), "storage": "local-cache"}))
+    idx = di.load(tmp_path, "m/x", ids, lambda q: np.array([0.1, 0.9, 0.0]))
+    assert idx.search("q", 2) == [(1, pytest.approx(0.9, abs=1e-3)), (0, pytest.approx(0.1, abs=1e-3))]
+    assert di.load(tmp_path, "m/x", ids + ["d"], lambda q: None) is None
+    assert di.storage_for(384)[0] == "local-cache" and di.storage_for(1024)[0] == "octo+local-cache"

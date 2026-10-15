@@ -85,13 +85,15 @@ It is a research aid, not legal advice. No accounts and no login anywhere.
 
 - Base URL from `ENGINE_BASE_URL` (local `http://127.0.0.1:8010`; a tunnel hostname later). Bearer token from
   `ENGINE_API_TOKEN`, kept server side.
-- `POST /api/v1/retrieve` `{"query": "...", "k": 10}` streams `event: stage` (parse, bm25, dense, hybrid, graph, rerank,
-  optional jev; each with `duration_ms`, `elapsed_ms`, candidates with ids, scores and ranks, graph edges), then
+- `POST /api/v1/retrieve` `{"query": "...", "k": 10}` streams `event: stage` (parse, bm25, dense, hybrid, graph, rerank
+  (cross-encoder plus Jev relevance by default); each with `duration_ms`, `elapsed_ms`, candidates with ids, scores and ranks, graph edges), then
   `event: result` (ranked cases with metadata, `provenance`, verbatim passages and spans), then `event: done`.
 - `POST /api/v1/check` `{"claims": [{"text", "cited_text", "citation", "chunk_id"}], "scorer": "minicheck"}` returns
   per-claim `calibrated_prob` and `accepted`, `answer_confidence`, `abstain`, and quote verification.
-- Coverage today: 4,151 US court opinions with stored text (federal and state, from the CLERC benchmark), linked into a
-  547k-node citation graph. Copy must not claim more.
+- Coverage today: 45,048 US court opinions with stored, quotable text: all 40,897 Colorado opinions in the Caselaw
+  Access Project (Colorado Supreme Court and Court of Appeals, 1864 to 2019) plus 4,151 federal and other-state opinions
+  from the CLERC benchmark, linked into a 547k-node citation graph. Copy may say "Colorado case law through 2019" but
+  must not claim complete coverage of any other state, of federal law, of statutes, or of Colorado opinions after 2019.
 
 ## Env var names the app uses
 

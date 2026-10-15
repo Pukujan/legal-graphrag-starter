@@ -5,34 +5,40 @@ import os
 from typing import Any, Callable
 
 from legal_graph.answer_check import CitationChecker, Claim
-from legal_graph.decisions import OpenRouterJevProvider, parse_decision_response
+from legal_graph import jev as _jev
 
 from .models import CHECK_SCHEMA_VERSION, CheckRequest
 
-JEV_MODEL_DEFAULT = "typesafe/jev-router"
-_SUPPORT_Q = {"support": {"type": "noul", "instructions":
-                          "Estimate the probability that the passage fully supports the claim."}}
+# Decisions-API model (legal_graph.jev, PR #45). "typesafe/jev-router" is a chat router that the
+# Decisions API rejects, so it is never the default.
+JEV_MODEL_DEFAULT = _jev.DEFAULT_MODEL  # "typesafe/jev-1.14"
 
 
-class JevScorer:
-    """SupportScorer over OpenRouter Jev Decisions (one noul 'support' question per pair)."""
+class JevScorer(_jev.JevScorer):
+    """/check SupportScorer and rerank relevance scorer over the Jev Decisions API.
 
-    def __init__(self, model: str | None = None, provider: OpenRouterJevProvider | None = None):
-        self.model = model or os.environ.get("JEV_MODEL", JEV_MODEL_DEFAULT)
-        self.model_version = self.model
-        self._provider = provider or OpenRouterJevProvider()
+    ``score`` (support) is inherited from ``legal_graph.jev.JevScorer``: mean of a Noul and an
+    order-averaged Choice. ``relevance`` asks the same two-question form about query relevance.
+    """
 
-    def _ask(self, state: dict[str, Any], instructions: str) -> float:
-        q = {"support": {**_SUPPORT_Q["support"], "instructions": instructions}}
-        raw = self._provider.decide({"model": self.model, "state": state, "questions": q})
-        return parse_decision_response(raw, q)["answers"]["support"]["value"]
+    REL_INSTR = ("Is this passage from a court opinion relevant to answering the legal question? It is relevant "
+                 "only if it states law or facts that bear directly on the question.")
+    REL_OPTIONS = {"relevant": "The passage bears directly on answering the question.",
+                   "not_relevant": "The passage does not help answer the question."}
 
-    def score(self, pairs):
-        return [self._ask({"passage": doc, "claim": claim}, _SUPPORT_Q["support"]["instructions"]) for doc, claim in pairs]
+    def __init__(self, model: str | None = None, client: _jev.JevClient | None = None):
+        super().__init__(client or _jev.JevClient(model=model or os.environ.get("JEV_MODEL", JEV_MODEL_DEFAULT),
+                                                  transport=_jev.HttpTransport(timeout=float(os.environ.get("JEV_TIMEOUT", "30"))),
+                                                  retries=int(os.environ.get("JEV_RETRIES", "2"))))
 
     def relevance(self, query: str, passage: str) -> float:
-        return self._ask({"question": query, "passage": passage},
-                         "Estimate the probability that this passage is relevant to answering the question.")
+        qs = {"relevance": {"type": "noul", "instructions": self.REL_INSTR,
+                            "criteria": {"true": self.REL_OPTIONS["relevant"], "false": self.REL_OPTIONS["not_relevant"]}},
+              **_jev.choice_questions("rel", self.REL_INSTR, self.REL_OPTIONS)}
+        r = self.client.decide({"question": query, "passage": passage}, qs)
+        n = _jev.noul(r["answers"], "relevance")
+        c = _jev.average_choice(r["answers"], "rel", list(self.REL_OPTIONS))["relevant"]
+        return (n + c) / 2
 
 
 class ScorerRegistry:
