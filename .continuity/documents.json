@@ -62,10 +62,53 @@
       "path": "checkpoints/CURRENT.md",
       "related": [],
       "reviewed_commit": "uncommitted",
-      "reviewed_sha256": "5ec7fbbb2b5e6069574fcf07a57069d51b9b03427876bb6284121db24e68a01f",
+      "reviewed_sha256": "27714078f95dd5c55f7a82cfbc9e3b7778c701f870b2819e69d19f02d37913aa",
       "summary": "As-of project phase, active work, blockers, and next action.",
       "tasks": [],
       "title": "Current"
+    },
+    {
+      "id": "decision-enrichment",
+      "keywords": [
+        "decisions",
+        "evidence",
+        "Jev",
+        "GLiNER2",
+        "annotations",
+        "GraphRAG"
+      ],
+      "path": "docs/decision-enrichment.md",
+      "related": [
+        "current"
+      ],
+      "reviewed_commit": "uncommitted",
+      "reviewed_sha256": "d762783404ef9550374ecc4122c4708083130c2669cca3482e0a44ed29a2c857",
+      "summary": "Jev decision parsing, source-preserving annotation overlay, synthetic pipeline, and explicit runtime limits.",
+      "tasks": [
+        "LGR-0003"
+      ],
+      "title": "Decision and Evidence Enrichment"
+    },
+    {
+      "id": "decision-task",
+      "keywords": [
+        "decisions",
+        "evidence",
+        "Jev",
+        "annotations",
+        "issue #4"
+      ],
+      "path": "tasks/TASK-LGR-0003-decision-graph-enrichment.md",
+      "related": [
+        "current"
+      ],
+      "reviewed_commit": "uncommitted",
+      "reviewed_sha256": "8740a86190f88676b1f0c4cfebb3c502a3480acd187b9d90442b71f512ffe27a",
+      "summary": "Issue-linked scope, lineage, acceptance, evidence, boundaries, and next step for decision enrichment.",
+      "tasks": [
+        "LGR-0003"
+      ],
+      "title": "Decision Enrichment Task"
     },
     {
       "id": "design-brief",
@@ -211,47 +254,40 @@
       "title": "ACS setup task"
     },
     {
-      "id": "decision-enrichment",
+      "id": "storage-contract",
       "keywords": [
-        "decisions",
-        "evidence",
-        "Jev",
-        "GLiNER2",
-        "annotations",
-        "GraphRAG"
+        "Octo",
+        "storage"
       ],
-      "path": "docs/decision-enrichment.md",
-      "related": [
-        "current"
-      ],
+      "path": "docs/storage-contract.md",
+      "related": [],
       "reviewed_commit": "uncommitted",
-      "reviewed_sha256": "d762783404ef9550374ecc4122c4708083130c2669cca3482e0a44ed29a2c857",
-      "summary": "Jev decision parsing, source-preserving annotation overlay, synthetic pipeline, and explicit runtime limits.",
+      "reviewed_sha256": "a0929b11646904e5649e7aa417d35836c57b1cfb59e008b9f42a2a1e64927bb7",
+      "summary": "App-owned immutable citation snapshots, parameterized reader contract, and synthetic live Octo verification.",
       "tasks": [
-        "LGR-0003"
+        "LGR-0004"
       ],
-      "title": "Decision and Evidence Enrichment"
+      "title": "Existing Octo Storage Contract"
     },
     {
-      "id": "decision-task",
+      "id": "storage-task",
       "keywords": [
-        "decisions",
-        "evidence",
-        "Jev",
-        "annotations",
-        "issue #4"
+        "LGR-0004",
+        "issue #7",
+        "storage"
       ],
-      "path": "tasks/TASK-LGR-0003-decision-graph-enrichment.md",
+      "path": "tasks/TASK-LGR-0004-octo-graph-storage.md",
       "related": [
-        "current"
+        "current",
+        "storage-contract"
       ],
       "reviewed_commit": "uncommitted",
-      "reviewed_sha256": "8740a86190f88676b1f0c4cfebb3c502a3480acd187b9d90442b71f512ffe27a",
-      "summary": "Issue-linked scope, lineage, acceptance, evidence, boundaries, and next step for decision enrichment.",
+      "reviewed_sha256": "b6d27066546cada2f98f49fd72622e06b7030c2d010c11e283273f7dcfd0445a",
+      "summary": "Issue-linked LGR-0004 implementation, live synthetic verification, and current handoff.",
       "tasks": [
-        "LGR-0003"
+        "LGR-0004"
       ],
-      "title": "Decision Enrichment Task"
+      "title": "Octo Storage Task"
     }
   ],
   "schema": "project-continuity.documents.v1"

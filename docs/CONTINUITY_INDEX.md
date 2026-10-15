@@ -1,6 +1,6 @@
 # Continuity Document Index
 
-<!-- continuity:documents-index {"catalog_sha256":"fe1dbdf088300e28e19bbcafc3f7f8bc678405bed2aba6c182104b0cbaa70f88","schema":"project-continuity.documents-index.v1"} -->
+<!-- continuity:documents-index {"catalog_sha256":"210ddfaf361f28581b8ce2469fc52a7466c90f93e2fc855e06888a74787127e2","schema":"project-continuity.documents-index.v1"} -->
 
 > Generated from `.continuity/documents.json`. Edit the JSON inventory, then run `continuity docs render`; do not edit this view directly.
 > Freshness below compares local file bytes; after `git fetch origin`, use `continuity docs find` for cached remote freshness.
@@ -46,8 +46,8 @@
 - File: [`checkpoints/CURRENT.md`](../checkpoints/CURRENT.md)
 - Local content status: **CURRENT**
 - Last reviewed at commit: `uncommitted`
-- Reviewed SHA-256: `5ec7fbbb2b5e6069574fcf07a57069d51b9b03427876bb6284121db24e68a01f`
-- Current SHA-256: `5ec7fbbb2b5e6069574fcf07a57069d51b9b03427876bb6284121db24e68a01f`
+- Reviewed SHA-256: `27714078f95dd5c55f7a82cfbc9e3b7778c701f870b2819e69d19f02d37913aa`
+- Current SHA-256: `27714078f95dd5c55f7a82cfbc9e3b7778c701f870b2819e69d19f02d37913aa`
 - Summary: As-of project phase, active work, blockers, and next action.
 - Search terms: `blockers`, `current state`, `next action`
 - Neighboring records: none
@@ -184,3 +184,27 @@
 - Search terms: `ACS`, `hotload`, `installation`, `validators`
 - Neighboring records: `current`, `project`
 - Task associations: `LGR-0001`
+
+## Existing Octo Storage Contract (`storage-contract`)
+
+- File: [`docs/storage-contract.md`](../docs/storage-contract.md)
+- Local content status: **CURRENT**
+- Last reviewed at commit: `uncommitted`
+- Reviewed SHA-256: `a0929b11646904e5649e7aa417d35836c57b1cfb59e008b9f42a2a1e64927bb7`
+- Current SHA-256: `a0929b11646904e5649e7aa417d35836c57b1cfb59e008b9f42a2a1e64927bb7`
+- Summary: App-owned immutable citation snapshots, parameterized reader contract, and synthetic live Octo verification.
+- Search terms: `Octo`, `storage`
+- Neighboring records: none
+- Task associations: `LGR-0004`
+
+## Octo Storage Task (`storage-task`)
+
+- File: [`tasks/TASK-LGR-0004-octo-graph-storage.md`](../tasks/TASK-LGR-0004-octo-graph-storage.md)
+- Local content status: **CURRENT**
+- Last reviewed at commit: `uncommitted`
+- Reviewed SHA-256: `b6d27066546cada2f98f49fd72622e06b7030c2d010c11e283273f7dcfd0445a`
+- Current SHA-256: `b6d27066546cada2f98f49fd72622e06b7030c2d010c11e283273f7dcfd0445a`
+- Summary: Issue-linked LGR-0004 implementation, live synthetic verification, and current handoff.
+- Search terms: `LGR-0004`, `issue #7`, `storage`
+- Neighboring records: `current`, `storage-contract`
+- Task associations: `LGR-0004`
