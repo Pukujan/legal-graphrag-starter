@@ -70,7 +70,7 @@ Per-stage fields:
 |---|---|
 | `parse` | `parser` (`eyecite`, the default and installed in the engine env; `regex` only if eyecite is missing), `citations: [{citation, doc_id or null}]` (reporter cites in the question, resolved against the active Octo snapshot) |
 | `bm25` | `retriever` (`bm25s`), `chunks_scored`, `candidates: [{doc_id, chunk_id, rank, score}]` (chunk hits max-pooled to cases) |
-| `dense` | `model`, `mode`. `mode: "index"` (normal): full-corpus search of the precomputed chunk index; extra fields `top_chunks` (= `dense_pool`), `index_chunks`, `dim`, `storage`, `candidates: [{doc_id, chunk_id, rank, score}]`. `mode: "pool"` (fallback when the index is missing or stale): re-encodes the top `dense_pool` BM25 chunks; `pool_chunks`, `candidates: [{doc_id, rank, score}]`. Scores are cosine. |
+| `dense` | `model`, `mode`. `mode: "index"` (normal): full-corpus search of the precomputed chunk index; extra fields `top_chunks` (= `dense_pool`), `index_chunks`, `dim`, `storage`, `backend`, `candidates: [{doc_id, chunk_id, rank, score}]`. `mode: "pool"` (fallback when the index is missing, stale or its query call failed, then with `index_error`): re-encodes the top `dense_pool` BM25 chunks; `pool_chunks`, `candidates: [{doc_id, rank, score}]`. Scores are cosine. |
 | `hybrid` | `method: "rrf"`, `rrf_k: 60`, `inputs: ["bm25","dense"]`, `candidates: [{doc_id, rank, score, ranks: {bm25: r, dense: r}}]` |
 | `graph` | `hops: 1`, `frontier: [doc_id]`, `edges_scanned` (edges returned by the one SQL read), `edge_cap` (`ENGINE_GRAPH_EDGE_CAP`, default 20,000), `truncated` (`true` when `edges_scanned` reached the cap, so some neighbours were not seen), `edges_used`, `edges: [{source, target, kind}]` (edges that added a case, max 500), `added: [{doc_id, via: [{source:"graph", edge, via, direction}]}]`, `graph_revision` |
 | `rerank` | `method` (`cross-encoder`, `cross-encoder+jev`, or `jev`), `model`, `reranked`, `cross_encoder: {model, reranked, duration_ms}`, `jev: {model, k, scored, failed, duration_ms}` or `jev: {skipped: true, reason}`, `candidates: [{doc_id, rank, score, jev_relevance or null, prev_rank}]`. Jev scores the top `jev_k` cross-encoder cases in parallel (relevance = mean of a Noul and an order-averaged Choice, `typesafe/jev-1.14`) and reorders that head by it; a failed Jev call keeps its case after the scored ones and adds a `jev_error` provenance entry. |
@@ -166,7 +166,8 @@ upper bounds. The client must render stages as they arrive and not wait for `res
 | `OCTO_API_KEY` | Octo workspace key (falls back to legacy `octo_db_legal`) |
 | `OCTO_SNAPSHOT_ID` | pin a graph snapshot; default reads `legal_graph.active_snapshot` |
 | `ENGINE_CACHE_DIR` | chunk cache (`chunks.jsonl`) and dense index (`dense-<model>.f16.npy` + `.json`), default `/workspace/lgr-text-data/engine-cache` |
-| `ENGINE_DENSE_MODEL`, `ENGINE_DENSE_MAX_LEN` | default `BAAI/bge-small-en-v1.5`, 256 |
+| `ENGINE_DENSE_MODEL`, `ENGINE_DENSE_MAX_LEN` | pool-mode fallback encoder, default `BAAI/bge-small-en-v1.5`, 256 |
+| `ENGINE_DENSE_INDEX_BACKEND`, `ENGINE_DENSE_INDEX_MODEL` | precomputed index: `local` (default model = `ENGINE_DENSE_MODEL`) or `openrouter` (default `baai/bge-large-en-v1.5`; box uses this) |
 | `ENGINE_DENSE_IN_RAM` | `1` (default) copies the dense index into RAM; `0` memory-maps it |
 | `ENGINE_GRAPH_EDGE_CAP` | max edges read per graph stage, default 20,000 |
 | `ENGINE_RERANK_MODEL`, `ENGINE_RERANK_MAX_LEN` | default `cross-encoder/ms-marco-MiniLM-L-6-v2`, 384 |
@@ -196,16 +197,30 @@ transformers`, which includes eyecite). First start pages 804,646 chunks out of 
 ### Dense index (build once)
 
 ```sh
-python -m legal_graph.engine.dense_index --build     # resumable; checkpoints every 4,096 chunks
+ENGINE_DENSE_INDEX_BACKEND=openrouter python -m legal_graph.engine.dense_index --build --write-octo --workers 32
 ```
 
-Every stored chunk is embedded once with the configured dense model (default bge-small, 384-d, L2-normalised,
-max 256 tokens) into `$ENGINE_CACHE_DIR/dense-BAAI__bge-small-en-v1.5.f16.npy` (float16, about 0.6 GB) with a `.json`
-manifest (model, dim, n, sha256 of the chunk-id order). The engine loads it at startup and encodes only the query at
-request time. **Storage: local cache, not Octo.** `legal_graph.chunk.embedding` is `vector(1024)` and bge-small is
-384-d, so the vectors do not fit the column; `chunk.embedding` stays NULL (`embed_model='none'`). A 1024-d model would
-fit (the manifest then says `storage: octo+local-cache`). If the chunk set changes, the manifest no longer matches, the
-engine logs a warning and uses `mode: "pool"` until the index is rebuilt.
+Every stored chunk is embedded once into `$ENGINE_CACHE_DIR/dense-<model>.f16.npy` (float16, L2-normalised) with a
+`.json` manifest (model, backend, dim, n, sha256 of the chunk-id order, API cost). The build streams `chunks.jsonl`,
+checkpoints after every block and resumes from the manifest. The engine loads the file at startup and encodes only the
+query at request time, so the dense stage no longer re-encodes passages under box load.
+
+Two backends (`ENGINE_DENSE_INDEX_BACKEND`):
+
+- `openrouter` (used on the box): `baai/bge-large-en-v1.5`, 1024-d, through the OpenRouter embeddings API. The full
+  build cost about USD 1.5 (see the manifest). The query is embedded by the same API (one call per request). If that call
+  fails, the stage falls back to `mode: "pool"` and reports `index_error`.
+- `local`: sentence-transformers on CPU, default `BAAI/bge-small-en-v1.5`, 384-d. Local CPU embedding of 804k chunks
+  measured 10-15 chunks/s on the shared box (other jobs held most cores), which is more than 15 hours. That is why the box
+  uses the API backend.
+
+**Where the vectors are stored.** Octo `legal_graph.chunk.embedding` is `vector(1024)`. bge-large vectors are 1024-d,
+so they fit. `--write-octo` writes them to `chunk.embedding` with `embed_model = 'baai/bge-large-en-v1.5'` as the
+store of record, and the engine reads the identical local cache at startup, which is faster than paging 3 GB of vectors
+out of Octo. A 384-d model (bge-small) does not fit the column. Its vectors stay in the local cache only and
+`chunk.embedding` stays NULL. The manifest's `storage` field says which case applies. If the chunk set changes, the
+manifest no longer matches. The engine then logs a warning and uses `mode: "pool"` (local bge-small over the BM25 pool)
+until the index is rebuilt.
 
 ## Engine layout (MVC, engine only)
 

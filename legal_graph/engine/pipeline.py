@@ -116,15 +116,23 @@ class Pipeline:
         dense_docs: list[str] = []
         dense_score: dict[str, float] = {}
         dense_chunk: dict[str, int] = {}
+        index_error = None
+        hits: list[tuple[int, float]] | None = None
         if req.dense and self.dense_index is not None:
             t0 = time.perf_counter()
-            for i, sc in self.dense_index(req.query, req.dense_pool):
+            try:
+                hits = self.dense_index(req.query, req.dense_pool)
+            except Exception as exc:  # e.g. the query-embedding API is down: fall back to pool mode
+                index_error = f"{type(exc).__name__}: {str(exc)[:120]}"
+        if hits is not None:
+            for i, sc in hits:
                 d = corpus.chunks[i].doc_id
                 if d not in dense_score:
                     dense_score[d], dense_chunk[d] = float(sc), i
                     dense_docs.append(d)
-            yield event("dense", t0, model=self.dense_model, mode="index", top_chunks=req.dense_pool,
-                        **(self.dense_index_info or {}),
+            info = dict(self.dense_index_info or {})
+            yield event("dense", t0, model=info.pop("model", self.dense_model), mode="index",
+                        top_chunks=req.dense_pool, **info,
                         candidates=[{"doc_id": d, "chunk_id": corpus.chunks[dense_chunk[d]].chunk_id, "rank": r + 1,
                                      "score": round(dense_score[d], 4)} for r, d in enumerate(dense_docs)])
         elif req.dense and self.dense and order:
@@ -138,6 +146,7 @@ class Pipeline:
                     dense_score[d], dense_chunk[d] = float(sc), i
                     dense_docs.append(d)
             yield event("dense", t0, model=self.dense_model, mode="pool", pool_chunks=len(dpool),
+                        **({"index_error": index_error} if index_error else {}),
                         candidates=[{"doc_id": d, "rank": r + 1, "score": round(dense_score[d], 4)}
                                     for r, d in enumerate(dense_docs)])
         else:

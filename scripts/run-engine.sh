@@ -11,5 +11,6 @@ export OCTO_API_KEY="$octodb_legal_graph"; unset octodb_legal_graph
 export JEV_MODEL="${JEV_MODEL:-typesafe/jev-1.14}"
 export ENGINE_LIVE=1 ENGINE_CACHE_DIR=/workspace/lgr-text-data/engine-cache HF_HUB_OFFLINE="${HF_HUB_OFFLINE:-1}"
 export ENGINE_GRAPH_EDGE_CAP="${ENGINE_GRAPH_EDGE_CAP:-20000}"
+export ENGINE_DENSE_INDEX_BACKEND="${ENGINE_DENSE_INDEX_BACKEND:-openrouter}"   # bge-large index; query embedded via OpenRouter
 cd "${ENGINE_REPO:-/workspace/lgr-engine2}"
 exec /workspace/lgr-search-data/.venv/bin/python -m uvicorn legal_graph.server:create_app --factory --host 127.0.0.1 --port "${PORT:-8010}"

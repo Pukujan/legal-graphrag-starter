@@ -2,7 +2,8 @@
 
 Env: OCTO_BASE_URL, OCTO_WORKSPACE_ID, OCTO_API_KEY (or legacy octo_db_legal),
 OCTO_SNAPSHOT_ID (default = legal_graph.active_snapshot), ENGINE_CACHE_DIR,
-ENGINE_DENSE_MODEL, ENGINE_RERANK_MODEL, ENGINE_GRAPH_EDGE_CAP (default 20000),
+ENGINE_DENSE_MODEL (pool fallback), ENGINE_DENSE_INDEX_BACKEND / ENGINE_DENSE_INDEX_MODEL (precomputed
+index, see dense_index), ENGINE_RERANK_MODEL, ENGINE_GRAPH_EDGE_CAP (default 20000),
 OPENROUTER_API_KEY, JEV_MODEL (default typesafe/jev-1.14), ENGINE_JEV_RERANK (default 1).
 """
 from __future__ import annotations
@@ -139,11 +140,21 @@ def build_live_pipeline() -> tuple[Pipeline, OctoGraph]:
         rm = CrossEncoder(rname, device="cpu", max_length=int(os.environ.get("ENGINE_RERANK_MAX_LEN", "384")))
         p.dense, p.dense_model = dense, dname
         from . import dense_index
-        idx = dense_index.load(cache_dir, dname, [c.chunk_id for c in corpus.chunks],
-                               lambda q: dm.encode([qprefix + q], normalize_embeddings=True)[0])
+        backend, iname = dense_index.index_config()
+        if backend == "openrouter":
+            enc = dense_index.OpenRouterEncoder(iname, timeout=float(os.environ.get("ENGINE_DENSE_QUERY_TIMEOUT", "20")),
+                                                retries=1)
+            iprefix = dense_index.query_prefix(iname)
+
+            def encode_query(q: str):
+                return enc([iprefix + q])[0]
+        else:
+            def encode_query(q: str):
+                return dm.encode([qprefix + q], normalize_embeddings=True)[0]
+        idx = dense_index.load(cache_dir, iname, [c.chunk_id for c in corpus.chunks], encode_query)
         if idx is not None:
-            p.dense_index, p.dense_index_info = idx.search, idx.info()
-            log.info("dense index loaded: %s", idx.info())
+            p.dense_index, p.dense_index_info = idx.search, {"model": iname, "backend": backend, **idx.info()}
+            log.info("dense index loaded: %s", p.dense_index_info)
         p.reranker, p.rerank_model = (lambda q, ps: rm.predict([(q, x) for x in ps], batch_size=16).tolist()), rname
     except ImportError:
         log.warning("sentence-transformers not installed; dense and rerank stages are skipped")

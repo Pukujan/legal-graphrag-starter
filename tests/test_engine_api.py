@@ -250,3 +250,22 @@ def test_dense_index_roundtrip(tmp_path):
     assert idx.search("q", 2) == [(1, pytest.approx(0.9, abs=1e-3)), (0, pytest.approx(0.1, abs=1e-3))]
     assert di.load(tmp_path, "m/x", ids + ["d"], lambda q: None) is None
     assert di.storage_for(384)[0] == "local-cache" and di.storage_for(1024)[0] == "octo+local-cache"
+
+
+def test_dense_index_config(monkeypatch):
+    from legal_graph.engine import dense_index as di
+    monkeypatch.setenv("ENGINE_DENSE_INDEX_BACKEND", "openrouter")
+    monkeypatch.delenv("ENGINE_DENSE_INDEX_MODEL", raising=False)
+    assert di.index_config() == ("openrouter", "baai/bge-large-en-v1.5")
+    monkeypatch.setenv("ENGINE_DENSE_INDEX_BACKEND", "local")
+    monkeypatch.delenv("ENGINE_DENSE_MODEL", raising=False)
+    assert di.index_config() == ("local", "BAAI/bge-small-en-v1.5")
+    assert di.query_prefix("baai/bge-large-en-v1.5").startswith("Represent")
+
+
+def test_dense_index_failure_falls_back_to_pool():
+    def boom(q, k):
+        raise RuntimeError("api down")
+    ev = run_events(make_pipeline(dense_index=boom), query="probable cause warrantless car")
+    d = next(e for e in ev if e.get("stage") == "dense")
+    assert d["mode"] == "pool" and "api down" in d["index_error"]
