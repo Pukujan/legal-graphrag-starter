@@ -1,0 +1,107 @@
+{
+  "dataset": "clerc",
+  "args": {
+    "dataset": "clerc",
+    "variants": "/workspace/lgr-search-data/v_chunk_bm25.json",
+    "n": "200",
+    "n_corpus": "2000",
+    "max_chars": "4000",
+    "seed": "20261014",
+    "clerc_dir": "/workspace/clerc",
+    "clerc_docs": "/workspace/lgr-search-data/docs.tsv",
+    "out": "/workspace/lgr-search-data/clerc_bm25.json"
+  },
+  "results": [
+    {
+      "variant": "bm25 fixed-250",
+      "R@5": 0.28,
+      "R@10": 0.405,
+      "R@20": 0.47,
+      "NDCG@10": 0.2524,
+      "MRR": 0.2143,
+      "p50_ms": 4.1,
+      "build_s": 1.2,
+      "n_queries": 200,
+      "n_docs": 2000,
+      "n_chunks": 28097
+    },
+    {
+      "variant": "bm25 fixed-500",
+      "R@5": 0.32,
+      "R@10": 0.4,
+      "R@20": 0.5,
+      "NDCG@10": 0.2723,
+      "MRR": 0.2434,
+      "p50_ms": 4.0,
+      "build_s": 0.9,
+      "n_queries": 200,
+      "n_docs": 2000,
+      "n_chunks": 14172
+    },
+    {
+      "variant": "bm25 fixed-1000",
+      "R@5": 0.355,
+      "R@10": 0.44,
+      "R@20": 0.495,
+      "NDCG@10": 0.2948,
+      "MRR": 0.2575,
+      "p50_ms": 4.1,
+      "build_s": 0.8,
+      "n_queries": 200,
+      "n_docs": 2000,
+      "n_chunks": 7213
+    },
+    {
+      "variant": "bm25 recursive-250",
+      "R@5": 0.28,
+      "R@10": 0.365,
+      "R@20": 0.475,
+      "NDCG@10": 0.2363,
+      "MRR": 0.209,
+      "p50_ms": 4.1,
+      "build_s": 1.0,
+      "n_queries": 200,
+      "n_docs": 2000,
+      "n_chunks": 36871
+    },
+    {
+      "variant": "bm25 recursive-500",
+      "R@5": 0.325,
+      "R@10": 0.42,
+      "R@20": 0.485,
+      "NDCG@10": 0.2685,
+      "MRR": 0.2311,
+      "p50_ms": 3.9,
+      "build_s": 0.7,
+      "n_queries": 200,
+      "n_docs": 2000,
+      "n_chunks": 17652
+    },
+    {
+      "variant": "bm25 recursive-1000",
+      "R@5": 0.34,
+      "R@10": 0.425,
+      "R@20": 0.5,
+      "NDCG@10": 0.2802,
+      "MRR": 0.2435,
+      "p50_ms": 1.1,
+      "build_s": 0.7,
+      "n_queries": 200,
+      "n_docs": 2000,
+      "n_chunks": 8938
+    },
+    {
+      "variant": "bm25 recursive-500 +header",
+      "R@5": 0.335,
+      "R@10": 0.39,
+      "R@20": 0.495,
+      "NDCG@10": 0.2593,
+      "MRR": 0.2288,
+      "p50_ms": 1.2,
+      "build_s": 0.9,
+      "n_queries": 200,
+      "n_docs": 2000,
+      "n_chunks": 17652
+    }
+  ]
+}
