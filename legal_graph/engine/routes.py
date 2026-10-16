@@ -40,6 +40,42 @@ def require_token(request: Request) -> None:
         raise HTTPException(401, detail="missing or invalid bearer token", headers={"WWW-Authenticate": "Bearer"})
 
 
+def _blank(value: Any) -> bool:
+    return value is None or value == ""
+
+
+def fill_case(case: dict[str, Any], authority: Any, passages: Any) -> dict[str, Any]:
+    """Fill court, year, link and cap id from the authority row and chunk ids.
+
+    The work row for a live opinion is often empty. The authority payload still
+    carries the court, decision date and CourtListener URL, and the chunk id
+    carries the CAP id (``cap:123:combined:0``).
+    """
+    filled = dict(case)
+    auth = authority if isinstance(authority, dict) else {}
+    if _blank(filled.get("court")) and isinstance(auth.get("court"), str):
+        filled["court"] = auth["court"]
+    if _blank(filled.get("year")) and isinstance(auth.get("date"), str) and len(auth["date"]) >= 4:
+        year = auth["date"][:4]
+        if year.isdigit():
+            filled["year"] = int(year)
+    url = auth.get("url")
+    if _blank(filled.get("link")) and isinstance(url, str) and url.startswith(("http://", "https://")):
+        filled["link"] = url
+    if _blank(filled.get("cap_id")) and isinstance(passages, list):
+        for passage in passages:
+            chunk_id = passage.get("chunk_id") if isinstance(passage, dict) else None
+            if isinstance(chunk_id, str) and chunk_id.startswith("cap:") and chunk_id.count(":") >= 2:
+                cap_id = chunk_id.split(":", 2)[1]
+                if cap_id.isdigit():
+                    filled["cap_id"] = cap_id
+                    break
+    title = auth.get("title")
+    if (_blank(filled.get("name")) or filled.get("name") == filled.get("id")) and isinstance(title, str) and title:
+        filled["name"] = title
+    return filled
+
+
 def list_benchmarks(bench_dir: Path) -> list[dict[str, Any]]:
     runs = []
     for p in sorted(bench_dir.glob("*/results.json")):
@@ -97,9 +133,10 @@ def build_router(get_pipeline: Callable[[], Any], registry: ScorerRegistry, benc
         if doc_id not in p.corpus.by_doc and doc_id not in p.corpus.docs:
             raise HTTPException(404, detail="case not found in the text corpus")
         payload = get_graph().authority(doc_id) if get_graph and get_graph() else None
-        return {"case": p.corpus.case(doc_id), "authority": payload,
-                "passages": [{"chunk_id": p.corpus.chunks[i].chunk_id, "ord": p.corpus.chunks[i].ord,
-                              "text": p.corpus.chunks[i].body} for i in p.corpus.by_doc.get(doc_id, [])]}
+        passages = [{"chunk_id": p.corpus.chunks[i].chunk_id, "ord": p.corpus.chunks[i].ord,
+                     "text": p.corpus.chunks[i].body} for i in p.corpus.by_doc.get(doc_id, [])]
+        return {"case": fill_case(p.corpus.case(doc_id), payload, passages), "authority": payload,
+                "passages": passages}
 
     @r.get("/benchmarks", summary="Frozen benchmark runs (benchmarks/runs/*/results.json)")
     def benchmarks():

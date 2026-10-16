@@ -136,6 +136,26 @@ def test_check_scores_and_quote_verification(client):
     assert client.post("/api/v1/check", json={**body, "scorer": "jev"}, headers=AUTH).status_code == 503
 
 
+def test_fill_case_from_authority_and_chunk_id():
+    from legal_graph.engine.routes import fill_case
+
+    case = {"id": "Ervin v. Amoco", "name": "Ervin v. Amoco", "court": None, "year": None, "link": None, "cap_id": None}
+    auth = {"court": "Colorado state court", "date": "1994-12-05", "title": "Ervin v. Amoco Oil Co.",
+            "url": "https://www.courtlistener.com/opinion/2613962/ervin-v-amoco-oil-co/"}
+    passages = [{"chunk_id": "cap:10348046:combined:0", "text": "stored"}]
+    out = fill_case(case, auth, passages)
+    assert out["court"] == "Colorado state court"
+    assert out["year"] == 1994
+    assert out["link"] == auth["url"]
+    assert out["cap_id"] == "10348046"
+    assert out["name"] == "Ervin v. Amoco Oil Co."
+    kept = fill_case({**case, "court": "Supreme Court", "year": 1990, "name": "Real Name", "link": "https://example.test"},
+                     auth, passages)
+    assert kept["court"] == "Supreme Court" and kept["year"] == 1990 and kept["name"] == "Real Name"
+    assert kept["link"] == "https://example.test"
+    assert fill_case(case, None, [])["court"] is None
+
+
 def test_case_and_benchmarks(client):
     r = client.get("/api/v1/cases/A", headers=AUTH)
     assert r.status_code == 200 and [p["chunk_id"] for p in r.json()["passages"]] == ["a:0", "a:1"]
