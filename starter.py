@@ -26,10 +26,10 @@ DATA = Path(__file__).parent / "data"
 
 def load_graph() -> nx.DiGraph:
     g = nx.DiGraph()
-    for line in (DATA / "nodes.jsonl").read_text().splitlines():
+    for line in (DATA / "nodes.jsonl").read_text(encoding="utf-8").splitlines():
         n = json.loads(line)
         g.add_node(n["id"], **{k: v for k, v in n.items() if k != "id"})
-    for line in (DATA / "edges.jsonl").read_text().splitlines():
+    for line in (DATA / "edges.jsonl").read_text(encoding="utf-8").splitlines():
         e = json.loads(line)
         g.add_edge(e["src"], e["dst"], kind=e["kind"])
     return g
