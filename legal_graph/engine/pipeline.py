@@ -6,6 +6,7 @@ live wiring is in ``octo_source.build_live_pipeline``.
 """
 from __future__ import annotations
 
+import logging
 import re
 import time
 from collections.abc import Callable, Iterator, Sequence
@@ -145,23 +146,32 @@ class Pipeline:
         if req.graph and self.neighbours:
             t0 = time.perf_counter()
             frontier = list(dict.fromkeys(seeds + hybrid[: req.graph_seed_docs]))
-            edges = self.neighbours(frontier) if frontier else []
-            fset, added, used = set(frontier), [], []
-            for e in edges:
-                for here, there, direction in ((e["source"], e["target"], "outgoing"), (e["target"], e["source"], "incoming")):
-                    if here in fset and there not in fset and there in corpus.by_doc:
-                        used.append({"source": e["source"], "target": e["target"], "kind": e.get("kind", "cites")})
-                        provenance.setdefault(there, []).append(
-                            {"source": "graph", "edge": e.get("kind", "cites"), "via": here, "direction": direction})
-                        if there not in pool:
-                            pool.append(there)
-                            added.append(there)
-            for d in added:  # best passage for graph-only cases
-                idxs = corpus.by_doc[d]
-                best_chunk[d] = max(idxs, key=lambda i: (float(scores[i]), -i))
-            yield event("graph", t0, hops=1, frontier=frontier, edges_scanned=len(edges), edges=used[:500],
-                        added=[{"doc_id": d, "via": [p for p in provenance[d] if p["source"] == "graph"]} for d in added],
-                        graph_revision=self.graph_revision)
+            try:
+                edges = self.neighbours(frontier) if frontier else []
+            except Exception as exc:
+                logging.getLogger("legal_graph.engine").warning("graph lookup failed: %s", type(exc).__name__)
+                yield {"type": "stage", "schema_version": EVENT_SCHEMA_VERSION, "stage": "graph", "skipped": True,
+                       "reason": f"graph lookup failed: {type(exc).__name__}",
+                       "duration_ms": round((time.perf_counter() - t0) * 1000, 2),
+                       "elapsed_ms": round((time.perf_counter() - t_start) * 1000, 2)}
+                edges = None
+            if edges is not None:
+                fset, added, used = set(frontier), [], []
+                for e in edges:
+                    for here, there, direction in ((e["source"], e["target"], "outgoing"), (e["target"], e["source"], "incoming")):
+                        if here in fset and there not in fset and there in corpus.by_doc:
+                            used.append({"source": e["source"], "target": e["target"], "kind": e.get("kind", "cites")})
+                            provenance.setdefault(there, []).append(
+                                {"source": "graph", "edge": e.get("kind", "cites"), "via": here, "direction": direction})
+                            if there not in pool:
+                                pool.append(there)
+                                added.append(there)
+                for d in added:  # best passage for graph-only cases
+                    idxs = corpus.by_doc[d]
+                    best_chunk[d] = max(idxs, key=lambda i: (float(scores[i]), -i))
+                yield event("graph", t0, hops=1, frontier=frontier, edges_scanned=len(edges), edges=used[:500],
+                            added=[{"doc_id": d, "via": [p for p in provenance[d] if p["source"] == "graph"]} for d in added],
+                            graph_revision=self.graph_revision)
         else:
             yield {"type": "stage", "schema_version": EVENT_SCHEMA_VERSION, "stage": "graph", "skipped": True,
                    "reason": "disabled by request" if not req.graph else "no graph source",

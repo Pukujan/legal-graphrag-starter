@@ -3,3 +3,7 @@ __pycache__/
 *.pyc
 data-expanded/
 benchmarks/answer_check/work/
+.env
+.env.workshop
+.env.engine
+.env.local
