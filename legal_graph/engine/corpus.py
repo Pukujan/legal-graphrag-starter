@@ -38,6 +38,8 @@ class Corpus:
     by_id: dict[str, int] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
+        if len(self.by_doc) and len(self.by_id):
+            return  # supplied ready-made, e.g. the memory-mapped maps of a disk-backed corpus
         grouped: dict[str, list[int]] = defaultdict(list)
         for i, c in enumerate(self.chunks):
             grouped[c.doc_id].append(i)
