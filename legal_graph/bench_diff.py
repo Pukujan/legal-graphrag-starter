@@ -3,7 +3,8 @@
 For each system pair: per-query win/tie/loss on a metric, paired two-sided
 permutation (sign-flip) test and paired bootstrap 95% CI of the mean
 difference, plus example queries where only one system retrieved the gold
-within k. Works on ``legal_graph.retrieval_bench`` runs (systems are the
+within k (exact McNemar too when the metric is 0/1, via ``legal_graph.benchmark_diff``,
+the two-file variant from PR #45). Works on ``legal_graph.retrieval_bench`` runs (systems are the
 per-query keys) and on legacy ``legal_graph.benchmark`` runs (baseline/augmented).
 
   python -m legal_graph.bench_diff RUN_DIR [--pairs a:b,c:d] [--queries Q.jsonl]
@@ -39,7 +40,11 @@ def paired(a: list[float], b: list[float], *, n_perm: int = 10000, n_boot: int =
     for _ in range(n_boot):
         boots.append(sum(d[rng.randrange(n)] for _ in range(n)) / n)
     boots.sort()
-    return {"mean_a": sum(a) / n, "mean_b": sum(b) / n, "mean_diff": obs,
+    from .benchmark_diff import mcnemar_exact  # shared with the PR #45 two-file diff tool
+    binary = all(x in (0, 1, 0.0, 1.0) for x in a) and all(x in (0, 1, 0.0, 1.0) for x in b)
+    extra = {"p_mcnemar": mcnemar_exact(sum(x > y for x, y in zip(a, b)), sum(x < y for x, y in zip(a, b)))} \
+        if binary else {}
+    return {**extra, "mean_a": sum(a) / n, "mean_b": sum(b) / n, "mean_diff": obs,
             "win": sum(x > 0 for x in d), "tie": sum(x == 0 for x in d), "loss": sum(x < 0 for x in d),
             "p_permutation": (hits + 1) / (n_perm + 1),
             "ci95_bootstrap": [boots[int(0.025 * n_boot)], boots[int(0.975 * n_boot) - 1]]}
