@@ -14,7 +14,7 @@ from typing import Any, Sequence
 
 from legal_graph.octo_client import DEFAULT_BASE_URL, OctoSqlExecutor
 
-from .corpus import Bm25sScorer, Chunk, Corpus, PurePythonBM25
+from .corpus import Bm25sScorer, Chunk, CompactBM25, Corpus, PurePythonBM25
 from .pipeline import Pipeline
 
 log = logging.getLogger("legal_graph.engine")
@@ -41,12 +41,16 @@ def load_corpus(sql, cache_dir: Path) -> Corpus:
     cache_dir.mkdir(parents=True, exist_ok=True)
     path = cache_dir / "chunks.jsonl"
     count = int(sql("SELECT count(*) AS n FROM legal_graph.chunk", [], 1)["rows"][0]["n"])
+    limit_env = os.environ.get("ENGINE_CHUNK_LIMIT", "").strip()
+    if limit_env:
+        count = min(count, int(limit_env))
+        path = cache_dir / f"chunks.limit{count}.jsonl"
     rows: list[dict[str, Any]] = []
     if path.exists():
         rows = [json.loads(line) for line in path.open()]
     if len(rows) != count:
         rows, last = [], ""
-        while True:
+        while len(rows) < count:
             page = sql("SELECT c.chunk_id, e.work_id, c.ord, c.body FROM legal_graph.chunk c "
                        "JOIN legal_graph.expression e ON e.expr_id = c.expr_id WHERE c.chunk_id > $1 "
                        "ORDER BY c.chunk_id LIMIT " + str(PAGE), [last], PAGE)["rows"]
@@ -55,6 +59,8 @@ def load_corpus(sql, cache_dir: Path) -> Corpus:
             rows.extend(page)
             last = page[-1]["chunk_id"]
             log.info("loaded %d/%d chunks", len(rows), count)
+        if len(rows) > count:
+            rows = rows[:count]
         tmp = path.with_suffix(".tmp")
         with tmp.open("w") as f:
             for r in rows:
@@ -104,7 +110,8 @@ def build_live_pipeline() -> tuple[Pipeline, OctoGraph]:
     try:
         lexical = Bm25sScorer(texts)
     except ImportError:
-        lexical = PurePythonBM25(texts)
+        # Per-chunk Counters of the full opinion corpus do not fit on the demo machine.
+        lexical = CompactBM25(texts) if len(texts) > 20_000 else PurePythonBM25(texts)
     graph = OctoGraph(sql, snapshot)
     p = Pipeline(corpus, lexical, resolve_citations=graph.resolve, neighbours=graph.neighbours,
                  graph_revision=snapshot)

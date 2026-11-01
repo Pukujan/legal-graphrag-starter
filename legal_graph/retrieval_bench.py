@@ -100,12 +100,19 @@ class BM25:
         self.w = sparse.csr_matrix((w.astype(np.float32), (tf.row, tf.col)), shape=tf.shape)
         self.vocab = vocab
 
-    def search(self, text: str, k: int, *, max_date: str | None = None, exclude=()) -> list[str]:
+    def score_vector(self, text: str):
+        """BM25 score of every corpus doc for ``text`` (aligned with ``self.ids``)."""
         import numpy as np
         terms = [self.vocab[t] for t in set(tokenize(text)) if t in self.vocab]
         if not terms:
+            return np.zeros(len(self.ids), dtype=np.float32)
+        return np.asarray(self.w[terms].T @ self.idf[terms]).ravel()
+
+    def search(self, text: str, k: int, *, max_date: str | None = None, exclude=()) -> list[str]:
+        import numpy as np
+        scores = self.score_vector(text)
+        if not scores.any():
             return []
-        scores = np.asarray(self.w[terms].T @ self.idf[terms]).ravel()
         order = np.argsort(-scores, kind="stable")
         out, ex = [], set(exclude)
         for j in order:
@@ -175,6 +182,8 @@ def run(config_path: Path, runs_dir: Path, data_root: Path | None = None, only_s
     timings: dict[str, float] = {}
     ranked: dict[str, dict[str, list[str]]] = {}
     index = None
+    bm25_index: dict[str, Any] = {}
+    stage_stats: dict[str, dict] = {}
     for sysdef in cfg["systems"]:
         name, kind = sysdef["name"], sysdef["kind"]
         t0 = time.perf_counter()
@@ -185,7 +194,17 @@ def run(config_path: Path, runs_dir: Path, data_root: Path | None = None, only_s
                       field=sysdef.get("field", "text"), title_field=sysdef.get("title_field", "title"))
             ranked[name] = {q["query_id"]: bm.search(q["text"], kmax, max_date=q.get("date"),
                                                      exclude=q.get("exclude", ())) for q in queries}
-            del bm
+            bm25_index[name] = bm
+        elif kind == "qgraph":
+            if index is None:
+                index = _graph_index(paths, queries, cfg)
+            from .graph_stage import run_qgraph
+            ranked[name] = run_qgraph(sysdef, queries, ranked[sysdef["from"]], index, cfg.get("graph", {}),
+                                      bm25_index.get(sysdef.get("text_scores_from", "")), dates, kmax)
+        elif kind == "jev_rerank":
+            from .graph_stage import STATS, run_jev_rerank
+            ranked[name] = run_jev_rerank(sysdef, queries, ranked[sysdef["from"]], corpus, kmax)
+            stage_stats[name] = STATS.get(name, {})
         elif kind == "plugin":
             mod, fn = sysdef["callable"].split(":")
             out = getattr(importlib.import_module(mod), fn)(queries, corpus, sysdef.get("params", {}))
@@ -235,6 +254,8 @@ def run(config_path: Path, runs_dir: Path, data_root: Path | None = None, only_s
         summary[name] = {m: _mean([r[name][m] for r in per_query]) for m in per_query[0][name]} if per_query else {}
     summary["n_queries"] = len(per_query)
     summary["system_seconds"] = timings
+    if stage_stats:
+        summary["stage_stats"] = stage_stats
     import platform
     record = {"label": cfg.get("label", ""), "config": cfg, "split": split,
               "environment": {"python": platform.python_version(), "platform": platform.platform()},

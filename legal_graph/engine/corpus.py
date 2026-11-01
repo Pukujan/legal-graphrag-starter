@@ -89,6 +89,70 @@ class PurePythonBM25:
         return out
 
 
+class CompactBM25:
+    """Okapi BM25 with array postings. Same scores as PurePythonBM25, without a Counter per chunk.
+
+    The live opinion corpus is hundreds of thousands of chunks. Per-document Counters do not fit
+    beside Docker and Ollama on a 16 GB machine. Postings stay in ``array.array`` during the build
+    and become NumPy vectors for scoring.
+    """
+
+    name = "bm25-compact"
+
+    def __init__(self, texts: Sequence[str], k1: float = 1.5, b: float = 0.75):
+        import array
+        import logging
+
+        import numpy as np
+
+        self.k1, self.b = k1, b
+        n = len(texts)
+        lengths = np.zeros(n, dtype=np.int32)
+        docs: dict[str, array.array] = {}
+        tfs: dict[str, array.array] = {}
+        df: Counter[str] = Counter()
+        log = logging.getLogger("legal_graph.engine")
+        for i, text in enumerate(texts):
+            tf = Counter(tokenize(text))
+            lengths[i] = sum(tf.values())
+            df.update(tf.keys())
+            for term, freq in tf.items():
+                bucket = docs.get(term)
+                if bucket is None:
+                    bucket = array.array("I")
+                    docs[term] = bucket
+                    tfs[term] = array.array("H")
+                bucket.append(i)
+                tfs[term].append(freq if freq < 65535 else 65535)
+            if i and i % 100_000 == 0:
+                log.info("indexed %d/%d chunks (%d terms)", i, n, len(docs))
+        self.len = lengths
+        self.avg = float(lengths.mean()) if n else 1.0
+        self.idf = {t: math.log(1 + (n - d + 0.5) / (d + 0.5)) for t, d in df.items()}
+        self.postings = {
+            t: (np.asarray(docs[t], dtype=np.int32), np.asarray(tfs[t], dtype=np.float32))
+            for t in docs
+        }
+        log.info("compact bm25 ready: %d chunks, %d terms", n, len(self.postings))
+
+    def score_all(self, query: str):
+        import numpy as np
+
+        out = np.zeros(len(self.len), dtype=np.float32)
+        if not len(self.len):
+            return out
+        k1, b, avg = self.k1, self.b, self.avg
+        for term in set(tokenize(query)):
+            idf = self.idf.get(term)
+            post = self.postings.get(term)
+            if idf is None or post is None:
+                continue
+            doc_ids, freq = post
+            denom = freq + k1 * (1.0 - b + b * self.len[doc_ids] / avg)
+            out[doc_ids] += idf * freq * (k1 + 1.0) / denom
+        return out
+
+
 class Bm25sScorer:
     """bm25s (same tokenizer/stemmer as legal_graph.search.hybrid.BM25Index); needs requirements-search.txt."""
 
